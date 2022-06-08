@@ -1,0 +1,60 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Feb 24, 2022, 4:11:13 PM
+    Author     : t.manh
+*/
+html,
+html a {
+    -webkit-font-smoothing: antialiased;
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.004);
+}
+
+body {
+    background-color: #fff;
+    color: #666;
+    font-family: "Open Sans", sans-serif;
+    font-size: 62.5%;
+    margin: 0 auto;
+}
+.body-404 {
+    padding: 10px;
+}
+.title,
+.title1,
+.title2 {
+    display: flex;
+    margin-bottom: 10px;
+    /* margin: 0 auto; */
+}
+.title2 {
+    margin-bottom: 32px;
+}
+p,
+button {
+    margin: 0 auto;
+}
+.error404 {
+    font-size: 14rem;
+}
+.description {
+    font-size: 2rem;
+}
+.description-page {
+    font-size: 28px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 300;
+}
+.callBack {
+    color: #fff;
+    font-weight: 600;
+    padding: 10px 15px;
+    border-radius: 6px;
+    border: 1px solid black;
+    background-color: rgb(134, 134, 196);
+    margin: 0 auto;
+}
+
