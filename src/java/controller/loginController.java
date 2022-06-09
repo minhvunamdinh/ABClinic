@@ -116,8 +116,10 @@ public class loginController extends HttpServlet {
             if (account != null ) { // check account null or not
                  int isActive = account.getIs_active();
                 if((isActive ==1)){
-                    request.getSession().setAttribute("account", account);
-                    if (remember != null) {// check user clicked remember account
+                    int role = account.getRole_id();
+                    if(role == 1){
+                        request.getSession().setAttribute("account", account);
+                        if (remember != null) {// check user clicked remember account
                         Cookie user = new Cookie("Username", account.getUsername());
                         Cookie pass = new Cookie("Password", password.trim());
                         user.setMaxAge(60 * 60 * 24 * 7);
@@ -125,7 +127,30 @@ public class loginController extends HttpServlet {
                         response.addCookie(user);
                         response.addCookie(pass);
                     }
-                    request.setAttribute("Message", "ok! ");
+                        request.setAttribute("Message", "Boss ok! ");
+                    }else if(role == 2){
+                        request.getSession().setAttribute("account", account);
+                        if (remember != null) {// check user clicked remember account
+                        Cookie user = new Cookie("Username", account.getUsername());
+                        Cookie pass = new Cookie("Password", password.trim());
+                        user.setMaxAge(60 * 60 * 24 * 7);
+                        pass.setMaxAge(60 * 60 * 24 * 7);
+                        response.addCookie(user);
+                        response.addCookie(pass);
+                    }
+                        request.setAttribute("Message", "Doctor ok! ");
+                    }else if(role == 3){
+                        request.getSession().setAttribute("account", account);
+                        if (remember != null) {// check user clicked remember account
+                        Cookie user = new Cookie("Username", account.getUsername());
+                        Cookie pass = new Cookie("Password", password.trim());
+                        user.setMaxAge(60 * 60 * 24 * 7);
+                        pass.setMaxAge(60 * 60 * 24 * 7);
+                        response.addCookie(user);
+                        response.addCookie(pass);
+                    }
+                        request.setAttribute("Message", "Receptionist ok! ");
+                    }
                 }else{
                     request.setAttribute("Message", "Account not active! ");
                 }
