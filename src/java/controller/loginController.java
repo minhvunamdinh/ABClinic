@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import model.Account;
+import model.User;
 
 /**
  *
@@ -130,6 +131,7 @@ public class loginController extends HttpServlet {
                         request.setAttribute("Message", "Boss ok! ");
                     }else if(role == 2){
                         request.getSession().setAttribute("account", account);
+                        
                         if (remember != null) {// check user clicked remember account
                         Cookie user = new Cookie("Username", account.getUsername());
                         Cookie pass = new Cookie("Password", password.trim());
@@ -139,6 +141,11 @@ public class loginController extends HttpServlet {
                         response.addCookie(pass);
                     }
                         request.setAttribute("Message", "Doctor ok! ");
+                        User user = accountDAO.getProfileUser(account.getId()+"");
+                        request.getSession().setAttribute("user", user);
+                        String url = "customerlist?status=Waiting&recordsPerPage=3&currentPage=1";
+                        response.sendRedirect(url);
+                        return;
                     }else if(role == 3){
                         request.getSession().setAttribute("account", account);
                         if (remember != null) {// check user clicked remember account

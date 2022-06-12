@@ -23,4 +23,6 @@ public interface IAccountDAO {
     public boolean isUsernameExist(String username) throws Exception;
     
     public Account checkAccountByUsernameAndPassword(String username, String password) throws Exception;
+    
+    public User getProfileUser(String id) throws Exception;
 }

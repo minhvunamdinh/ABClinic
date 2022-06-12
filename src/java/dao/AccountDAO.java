@@ -21,7 +21,7 @@ import model.User;
  *
  * @author vudm
  */
-public class AccountDAO  extends DBConnection implements IAccountDAO{
+public class AccountDAO extends DBConnection implements IAccountDAO {
 
     @Override
     public void registerAccount(Account account) throws Exception {
@@ -42,7 +42,7 @@ public class AccountDAO  extends DBConnection implements IAccountDAO{
 
             String encryptedPassword = encryptPasswordDAO.encryptPassword(account.getPassword(), salt);
 
-            ps.setString(2,  encryptedPassword);
+            ps.setString(2, encryptedPassword);
             ps.setInt(3, account.getRole_id());
             ps.setInt(4, account.getIs_active());
             ps.setString(5, Base64.getEncoder().encodeToString(salt));
@@ -69,8 +69,8 @@ public class AccountDAO  extends DBConnection implements IAccountDAO{
             ps = con.prepareStatement(sql);
 
             ps.setInt(1, user.getUser_id());
-            ps.setString(2,  user.getFullname());
-            ps.setString(3,  user.getAddress());
+            ps.setString(2, user.getFullname());
+            ps.setString(3, user.getAddress());
             ps.setString(4, user.getPhone());
             ps.setString(5, user.getEmail());
             ps.setString(6, user.getDob());
@@ -93,7 +93,7 @@ public class AccountDAO  extends DBConnection implements IAccountDAO{
         String sql = "SELECT TOP 1 id\n "
                 + "FROM\n "
                 + "Account\n "
-                +"ORDER  BY id DESC" ;
+                + "ORDER  BY id DESC";
 
         try {
             //open connection
@@ -101,12 +101,11 @@ public class AccountDAO  extends DBConnection implements IAccountDAO{
             ps = con.prepareStatement(sql);
             rs = ps.executeQuery();
 
-
             //assign data to books
             while (rs.next()) {
                 Account account = new Account();
                 account.setId(rs.getInt("id"));
-                
+
                 accounts.add(account);
             }
 
@@ -119,7 +118,7 @@ public class AccountDAO  extends DBConnection implements IAccountDAO{
 
         return accounts;
     }
-    
+
     @Override
     public boolean isUsernameExist(String username) throws Exception {
 
@@ -152,8 +151,7 @@ public class AccountDAO  extends DBConnection implements IAccountDAO{
 
         return true;
     }
-    
-    
+
     @Override
     public Account checkAccountByUsernameAndPassword(String username, String password) throws Exception {
 
@@ -193,5 +191,55 @@ public class AccountDAO  extends DBConnection implements IAccountDAO{
         }
         return null;
     }
-    
+
+    @Override
+    public User getProfileUser(String id) throws Exception {
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        String sql = "select * from Profile pro join Account ac on ac.id = pro.user_id\n"
+                + "where ac.id = ?";
+
+        try {
+            con = super.open();
+            ps = con.prepareStatement(sql);
+            ps.setString(1, id);
+            rs = ps.executeQuery();
+            //assign data to books
+            while (rs.next()) {
+                User user = new User();
+                user.setUser_id(rs.getInt("user_id"));
+                user.setFullname(rs.getString("fullname"));
+                user.setPhone(rs.getString("phone"));
+
+                user.setGender(rs.getInt("gender"));
+
+                user.setAddress(rs.getString("address"));
+                user.setDob(rs.getString("dob"));
+                user.setEmail(rs.getString("email"));
+                String role = "Boss";
+                switch (rs.getInt("role_id")) {
+                    case 1:
+                        role = "Boss";
+                        break;
+                    case 2:
+                        role = "Bác Sĩ";
+                        break;
+                    case 3:
+                        role = "Lễ Tân";
+                        break;
+                }
+                user.setRole(role);
+                return user;
+            }
+        } catch (Exception ex) {
+            throw ex;
+        } finally {
+            //close connection
+            super.close(con, ps, rs);
+        }
+
+        return null;
+    }
+
 }

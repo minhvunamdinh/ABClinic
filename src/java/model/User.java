@@ -21,7 +21,27 @@ public class User {
     private String email;
     private String dob;
     private int gender;
+    private String role;
 
+    public User(int user_id, String fullname, String address, String phone, String email, String dob, int gender, String role) {
+        this.user_id = user_id;
+        this.fullname = fullname;
+        this.address = address;
+        this.phone = phone;
+        this.email = email;
+        this.dob = dob;
+        this.gender = gender;
+        this.role = role;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+    
     public User() {
     }
 
