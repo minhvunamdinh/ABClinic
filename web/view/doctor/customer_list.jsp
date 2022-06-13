@@ -33,6 +33,7 @@
                         <th>Bác sĩ</th>
                         <th>Ngày khám</th>
                         <th> Trạng Thái </th>
+                        <th>Mô tả</th>
                         <th>Thao tác</th>
                     </tr>
                     <c:forEach var="customer" items="${requestScope.customer_list}">
@@ -42,6 +43,7 @@
                             <td>Bác Sĩ Hoàng</td>
                             <td>${customer.created_at} </td>
                             <td style="color: yellowgreen">${customer.status}</td>
+                            <td>${customer.description}</td>
                             <td style=" display: flex;flex-wrap: wrap; text-align: center;">
                                 <div style="width: 50%"><a  href="customer_detail?id=${customer.id}">Chi tiết</a></div>
                                 <c:if test="${status == 'Waiting'}">

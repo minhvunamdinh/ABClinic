@@ -28,7 +28,7 @@ public class DBConnection {
     protected Connection open() {
         try {
             Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-            return DriverManager.getConnection("jdbc:sqlserver://localhost:1433;databaseName=ABClinic", "sa", "nhiphoi00");
+            return DriverManager.getConnection("jdbc:sqlserver://localhost:1433;databaseName=ABClinic", "sa", "100420");
         } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(DBConnection.class.getName()).log(Level.SEVERE, null, ex);
         }

@@ -16,4 +16,6 @@ public interface ICustomerDAO {
     public Customer get_customer_detail(String id) throws Exception;
     public ArrayList<Customer> list_customer(String id,String status,int currentPage, int recordsPerpage) throws Exception;
      public int getNumberOfRows(String id, String status) throws Exception;
+     public int updateCustomer(Customer customer) throws Exception;
+     public int updateCustomerResult(Customer customer) throws Exception;
 }

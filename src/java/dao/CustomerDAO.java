@@ -37,10 +37,8 @@ public class CustomerDAO extends DBConnection implements ICustomerDAO {
                 customer.setId(rs.getInt("id"));
                 customer.setFullname(rs.getString("fullname"));
                 customer.setPhone(rs.getString("phone"));
-                String gender = "Khác";
-                if (rs.getBoolean("gender")) {
-                    gender = rs.getBoolean("gender") ? "Nam" : "Nữ";
-                }
+                String  gender = rs.getBoolean("gender") ? "Nam" : "Nu";
+                
                 customer.setGender(gender);
                 customer.setJob(rs.getString("job"));
                 customer.setAddress(rs.getString("address"));
@@ -85,7 +83,7 @@ public class CustomerDAO extends DBConnection implements ICustomerDAO {
         if (status != "") {
             sql = sql + " and cus.status = ?";
         }
-        String query = "With count AS( SELECT *, ROW_NUMBER() OVER ( ORDER BY created_at)  as RowNumber " + sql 
+        String query = "With count AS( SELECT *, ROW_NUMBER() OVER ( ORDER BY created_at)  as RowNumber " + sql
                 + ") select * from count\n"
                 + "Where RowNumber Between ? and ?";
         try {
@@ -93,7 +91,7 @@ public class CustomerDAO extends DBConnection implements ICustomerDAO {
             ps = con.prepareStatement(query);
             int i = 0;
             if (id != "") {
-                
+
                 ps.setString(++i, id);
 
             }
@@ -112,10 +110,7 @@ public class CustomerDAO extends DBConnection implements ICustomerDAO {
                 customer.setId(rs.getInt("id"));
                 customer.setFullname(rs.getString("fullname"));
                 customer.setPhone(rs.getString("phone"));
-                String gender = "Khác";
-                if (rs.getBoolean("gender")) {
-                    gender = rs.getBoolean("gender") ? "Nam" : "Nữ";
-                }
+                String gender = rs.getBoolean("gender") ? "Nam" : "Nu";
                 customer.setGender(gender);
                 customer.setJob(rs.getString("job"));
                 customer.setAddress(rs.getString("address"));
@@ -184,6 +179,76 @@ public class CustomerDAO extends DBConnection implements ICustomerDAO {
             super.close(con, ps, rs);
         }
         return numOfRows;
+    }
+
+    @Override
+    public int updateCustomer(Customer customer) throws Exception {
+        int result = 0;
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        String sql = " UPDATE [dbo].[Customer]\n"
+                + "   SET [fullname] = ?\n"
+                + "      ,[gender] =?\n"
+                + "      ,[job] = ?\n"
+                + "      ,[address] =?\n"
+                + "      ,[dob] = ?\n"
+                + "      ,[country] = ?\n"
+                + "      ,[description] = ?\n"
+                + " WHERE id=?\n";
+
+        try {
+            //open connection
+            con = super.open();
+            ps = con.prepareStatement(sql);
+            ps.setString(1, customer.getFullname());
+            ps.setString(2, customer.getGender());
+            ps.setString(3, customer.getJob());
+            ps.setString(4, customer.getAddress());
+            ps.setString(5, customer.getDob());
+            ps.setString(6, customer.getCountry());
+            ps.setString(7, customer.getDescription());
+            ps.setInt(8, customer.getId());
+            result = ps.executeUpdate();
+        } catch (Exception ex) {
+            throw ex;
+        } finally {
+            //close connection
+            super.close(con, ps, rs);
+        }
+        return result;
+    }
+
+    @Override
+    public int updateCustomerResult(Customer customer) throws Exception {
+        int result = 0;
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        String sql = "UPDATE [dbo].[CusRes]\n"
+                + "   SET \n"
+                + "      [test_result] = ?\n"
+                + "      ,[examination_card] = ?\n"
+                + "      ,[time_return] = ?\n"
+                + " WHERE cus_id = ?";
+
+        try {
+            //open connection
+            con = super.open();
+            ps = con.prepareStatement(sql);
+            ps.setString(1, customer.getTest_result());
+            ps.setString(2, customer.getExamination_card());
+            ps.setString(3, customer.getTime_return());
+            ps.setInt(4, customer.getId());
+
+            result = ps.executeUpdate();
+        } catch (Exception ex) {
+            throw ex;
+        } finally {
+            //close connection
+            super.close(con, ps, rs);
+        }
+        return result;
     }
 
 }

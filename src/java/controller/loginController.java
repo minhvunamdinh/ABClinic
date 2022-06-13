@@ -26,8 +26,6 @@ import model.User;
 @WebServlet(name = "login", urlPatterns = {"/login"})
 public class loginController extends HttpServlet {
 
-   
-
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.
@@ -40,44 +38,51 @@ public class loginController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-         try {
-            Cookie[] cookie = request.getCookies();
-            String userName = "";
-            String passWord = "";
+        request.getRequestDispatcher("view/login.jsp").forward(request, response);
 
-            if (cookie != null) { // if get cookie get value
-                for (Cookie cookie1 : cookie) {
-                    if (cookie1.getName().equals("Username")) {
-                        //get cookie equal username
-                        userName = cookie1.getValue();
-                    }
-                    if (cookie1.getName().equals("Password")) {
-                        //get cookie equal password
-                        passWord = cookie1.getValue();
-                    }
-                }
-
-                IAccountDAO accountDAO = new AccountDAO();
-                Account account = accountDAO.checkAccountByUsernameAndPassword(userName, passWord);
-                if (account != null && account.getIs_active() == 1) {// if get account success
-
-                    request.getSession().setAttribute("account", account);
-                    request.setAttribute("Message", "ok! ");
-//                    response.sendRedirect("home");
-                } else {
-                    request.setAttribute("user", null);
-                    request.setAttribute("pass", null);
-                    request.getRequestDispatcher("view/login.jsp").forward(request, response);
-                }
-            } else {
-                request.setAttribute("user", null);
-                request.setAttribute("pass", null);
-                request.getRequestDispatcher("view/login.jsp").forward(request, response);
-            }
-        } catch (Exception ex) {
-            request.setAttribute("error", "Sorry! Error occurred, THAT PAGE DOESN'T EXIST OR IS UNAVABLE.");
-            request.getRequestDispatcher("error/error.jsp").forward(request, response);
-        }
+//        try {
+//            Cookie[] cookie = request.getCookies();
+//            String userName = "";
+//            String passWord = "";
+//
+//            if (cookie != null) { // if get cookie get value
+//                for (Cookie cookie1 : cookie) {
+//                    if (cookie1.getName().equals("Username")) {
+//                        //get cookie equal username
+//                        userName = cookie1.getValue();
+//                    }
+//                    if (cookie1.getName().equals("Password")) {
+//                        //get cookie equal password
+//                        passWord = cookie1.getValue();
+//                    }
+//                }
+//
+//                IAccountDAO accountDAO = new AccountDAO();
+//                Account account = accountDAO.checkAccountByUsernameAndPassword(userName, passWord);
+//                if (account != null && account.getIs_active() == 1) {// if get account success
+//
+//                    request.getSession().setAttribute("account", account);
+////                    request.setAttribute("Message", "ok! ");
+//                    User user = accountDAO.getProfileUser(account.getId() + "");
+//                    request.getSession().setAttribute("user", user);
+//                    String url = "customerlist?status=Waiting&recordsPerPage=3&currentPage=1";
+//                    response.sendRedirect(url);
+//                    return;
+////                    response.sendRedirect("home");
+//                } else {
+//                    request.setAttribute("user", null);
+//                    request.setAttribute("pass", null);
+//                    request.getRequestDispatcher("view/login.jsp").forward(request, response);
+//                }
+//            } else {
+//                request.setAttribute("user", null);
+//                request.setAttribute("pass", null);
+//                request.getRequestDispatcher("view/login.jsp").forward(request, response);
+//            }
+//        } catch (Exception ex) {
+//            request.setAttribute("error", "Sorry! Error occurred, THAT PAGE DOESN'T EXIST OR IS UNAVABLE.");
+//            request.getRequestDispatcher("error/error.jsp").forward(request, response);
+//        }
     }
 
     /**
@@ -112,56 +117,56 @@ public class loginController extends HttpServlet {
             }
             IAccountDAO accountDAO = new AccountDAO();
             Account account = accountDAO.checkAccountByUsernameAndPassword(username, password);
-           
 
-            if (account != null ) { // check account null or not
-                 int isActive = account.getIs_active();
-                if((isActive ==1)){
+            if (account != null) { // check account null or not
+                int isActive = account.getIs_active();
+                if ((isActive == 1)) {
                     int role = account.getRole_id();
-                    if(role == 1){
+                    if (role == 1) {
                         request.getSession().setAttribute("account", account);
                         if (remember != null) {// check user clicked remember account
-                        Cookie user = new Cookie("Username", account.getUsername());
-                        Cookie pass = new Cookie("Password", password.trim());
-                        user.setMaxAge(60 * 60 * 24 * 7);
-                        pass.setMaxAge(60 * 60 * 24 * 7);
-                        response.addCookie(user);
-                        response.addCookie(pass);
-                    }
+                            Cookie user = new Cookie("Username", account.getUsername());
+                            Cookie pass = new Cookie("Password", password.trim());
+                            user.setMaxAge(60 * 60 * 24 * 7);
+                            pass.setMaxAge(60 * 60 * 24 * 7);
+                            response.addCookie(user);
+                            response.addCookie(pass);
+                        }
                         request.setAttribute("Message", "Boss ok! ");
-                    }else if(role == 2){
+                    } else if (role == 2) {
                         request.getSession().setAttribute("account", account);
-                        
+
                         if (remember != null) {// check user clicked remember account
-                        Cookie user = new Cookie("Username", account.getUsername());
-                        Cookie pass = new Cookie("Password", password.trim());
-                        user.setMaxAge(60 * 60 * 24 * 7);
-                        pass.setMaxAge(60 * 60 * 24 * 7);
-                        response.addCookie(user);
-                        response.addCookie(pass);
-                    }
+                            Cookie user = new Cookie("Username", account.getUsername());
+                            Cookie pass = new Cookie("Password", password.trim());
+                            user.setMaxAge(60 * 60 * 24 * 7);
+                            pass.setMaxAge(60 * 60 * 24 * 7);
+                            response.addCookie(user);
+                            response.addCookie(pass);
+                        }
                         request.setAttribute("Message", "Doctor ok! ");
-                        User user = accountDAO.getProfileUser(account.getId()+"");
+                        User user = accountDAO.getProfileUser(account.getId() + "");
                         request.getSession().setAttribute("user", user);
                         String url = "customerlist?status=Waiting&recordsPerPage=3&currentPage=1";
                         response.sendRedirect(url);
                         return;
-                    }else if(role == 3){
+
+                    } else if (role == 3) {
                         request.getSession().setAttribute("account", account);
                         if (remember != null) {// check user clicked remember account
-                        Cookie user = new Cookie("Username", account.getUsername());
-                        Cookie pass = new Cookie("Password", password.trim());
-                        user.setMaxAge(60 * 60 * 24 * 7);
-                        pass.setMaxAge(60 * 60 * 24 * 7);
-                        response.addCookie(user);
-                        response.addCookie(pass);
-                    }
+                            Cookie user = new Cookie("Username", account.getUsername());
+                            Cookie pass = new Cookie("Password", password.trim());
+                            user.setMaxAge(60 * 60 * 24 * 7);
+                            pass.setMaxAge(60 * 60 * 24 * 7);
+                            response.addCookie(user);
+                            response.addCookie(pass);
+                        }
                         request.setAttribute("Message", "Receptionist ok! ");
                     }
-                }else{
+                } else {
                     request.setAttribute("Message", "Account not active! ");
                 }
-                
+
                 request.getRequestDispatcher("view/login.jsp").forward(request, response);
 //                response.sendRedirect("home");
             } else { // if account null
