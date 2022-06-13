@@ -66,8 +66,9 @@ public class CustomerDetailController extends HttpServlet {
             HttpSession session = request.getSession();
             User user_session = (User) session.getAttribute("user");
             request.setAttribute("user", user_session);
+            String id = request.getParameter("id");
             CustomerDAO customer_dao = new CustomerDAO();
-            Customer customer = customer_dao.get_customer_detail(user_session.getUser_id()+"");
+            Customer customer = customer_dao.get_customer_detail(id);
             request.setAttribute("customer", customer);
 
             request.getRequestDispatcher("view/customer_detail.jsp").forward(request, response);
@@ -88,7 +89,41 @@ public class CustomerDetailController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+            try {
+            request.setCharacterEncoding("UTF-8");
+
+            String id = request.getParameter("id");
+            String fullname = request.getParameter("fullname").trim();
+            String gender = request.getParameter("gender").trim();
+            String job = request.getParameter("job").trim();
+            String address = request.getParameter("address").trim();
+            String dob = request.getParameter("dob").trim();
+            String country = request.getParameter("country").trim();
+            String description = request.getParameter("description").trim();
+            String examination_card = request.getParameter("examination_card").trim();
+            String test_result = request.getParameter("test_result").trim();
+            String time_return = request.getParameter("time_return").trim();
+            //set customer by id
+            CustomerDAO cus_dao = new CustomerDAO();
+            Customer customer_update = new Customer();
+            customer_update.setId(Integer.parseInt(id));
+            customer_update.setFullname(fullname);
+            customer_update.setGender(gender);
+            customer_update.setJob(job);
+            customer_update.setAddress(address);
+            customer_update.setDob(dob);
+            customer_update.setCountry(country);
+            customer_update.setDescription(description);
+            customer_update.setExamination_card(examination_card);
+            customer_update.setTest_result(test_result);
+            customer_update.setTime_return(time_return);
+            cus_dao.updateCustomer(customer_update);
+            cus_dao.updateCustomerResult(customer_update);
+            response.sendRedirect("customer_detail?id="+id);
+        } catch (Exception e) {
+             request.setAttribute("error", "Sorry! Error occurred, THAT PAGE DOESN'T EXIST OR IS UNAVABLE.");
+            request.getRequestDispatcher("error/error.jsp").forward(request, response);
+        }
     }
 
     /**

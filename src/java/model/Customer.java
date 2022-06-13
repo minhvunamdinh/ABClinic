@@ -5,11 +5,16 @@
  */
 package model;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 /**
  *
  * @author zz0da
  */
 public class Customer {
+
     private int id;
     private String fullname;
     private String phone;
@@ -30,7 +35,6 @@ public class Customer {
     public Customer() {
     }
 
-    
     public Customer(int id, String fullname, String phone, String gender, String job, String dob, String address, String country, String description, String status, String code, String created_by, String created_at, String test_result, String examination_card, String time_return) {
         this.id = id;
         this.fullname = fullname;
@@ -49,8 +53,7 @@ public class Customer {
         this.examination_card = examination_card;
         this.time_return = time_return;
     }
-    
-    
+
     public String getCode() {
         return code;
     }
@@ -98,9 +101,7 @@ public class Customer {
     public void setTime_return(String time_return) {
         this.time_return = time_return;
     }
-    
-    
-    
+
     public int getId() {
         return id;
     }
@@ -145,7 +146,7 @@ public class Customer {
         return dob;
     }
 
-    public void setDob(String dob) {
+    public void setDob(String dob) throws ParseException {
         this.dob = dob;
     }
 
@@ -180,6 +181,5 @@ public class Customer {
     public void setStatus(String status) {
         this.status = status;
     }
-    
-    
+
 }
