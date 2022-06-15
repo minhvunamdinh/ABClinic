@@ -31,11 +31,29 @@ public class Customer {
     private String test_result;
     private String examination_card;
     private String time_return;
+    private String list_test;
+    private String note;
 
+    public String getNote() {
+        return note;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
+    }
+    
+    public String getList_test() {
+        return list_test;
+    }
+
+    public void setList_test(String list_test) {
+        this.list_test = list_test;
+    }
+    
     public Customer() {
     }
 
-    public Customer(int id, String fullname, String phone, String gender, String job, String dob, String address, String country, String description, String status, String code, String created_by, String created_at, String test_result, String examination_card, String time_return) {
+    public Customer(int id, String fullname, String phone, String gender, String job, String dob, String address, String country, String description, String status, String code, String created_by, String created_at, String test_result, String examination_card, String time_return, String list_test) {
         this.id = id;
         this.fullname = fullname;
         this.phone = phone;
@@ -52,7 +70,10 @@ public class Customer {
         this.test_result = test_result;
         this.examination_card = examination_card;
         this.time_return = time_return;
+        this.list_test = list_test;
     }
+
+    
 
     public String getCode() {
         return code;

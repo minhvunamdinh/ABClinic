@@ -27,7 +27,7 @@
             </div>
         </div>
 
-            <form style="margin: 0 10px;" action="customer_detail?id=${customer.id}" method="POST">
+        <form style="margin: 0 10px;" action="customer_detail?id=${customer.id}" method="POST">
 
             <table style="width:100%; ">
                 <tr>
@@ -54,7 +54,7 @@
                     <td>${customer.created_at} </td>
                     <td>
                         <select name="gender">
-                            
+
                             <option value="0" ${customer.gender=='Nu'?"selected":""}>Nữ</option>
                             <option value="1" ${customer.gender=='Nam'?"selected":""}>Nam</option>
                         </select>
@@ -67,10 +67,10 @@
                     <td><input type="text" class="form-control" name="country" value=" ${customer.country}"/></td>
                     <td><input type="text" class="form-control" name="description" value=" ${customer.description}"/></td>
                     <td style="color: green">${customer.status}</td>
-                    <td><input type="text" class="form-control" name="examination_card" value=" ${customer.examination_card}"/></td>
-                    <td><input type="text" class="form-control" name="test_result" value=" ${customer.test_result}"/></td>
+                    <td><input type="text" class="form-control" name="examination_card" value=" ${customer.examination_card}" ${customer.status.trim() == 'Đang khám'?"":"readonly"} /></td>
+                    <td><input type="text" class="form-control" name="test_result" value=" ${customer.test_result}"${customer.status.trim() == 'Đang khám'?"":"readonly"}/></td>
                     <td>
-                        <input type="date" id="time_return" name="time_return" value="${customer.time_return}"></td>
+                        <input type="date" id="time_return" name="time_return" value="${customer.time_return}"${customer.status.trim() == 'Đang khám'?"":"readonly"}></td>
                     <td>
                         <c:if test="${customer.status.trim() == 'Đang chờ'}">
                             <a href="accept_customer?id=${customer.id}&status=Doing"> Thêm vào khám </a> 
@@ -84,7 +84,9 @@
                 </tr>
 
             </table>
-            <button><a href="Xét nghiệm">Chỉ định xét nghiệm</a></button>
+            <c:if test="${customer.status.trim() == 'Đang khám'}">
+                <button><a href="order_test?cus_id=${customer.id}">Chỉ định xét nghiệm</a></button>
+            </c:if>
             <button  value="submit" onclick="updateOk()">Lưu thông tin</button>
         </form>
 

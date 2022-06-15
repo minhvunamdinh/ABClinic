@@ -37,8 +37,8 @@ public class CustomerDAO extends DBConnection implements ICustomerDAO {
                 customer.setId(rs.getInt("id"));
                 customer.setFullname(rs.getString("fullname"));
                 customer.setPhone(rs.getString("phone"));
-                String  gender = rs.getBoolean("gender") ? "Nam" : "Nu";
-                
+                String gender = rs.getBoolean("gender") ? "Nam" : "Nu";
+
                 customer.setGender(gender);
                 customer.setJob(rs.getString("job"));
                 customer.setAddress(rs.getString("address"));
@@ -58,6 +58,8 @@ public class CustomerDAO extends DBConnection implements ICustomerDAO {
                 customer.setTest_result(rs.getString("test_result"));
                 customer.setExamination_card(rs.getString("examination_card"));
                 customer.setTime_return(rs.getString("time_return"));
+                customer.setList_test(rs.getString("list_test"));
+                customer.setNote(rs.getString("note"));
                 return customer;
             }
         } catch (Exception ex) {
@@ -130,6 +132,8 @@ public class CustomerDAO extends DBConnection implements ICustomerDAO {
                 customer.setTest_result(rs.getString("test_result"));
                 customer.setExamination_card(rs.getString("examination_card"));
                 customer.setTime_return(rs.getString("time_return"));
+                customer.setList_test(rs.getString("list_test"));
+                customer.setNote(rs.getString("note"));
 
                 list_customer.add(customer);
             }
@@ -230,6 +234,8 @@ public class CustomerDAO extends DBConnection implements ICustomerDAO {
                 + "      [test_result] = ?\n"
                 + "      ,[examination_card] = ?\n"
                 + "      ,[time_return] = ?\n"
+                + "      ,[list_test] = ?\n"
+                + "      ,[note] = ?\n"
                 + " WHERE cus_id = ?";
 
         try {
@@ -239,7 +245,9 @@ public class CustomerDAO extends DBConnection implements ICustomerDAO {
             ps.setString(1, customer.getTest_result());
             ps.setString(2, customer.getExamination_card());
             ps.setString(3, customer.getTime_return());
-            ps.setInt(4, customer.getId());
+            ps.setString(4, customer.getList_test());
+            ps.setString(5,customer.getNote());
+            ps.setInt(6, customer.getId());
 
             result = ps.executeUpdate();
         } catch (Exception ex) {
