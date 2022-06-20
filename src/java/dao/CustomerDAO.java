@@ -350,12 +350,61 @@ public class CustomerDAO extends DBConnection implements ICustomerDAO {
         }
         return listCustomer; 
     }
+    public List<Customer> getListCustomerByName(String name) throws Exception{
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        List<Customer> listCustomer = new ArrayList<>();
+        String sql = "select * from Customer cus join CusRes cusres on cus.id = cusres.cus_id WHERE cus.status = 'DONE' AND cus.fullname LIKE '%"+name+"%'";
+
+        try {
+            con = super.open();
+            ps = con.prepareStatement(sql);
+            rs = ps.executeQuery();
+            //assign data to books
+            while (rs.next()) {
+                Customer customer = new Customer();
+                customer.setId(rs.getInt("id"));
+                customer.setFullname(rs.getString("fullname"));
+                customer.setPhone(rs.getString("phone"));
+                String gender = rs.getBoolean("gender") ? "Nam" : "Nu";
+                customer.setGender(gender);
+                customer.setJob(rs.getString("job"));
+                customer.setAddress(rs.getString("address"));
+                customer.setDob(rs.getString("dob"));
+                customer.setCountry(rs.getString("country"));
+                customer.setDescription(rs.getString("description"));
+                String cstatus = "Đang chờ";
+                if (rs.getString("status").trim().equals("Doing")) {
+                    cstatus = "Đang khám";
+                } else if (rs.getString("status").trim().equals("Done")) {
+                    cstatus = "Đã khám";
+                }
+                customer.setStatus(cstatus);
+                customer.setCode("HE" + rs.getInt("code"));
+                customer.setCreated_by(rs.getString("created_by")); // Thêm tên Bác Sĩ
+                customer.setCreated_at(rs.getString("created_at"));
+                customer.setTest_result(rs.getString("test_result"));
+                customer.setExamination_card(rs.getString("examination_card"));
+                customer.setTime_return(rs.getString("time_return"));
+                customer.setList_test(rs.getString("list_test"));
+                customer.setNote(rs.getString("note"));
+                listCustomer.add(customer);
+            }
+        } catch (Exception ex) {
+            throw ex;
+        } finally {
+            //close connection
+            super.close(con, ps, rs);
+        }
+        return listCustomer; 
+    }
     
     
     public static void main(String[] args) throws Exception {
         Customer customer = new Customer(0, "Tran", "0869", "1", "MV", "2000-12-12", "DB", "VN", "Dep trai", "abc", "", "", "", "", "", "", "");
         CustomerDAO cus = new CustomerDAO();
-        
+        System.out.println(cus.getListCustomerByName("B"));
     }
     
 }

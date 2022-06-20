@@ -37,17 +37,38 @@ public class AddNewCustomerControl extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+            throws ServletException, IOException, Exception {
+        String id = request.getParameter("id");
         HttpSession session = request.getSession();
-        DoctorDAO doctorDao = new DoctorDAO();
-        CustomerDAO customerDao = new CustomerDAO();
-        try {
-            request.getSession().setAttribute("listcustomer", customerDao.getListCustomer());
-            request.getSession().setAttribute("listdoctor", doctorDao.getAllDoctor());
-        } catch (Exception ex) {
-            Logger.getLogger(AddNewCustomerControl.class.getName()).log(Level.SEVERE, null, ex);
+            DoctorDAO doctorDao = new DoctorDAO();
+            CustomerDAO customerDao = new CustomerDAO();
+        if (id == null || id.equals("null")) {
+            try {
+                request.getSession().setAttribute("listcustomer", customerDao.getListCustomer());
+                request.getSession().setAttribute("listdoctor", doctorDao.getAllDoctor());
+            } catch (Exception ex) {
+                Logger.getLogger(AddNewCustomerControl.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            request.getRequestDispatcher("view/insertorder.jsp").forward(request, response);
+        } else {
+            Customer cus = customerDao.get_customer_detail(id);
+            request.setAttribute("fullname", cus.getFullname());
+            request.setAttribute("phone", cus.getPhone());
+            request.setAttribute("age", cus.getDob());
+            request.setAttribute("email", cus.getFullname());
+            request.setAttribute("country", cus.getCountry());
+            request.setAttribute("dob", cus.getDob());
+            request.setAttribute("job", cus.getJob());
+            request.setAttribute("gender", cus.getGender());
+             try {
+                request.getSession().setAttribute("listcustomer", customerDao.getListCustomer());
+                request.getSession().setAttribute("listdoctor", doctorDao.getAllDoctor());
+            } catch (Exception ex) {
+                Logger.getLogger(AddNewCustomerControl.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            request.getRequestDispatcher("view/insertorder.jsp").forward(request, response);
         }
-        request.getRequestDispatcher("view/insertorder.jsp").forward(request, response);
+
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -62,7 +83,11 @@ public class AddNewCustomerControl extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        try {
+            processRequest(request, response);
+        } catch (Exception ex) {
+            Logger.getLogger(AddNewCustomerControl.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -82,7 +107,7 @@ public class AddNewCustomerControl extends HttpServlet {
         String country = request.getParameter("country");
         String age = request.getParameter("age");
         String email = request.getParameter("email");
-        String dob= request.getParameter("dob");
+        String dob = request.getParameter("dob");
         String gender = request.getParameter("gender");
         String job = request.getParameter("job");
         String status = request.getParameter("status");

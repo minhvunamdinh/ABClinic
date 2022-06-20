@@ -21,19 +21,19 @@
         <form action="addnewcus" method="POST">
             <table>
                 <tr>
-                    <td>Họ và Tên :<input name="fullname"  type="text" placeholder="FullName" required></td>
-                    <td>Số điện thoại :<input name="phone"  type="text" placeholder="Phone" required></td>
+                    <td>Họ và Tên :<input name="fullname"  type="text" placeholder="FullName" required value='<%=request.getAttribute("fullname")%>'></td>
+                    <td>Số điện thoại :<input name="phone"  type="text" placeholder="Phone" required value='<%=request.getAttribute("phone")%>'></td>
                 </tr>
                 <tr>
-                    <td>Tuổi :<input name="age"  type="text" placeholder="Age" required></td>
-                    <td>Email :<input name="email"  type="text" placeholder="Email" required></td>
+                    <td>Tuổi :<input name="age"  type="text" placeholder="Age" required  value='<%=request.getAttribute("age")%>'></td>
+                    <td>Email :<input name="email"  type="text" placeholder="Email" required value='<%=request.getAttribute("email")%>'></td>
                 </tr>
                 <tr>
-                    <td>Quốc Gia :<input name="country"  type="text" placeholder="Country" required></td>
-                    <td>Ngày sinh :<input name="dob"  type="date" placeholder="Date" required></td>
+                    <td>Quốc Gia :<input name="country"  type="text" placeholder="Country" required value='<%=request.getAttribute("country")%>'></td>
+                    <td>Ngày sinh :<input name="dob"  type="date" placeholder="Date" required value='<%=request.getAttribute("dob")%>'></td>
                 </tr>
                 <tr>
-                    <td>Công việc :<input name="job"  type="text" placeholder="Job" required></td>
+                    <td>Công việc :<input name="job"  type="text" placeholder="Job" required value='<%=request.getAttribute("job")%>'></td>
                     <td>Chọn bác sĩ :<select name="doctor">
                             <c:forEach items="${sessionScope.listdoctor}" var="o">
                                 <option>${o.fullname}</option>
