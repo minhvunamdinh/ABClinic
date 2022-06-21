@@ -39,7 +39,7 @@ public class CustomerSearchController extends HttpServlet {
         HttpSession session = request.getSession();
         CustomerDAO customerDao = new CustomerDAO();
         try {
-            request.getSession().setAttribute("listcustomer", customerDao.getListCustomerByName(""));
+            request.getSession().setAttribute("listcustomer", customerDao.getListCustomerByName("", "Done"));
         } catch (Exception ex) {
             Logger.getLogger(CustomerSearchController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -74,13 +74,24 @@ public class CustomerSearchController extends HttpServlet {
             throws ServletException, IOException {
         HttpSession session = request.getSession();
         CustomerDAO customerDao = new CustomerDAO();
-        String search = request.getParameter("fullname");
-        try {
-            request.getSession().setAttribute("listcustomer", customerDao.getListCustomerByName(search));
-        } catch (Exception ex) {
-            Logger.getLogger(CustomerSearchController.class.getName()).log(Level.SEVERE, null, ex);
+        String search = request.getParameter("search");
+        String typesearch = request.getParameter("searching");
+        if (typesearch.equalsIgnoreCase("1")) {
+            try {
+                request.getSession().setAttribute("listcustomer", customerDao.getListCustomerByName(search, "Done"));
+            } catch (Exception ex) {
+                Logger.getLogger(CustomerSearchController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            request.getRequestDispatcher("view/listsearchcustomer.jsp").forward(request, response);
+        }else{
+            try {
+                request.getSession().setAttribute("listcustomer", customerDao.getListCustomerByName(search, ""));
+            } catch (Exception ex) {
+                Logger.getLogger(CustomerSearchController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            request.getRequestDispatcher("view/customer_list_recep.jsp").forward(request, response);
         }
-        request.getRequestDispatcher("view/listsearchcustomer.jsp").forward(request, response);
+
     }
 
     /**

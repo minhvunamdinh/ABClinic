@@ -42,7 +42,12 @@
                     </td>
                 </tr>
                 <tr>
-                    <td>Giới tính :<input name="gender"  type="radio" placeholder="gender" required value="1"> Men<input name="gender"  type="radio" placeholder="gender" required value="0"> Woman</td>
+                    <td>Giới tính 
+                        <select name="gender">
+                            <option value="0" ${o.gender=='0'?"selected":""}>Nữ</option>
+                            <option value="1" ${o.gender=='1'?"selected":""}>Nam</option>
+                        </select>
+                        
                     <td></td>   
                 </tr>
                 <tr>
@@ -50,7 +55,12 @@
                     <td></td>   
                 </tr>
             </table>
-            <button type="submit" >Xác Nhận</button>
+                    <button type="submit" onclick="insertSuccess()">Xác Nhận</button>
         </form>
+        <script>
+            function insertSuccess() {
+                alert("Add new Successfull!");
+            }
+        </script> 
     </body>
 </html>

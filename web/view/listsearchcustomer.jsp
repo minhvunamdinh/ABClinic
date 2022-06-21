@@ -16,8 +16,8 @@
         <link href="./public/style/form.css" rel="stylesheet" type="text/css"/>
     </head>
     <body>
-        <form style="margin: 0 10px;" action="CustomerSearchController" method="POST">
-            Tìm kiếm :<input name="fullname" type="text" placeholder="Searching..."> <button type="submit">Tìm kiếm</button>
+        <form style="margin: 0 10px;" action="CustomerSearchController?searching=1" method="POST">
+            Tìm kiếm :<input name="search" type="text" placeholder="Searching..."> <button type="submit">Tìm kiếm</button>
             <table style="width:100%; ">
                 <tr>
                     <th>Mã bệnh nhân</th>

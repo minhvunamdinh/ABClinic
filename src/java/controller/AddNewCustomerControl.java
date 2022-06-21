@@ -40,11 +40,19 @@ public class AddNewCustomerControl extends HttpServlet {
             throws ServletException, IOException, Exception {
         String id = request.getParameter("id");
         HttpSession session = request.getSession();
-            DoctorDAO doctorDao = new DoctorDAO();
-            CustomerDAO customerDao = new CustomerDAO();
-        if (id == null || id.equals("null")) {
+        DoctorDAO doctorDao = new DoctorDAO();
+        CustomerDAO customerDao = new CustomerDAO();
+        if (id == null || id.equals("null") || id.isEmpty()) {
             try {
-                request.getSession().setAttribute("listcustomer", customerDao.getListCustomer());
+                Customer cus = customerDao.get_customer_detail(id);
+                request.setAttribute("fullname", "");
+                request.setAttribute("phone", "");
+                request.setAttribute("age", "");
+                request.setAttribute("email", "");
+                request.setAttribute("country", "");
+                request.setAttribute("dob", "");
+                request.setAttribute("job", "");
+                request.setAttribute("gender", "");
                 request.getSession().setAttribute("listdoctor", doctorDao.getAllDoctor());
             } catch (Exception ex) {
                 Logger.getLogger(AddNewCustomerControl.class.getName()).log(Level.SEVERE, null, ex);
@@ -60,8 +68,8 @@ public class AddNewCustomerControl extends HttpServlet {
             request.setAttribute("dob", cus.getDob());
             request.setAttribute("job", cus.getJob());
             request.setAttribute("gender", cus.getGender());
-             try {
-                request.getSession().setAttribute("listcustomer", customerDao.getListCustomer());
+            
+            try {
                 request.getSession().setAttribute("listdoctor", doctorDao.getAllDoctor());
             } catch (Exception ex) {
                 Logger.getLogger(AddNewCustomerControl.class.getName()).log(Level.SEVERE, null, ex);
@@ -101,9 +109,10 @@ public class AddNewCustomerControl extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        HttpSession session = request.getSession();
+        CustomerDAO customerDao = new CustomerDAO();
         String phone = request.getParameter("phone");
         String fullname = request.getParameter("fullname");
-        System.out.println(fullname);
         String country = request.getParameter("country");
         String age = request.getParameter("age");
         String email = request.getParameter("email");
@@ -112,8 +121,12 @@ public class AddNewCustomerControl extends HttpServlet {
         String job = request.getParameter("job");
         String status = request.getParameter("status");
         CustomerDAO cus = new CustomerDAO();
+        Customer customer = new Customer(2, fullname, phone, gender, job, dob, "", country, status, "Waiting", "", "", "", "", "", "", "");
         try {
-            cus.insertNewCustomer(new Customer(0, fullname, phone, gender, job, dob, "", country, status, "Waiting", "", "", "", "", "", "", ""));
+            cus.insertNewCustomer(customer);
+            
+            request.getSession().setAttribute("listcustomer", customerDao.getListCustomerByName("", ""));
+            request.getRequestDispatcher("view/customer_list_recep.jsp").forward(request, response);
         } catch (Exception ex) {
             Logger.getLogger(AddNewCustomerControl.class.getName()).log(Level.SEVERE, null, ex);
         }

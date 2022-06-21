@@ -11,6 +11,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import model.Customer;
 
@@ -247,7 +248,7 @@ public class CustomerDAO extends DBConnection implements ICustomerDAO {
             ps.setString(2, customer.getExamination_card());
             ps.setString(3, customer.getTime_return());
             ps.setString(4, customer.getList_test());
-            ps.setString(5,customer.getNote());
+            ps.setString(5, customer.getNote());
             ps.setInt(6, customer.getId());
 
             result = ps.executeUpdate();
@@ -259,24 +260,24 @@ public class CustomerDAO extends DBConnection implements ICustomerDAO {
         }
         return result;
     }
-    
-    public int insertNewCustomer(Customer customer) throws Exception{
+
+    public int insertNewCustomer(Customer customer) throws Exception {
         int result = 0;
         Connection con = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
-        String sql = "INSERT INTO dbo.Customer\n" +
-        "        ( [fullname] ,\n" +
-        "          [phone] ,\n" +
-        "          [gender] ,\n" +
-        "          [job] ,\n" +
-        "          [address] ,\n" +
-        "          [dob] ,\n" +
-        "          [country] ,\n" +
-        "          [description] ,\n" +
-        "          [status]\n" +
-        "        )\n" +
-        "VALUES  ( ? ,? ,? ,? ,? ,? ,? ,? ,?)";
+        String sql = "INSERT INTO dbo.Customer\n"
+                + "        ( [fullname] ,\n"
+                + "          [phone] ,\n"
+                + "          [gender] ,\n"
+                + "          [job] ,\n"
+                + "          [address] ,\n"
+                + "          [dob] ,\n"
+                + "          [country] ,\n"
+                + "          [description] ,\n"
+                + "          [status]\n"
+                + "        )\n"
+                + "VALUES  ( ? ,? ,? ,? ,? ,? ,? ,? ,?)";
         System.out.println(sql);
         try {
             //open connection
@@ -301,7 +302,8 @@ public class CustomerDAO extends DBConnection implements ICustomerDAO {
         }
         return result;
     }
-    public List<Customer> getListCustomer() throws Exception{
+
+    public List<Customer> getListCustomer() throws Exception {
         Connection con = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -348,14 +350,15 @@ public class CustomerDAO extends DBConnection implements ICustomerDAO {
             //close connection
             super.close(con, ps, rs);
         }
-        return listCustomer; 
+        return listCustomer;
     }
-    public List<Customer> getListCustomerByName(String name) throws Exception{
+
+    public List<Customer> getListCustomerByName(String name, String status) throws Exception {
         Connection con = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
         List<Customer> listCustomer = new ArrayList<>();
-        String sql = "select * from Customer cus join CusRes cusres on cus.id = cusres.cus_id WHERE cus.status = 'DONE' AND cus.fullname LIKE '%"+name+"%'";
+        String sql = "select * from Customer cus join CusRes cusres on cus.id = cusres.cus_id WHERE cus.status Like '%" + status + "%' AND cus.fullname LIKE '%" + name + "%'";
 
         try {
             con = super.open();
@@ -397,14 +400,47 @@ public class CustomerDAO extends DBConnection implements ICustomerDAO {
             //close connection
             super.close(con, ps, rs);
         }
-        return listCustomer; 
+        return listCustomer;
     }
-    
-    
+
+    public int insertNewCustomerResult(Customer customer) throws Exception {
+        int result = 0;
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        String sql = "INSERT INTO dbo.CusRes\n"
+                + "        ( code ,created_by ,created_at ,test_result ,examination_card ,time_return ,cus_id ,list_test ,note)\n"
+                + "VALUES  ( ? ,? ,? ,? ,? ,? ,? ,? ,?)";
+        System.out.println(sql);
+        try {
+            //open connection
+            con = super.open();
+            ps = con.prepareStatement(sql);
+            ps.setString(1, "1");
+            ps.setString(2, "14");
+            ps.setString(3, java.time.LocalDate.now()+"");
+            ps.setString(4, "");
+            ps.setString(5, "");
+            ps.setString(6, "");
+            ps.setString(7, customer.getId()+"");
+            ps.setString(8, "");
+            ps.setString(9, "");
+
+            result = ps.executeUpdate();
+        } catch (Exception ex) {
+            throw ex;
+        } finally {
+            //close connection
+            super.close(con, ps, rs);
+        }
+        return result;
+    }
+
     public static void main(String[] args) throws Exception {
-        Customer customer = new Customer(0, "Tran", "0869", "1", "MV", "2000-12-12", "DB", "VN", "Dep trai", "abc", "", "", "", "", "", "", "");
+        Customer customer = new Customer(3, "Tran", "0869", "1", "MV", "2000-12-12", "DB", "VN", "Dep trai", "abc", "", "", "", "", "", "", "");
         CustomerDAO cus = new CustomerDAO();
-        System.out.println(cus.getListCustomerByName("B"));
+        System.out.println(cus.getListCustomerByName("B", ""));
+        cus.insertNewCustomerResult(customer);
     }
-    
+
 }
