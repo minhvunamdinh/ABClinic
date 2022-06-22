@@ -52,6 +52,7 @@ public class registerController extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
+            request.setCharacterEncoding("UTF-8");
             IAccountDAO accountDAO = new AccountDAO();//implement interface
             String username = request.getParameter("username").trim();
             String password = request.getParameter("password").trim();

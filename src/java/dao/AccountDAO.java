@@ -14,6 +14,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.List;
 import model.Account;
 import model.User;
 
@@ -241,5 +242,40 @@ public class AccountDAO extends DBConnection implements IAccountDAO {
 
         return null;
     }
+    
+    @Override
+    public ArrayList<Account> getTotalAccount() throws Exception{
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        ArrayList<Account> accounts = new ArrayList<>();
+        
+        String sql = "select *\n" +
+                "from Account,[Profile]\n" +
+                    "where Account.id =[Profile].[user_id]";
+        try {
+            //open connection
+            con = super.open();
+            ps = con.prepareStatement(sql);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                Account account = new Account();
+                account.setId(rs.getInt("id"));
+                account.setUsername(rs.getString("username"));
+                account.setIs_active(rs.getInt("is_active"));
+                account.setFullname(rs.getString("fullname"));
+                account.setDob(rs.getString("dob"));
+                account.setAddress(rs.getString("address"));
+                accounts.add(account);
+            }
+        } catch (SQLException ex) {
+            throw ex;
+        } finally {
+            //close connection
+            super.close(con, ps, rs);
+        }
+        return accounts;
+    }
+    
 
 }
