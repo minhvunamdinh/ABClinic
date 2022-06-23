@@ -11,52 +11,35 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>JSP Page</title>
         <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css" rel="stylesheet" id="bootstrap-css">
-        <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
+<!--        <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>-->
         <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
     </head>
     <body>
-        <div class="container">
-            <div class="row">
-                <div class="span12">
-                    <div class="head">
-                        <div class="row-fluid">
-                            <div class="span12">
-                                <div class="span6">
-                                    <h1 class="muted">ABClinnic</h1>
-                                </div>
-
-                                <div class="span4 offset2" style="margin-top:15px;">
-                                    <button class="btn pull-right" type="button">Đăng ký</button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="navbar">
-                            <div class="navbar-inner">
-                                <div class="container">
-                                    <ul class="nav" start="1">
-                                        <li>
+        <div style="border: 2px solid;height: 110px;width:90%;margin-left: 5%;background: #34e3a4;" >
+                 <div class="span6"style="text-align: center">
+                                    <h1 class="muted" style="color: red;margin-left: 120%;text-align: center;font-size: 2.5rem;    margin-bottom: 0.5rem;font-weight: 400;line-height: 1.2;">ABClinnic</h1>
+                  </div>
+            <div  style="margin: 5% 0 0 0;border: none;width: 35%">
+                <ul class="nav" start="1" style="display: flex">
+                                        <li style="padding-left: 1% ;">
                                             <a href="../admin/adminPage.jsp">Home</a>
                                         </li>
 
-                                        <li>
-                                            <a href="#">Account</a>
+                                        <li style="padding-left: 5%;">
+                                            <a href="../ABClinic/AdminViewAccountController">Account</a>
                                         </li>
 
-                                        <li>
+                                        <li style="padding-left: 5%;">
                                             <a href="#">Revenue</a>
                                         </li>
 
-                                        <li>
+                                        <li style="padding-left: 5%;">
                                             <a href="#">Management all</a>
                                         </li>
                                     </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </div>
-        </div>
+                                    
+            
+         </div>
     </body>
 </html>

@@ -28,4 +28,6 @@ public interface IAccountDAO {
     public User getProfileUser(String id) throws Exception;
     
     public ArrayList<Account> getTotalAccount() throws Exception;
+    
+    public ArrayList<Account> getAccountByID(int aid) throws Exception;
 }

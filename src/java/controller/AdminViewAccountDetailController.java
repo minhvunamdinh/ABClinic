@@ -18,11 +18,12 @@ import model.Account;
 
 /**
  *
- * @author vudm
+ * @author admin
  */
-@WebServlet(name = "AdminViewAccountController", urlPatterns = {"/AdminViewAccountController"})
-public class AdminViewAccountController extends HttpServlet {
+@WebServlet(name = "AdminViewAccountDetailController", urlPatterns = {"/AdminViewAccountDetailController"})
+public class AdminViewAccountDetailController extends HttpServlet {
 
+    
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
@@ -37,10 +38,13 @@ public class AdminViewAccountController extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
+            int aid = Integer.parseInt(request.getParameter("aid"));
+            
             IAccountDAO accountDAO = new AccountDAO();
-              ArrayList<Account> listPage = accountDAO.getTotalAccount();
+            
+              ArrayList<Account> listPage = accountDAO.getAccountByID(aid);
               request.setAttribute("listPage", listPage);
-              request.getRequestDispatcher("view/admin/adminViewAccount.jsp").forward(request, response);
+              request.getRequestDispatcher("view/admin/adminViewADetail.jsp").forward(request, response);
         } catch (Exception ex) {
             request.getRequestDispatcher("error/error.jsp").forward(request, response);
         }

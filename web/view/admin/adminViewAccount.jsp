@@ -61,15 +61,62 @@
 
         <!-- Page level custom scripts -->
         <script src="./view/bootstrap/js/demo/datatables-demo.js"></script>
-        
+<!--        style="float: right;margin-right: 5%">Đăng nhập-->
+<style>
+.dropbtn {
+  background-color: #04AA6D;
+  color: white;
+  padding: 16px;
+  font-size: 12px;
+  border: none;
+}
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f1f1f1;
+  min-width: 100px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+.dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown-content a:hover {background-color: #ddd;}
+
+.dropdown:hover .dropdown-content {display: block;}
+
+.dropdown:hover .dropbtn {background-color: #3e8e41;}
+</style>
 
     </head>
     
     <body id="page-top" >
-        <div style="border: 2px solid; width: 90%;text-align: center;margin-left: 5%" >
+        <div style="border: 2px solid; width: 90%;text-align: center;margin-left: 5%;background: #34e3a4" >
                  <div class="span6">
-                                    <h1 class="muted">ABClinnic</h1>
-                                    <p style="float: right;margin-right: 5%">Hello ${sessionScope.account.getUsername()}</p>
+                                    <h1 class="muted" style="color: red">ABClinnic</h1>
+                                     <c:if test="${null!=sessionScope.account}">
+                                         
+                                         <p style="float: right;margin-right: 5%">Đăng xuất</p>
+                                         <p style="float: right;margin-right: 10%">Hello ${sessionScope.account.getUsername()}</p>
+                                         
+                                    </c:if>
+                                     <c:if test="${null ==sessionScope.account}">
+                                         
+                                         <p style="float: right;margin-right: 5%">Đăng nhập</p>
+                                         
+                                         
+                                    </c:if>
                   </div>
                                     <ul class="nav" start="1">
                                         <li style="padding-left: 5%">
@@ -77,7 +124,7 @@
                                         </li>
 
                                         <li style="padding-left: 5%">
-                                            <a href="#">Account</a>
+                                            <a href="../ABClinic/AdminViewAccountController">Account</a>
                                         </li>
 
                                         <li style="padding-left: 5%">
@@ -122,7 +169,7 @@
                                                 <th>Họ và tên</th>
                                                 <th>Ngày sinh</th>
                                                 <th>Địa chỉ</th>
-                                                <th>Link</th>
+                                                <th>Chức năng</th>
                                             </tr>
                                             
                                         </thead>
@@ -131,11 +178,25 @@
                                                 <tr>
                                                     <td>${rpt.getId()}</td>
                                                     <td>${rpt.getUsername()}</td>
-                                                    <td>${rpt.getIs_active()}</td>
+                                                    <c:if test="${rpt.getIs_active() == '1'}">
+                                                        <td><label style="color: green">Kích hoạt</label></td>
+                                                    </c:if>
+                                                    <c:if test="${rpt.getIs_active() == '0'}">
+                                                        <td><td><label style="color: Red">Chưa kích hoạt</label></td></td>
+                                                    </c:if>
                                                     <td>${rpt.getFullname()}</td>
                                                     <td>${rpt.getDob()}</td>
                                                     <td>${rpt.getAddress()}</td>
-                                                    <td><a href="AdminViewReportDetail?rid=${rpt.getId()}">Chi tiết</a></td>
+                                                    <td>
+                                                        <div class="dropdown">
+                                                            <button class="dropbtn">Chức năng</button>
+                                                            <div class="dropdown-content">
+                                                              <a href="../ABClinic/AdminViewAccountDetailController?aid=${rpt.getId()}">Chi tiết</a>
+                                                              <a href="#">Cập nhật</a>
+                                                              <a href="#">Trạng thái</a>
+                                                            </div>
+                                                      </div>
+                                                              </td>
                                                 </tr>
                                              </c:forEach>
                                             
