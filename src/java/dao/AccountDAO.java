@@ -300,7 +300,7 @@ public class AccountDAO extends DBConnection implements IAccountDAO {
                 account.setUsername(rs.getString("username"));
                 account.setIs_active(rs.getInt("is_active"));
                 account.setFullname(rs.getString("fullname"));
-                account.setAddress(rs.getString("phone"));
+                account.setPhone(rs.getString("phone"));
                 account.setEmail(rs.getString("email"));
                 account.setDob(rs.getString("dob"));
                 account.setAddress(rs.getString("address"));

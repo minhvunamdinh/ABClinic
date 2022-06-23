@@ -13,16 +13,12 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>JSP Page</title>
-        <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-        <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
-        <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
     </head>
     <body>
         <jsp:include page="../header/adminHeader.jsp"></jsp:include>
-        <div class="container" style="margin-top: 10%">
+            
             <div class="row" >
-                <h2>Chi tiết tài khoản</h2>
-                <div class="col-md-8" style="margin-left: 30%">
+                <div class="col-md-8" style="margin-left: 40%;margin-top: 10%;">
                     <h2>Bảng hiển thị thông tin tài khoản</h2>
                     <div class=" col-md-9 col-lg-9 " >
                         <table class="table table-user-information">
@@ -61,17 +57,16 @@
                                     <td>${rpt.getEmail()}</td>
                                 </tr>
                                 <tr>
-                            <td>Số điện thoại</td>
-                            <td>${rpt.getPhone()}</td>
-
-                            </tr>
+                                    <td>Số điện thoại</td>
+                                    <td>${rpt.getPhone()}</td>
+                                </tr>
 </c:forEach>
                             </tbody>
                         </table>
                     </div>
                 </div>
             </div>
-            <div class="backPage">
+        <div class="backPage" style="margin-left: 20%">
                 <button onclick="history.back()">Back</button>
             </div>
     </body>
