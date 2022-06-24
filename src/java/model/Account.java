@@ -37,6 +37,22 @@ public class Account {
         this.id = id;
     }
 
+    public Account(int id, int is_active) {
+        this.id = id;
+        this.is_active = is_active;
+    }
+    
+
+    public Account(int id, String fullname, String address, String dob, int gender) {
+        this.id = id;
+        this.fullname = fullname;
+        this.address = address;
+        this.dob = dob;
+        this.gender = gender;
+    }
+    
+    
+
     public Account(int id, String username, String password, int role_id, int is_active, String fullname, String address, String phone, String email, String dob, int gender) {
         this.id = id;
         this.username = username;

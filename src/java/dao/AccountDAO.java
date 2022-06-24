@@ -318,5 +318,58 @@ public class AccountDAO extends DBConnection implements IAccountDAO {
         return accounts;
     }
     
+    @Override
+    public int updateAccount(Account account) throws Exception{
+        int result = 0;
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        String sql = " UPDATE [Profile] "
+                + "   SET [Profile].fullname = ? ,[Profile].address=?,[Profile].dob=?,[Profile].gender=?"
+                + " WHERE  [Profile].[user_id]=?";
+        try {
+            //open connection
+            con = super.open();
+            ps = con.prepareStatement(sql);
+            ps.setString(1, account.getFullname());
+            ps.setString(2, account.getAddress());
+            ps.setString(3, account.getDob());
+            ps.setInt(4, account.getGender());
+            ps.setInt(5, account.getId());
+            result = ps.executeUpdate();
+        } catch (SQLException ex) {
+            throw ex;
+        } finally {
+            //close connection
+            super.close(con, ps, rs);
+        }
+        return result;
+    }
+    
+    @Override
+    public int activeAccount(Account account) throws Exception{
+        int result = 0;
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        String sql = " UPDATE Account "
+                + "   SET is_active=?"
+                + " WHERE  Account.id=?";
+        try {
+            //open connection
+            con = super.open();
+            ps = con.prepareStatement(sql);
+            ps.setInt(1, account.getIs_active());
+            ps.setInt(2, account.getId());
+            result = ps.executeUpdate();
+        } catch (SQLException ex) {
+            throw ex;
+        } finally {
+            //close connection
+            super.close(con, ps, rs);
+        }
+        return result;
+    }
+    
 
 }

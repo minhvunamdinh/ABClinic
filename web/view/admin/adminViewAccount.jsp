@@ -182,7 +182,7 @@
                                                         <td><label style="color: green">Kích hoạt</label></td>
                                                     </c:if>
                                                     <c:if test="${rpt.getIs_active() == '0'}">
-                                                        <td><td><label style="color: Red">Chưa kích hoạt</label></td></td>
+                                                        <td><label style="color: Red">Chưa kích hoạt</label></td>
                                                     </c:if>
                                                     <td>${rpt.getFullname()}</td>
                                                     <td>${rpt.getDob()}</td>
@@ -192,8 +192,8 @@
                                                             <button class="dropbtn">Chức năng</button>
                                                             <div class="dropdown-content">
                                                               <a href="../ABClinic/AdminViewAccountDetailController?aid=${rpt.getId()}">Chi tiết</a>
-                                                              <a href="#">Cập nhật</a>
-                                                              <a href="#">Trạng thái</a>
+                                                              <a href="../ABClinic/AdminEditAccount?aid=${rpt.getId()}">Cập nhật</a>
+                                                              <a href="../ABClinic/AdminAcAccountController?aid=${rpt.getId()}&active=${rpt.getIs_active()}">Trạng thái</a>
                                                             </div>
                                                       </div>
                                                               </td>

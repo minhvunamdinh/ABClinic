@@ -6,7 +6,6 @@
 package interfaceDAO;
 
 import java.util.ArrayList;
-import java.util.List;
 import model.Account;
 import model.User;
 
@@ -30,4 +29,8 @@ public interface IAccountDAO {
     public ArrayList<Account> getTotalAccount() throws Exception;
     
     public ArrayList<Account> getAccountByID(int aid) throws Exception;
+    
+    public int updateAccount(Account account) throws Exception;
+    
+    public int activeAccount(Account account) throws Exception;
 }
