@@ -14,7 +14,15 @@ import model.TypeTest;
  * @author zz0da
  */
 public interface ITestDAO {
+
     public ArrayList<TypeTest> list_type_test() throws Exception;
-    public  ArrayList<Test> list_test() throws Exception;
+
+    public ArrayList<Test> list_test() throws Exception;
+
+    public ArrayList<Test> get_list_test() throws Exception;
+
     public ArrayList<Test> list_test_by_customer(String id) throws Exception;
+
+    public void change_status_test(String id, String status) throws Exception;
+
 }

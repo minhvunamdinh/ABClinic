@@ -88,4 +88,59 @@ public class TestDAO extends DBConnection implements ITestDAO {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    @Override
+    public ArrayList<Test> get_list_test() throws Exception {
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        ArrayList<Test> list_test = new ArrayList<>();
+        String sql = "select * from Test test join TypeTest type_test on test.type_id = type_test.type_id ";
+
+        try {
+            con = super.open();
+            ps = con.prepareStatement(sql);
+            rs = ps.executeQuery();
+            //assign data to books
+            while (rs.next()) {
+                Test test = new Test();
+                test.setId(rs.getInt("id"));
+                test.setType_id(rs.getInt("type_id"));
+                test.setName(rs.getString("name"));
+                test.setCost_price(rs.getInt("cost_price"));
+                test.setSell_price(rs.getInt("sell_price"));
+                test.setIs_active(rs.getBoolean("is_active"));
+                test.setForm(rs.getString("form"));
+                test.setType_test_name(rs.getString("type_test_name"));
+                list_test.add(test);
+            }
+        } catch (Exception ex) {
+            throw ex;
+        } finally {
+            //close connection
+            super.close(con, ps, rs);
+        }
+
+        return list_test;
+    }
+    
+    public void change_status_test(String id, String status) throws Exception{
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        String sql = "UPDATE Test SET is_active = ? WHERE id = ?";
+        try {
+            con = super.open();
+            ps = con.prepareStatement(sql);
+            ps.setString(1, status);
+            ps.setString(2, id);
+            ps.executeUpdate();
+
+        } catch (Exception ex) {
+            throw ex;
+        } finally {
+            //close connection
+            super.close(con, ps, rs);
+        }
+    }
+
 }
