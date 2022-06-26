@@ -103,7 +103,7 @@
     <body id="page-top" >
         <jsp:include page="../header/header.jsp"></jsp:include>
             <button><a href="">Quản Lý Loại Xét Nghiệm</a></button>
-        
+            <button><a href="admin_test_detail">Thêm mới xét nghiệm</a></button>
         <c:if test="${not empty success}">
             <p style="color:green">${success}</p>
         </c:if>

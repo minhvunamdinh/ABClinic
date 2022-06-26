@@ -58,23 +58,23 @@
     <body>
 
         <jsp:include page="../header/header.jsp"></jsp:include>
-        <c:if test="<%=request.getParameter("id") != null %>">
+        <c:if test="<%=request.getParameter("id") != null%>">
             <h1>Cập nhật Xét Nghiệm <%= request.getParameter("id")%></h1>
         </c:if> 
-        <c:if test="<%=request.getParameter("id") == null %>">
+        <c:if test="<%=request.getParameter("id") == null%>">
             <h1>Tạo mới Xét Nghiệm</h1>
         </c:if> 
-            <div class="row" >
-                <div class="col-md-8" style="margin-left: 20%;margin-top: 10%;">
-                    <h2>Chi tiết Xét Nghiệm</h2>
-                    <form action="admin_test_detail" method="POST">
-                        <div class=" col-md-9 col-lg-9 " >
-                            <table class="table table-user-information">
-                                <tbody>
+        <div class="row" >
+            <div class="col-md-8" style="margin-left: 20%;margin-top: 10%;">
+                <h2>Chi tiết Xét Nghiệm</h2>
+                <form action="admin_test_detail" method="POST">
+                    <div class=" col-md-9 col-lg-9 " >
+                        <table class="table table-user-information">
+                            <tbody>
 
-                                    <tr>
-                                        <td>ID</td>
-                                        <td><input type="text"  name="id" value="${test.id}" readonly=""/></td>
+                                <tr>
+                                    <td>ID</td>
+                                    <td><input type="text"  name="id" value="${test.id}" readonly=""/></td>
                                 </tr>
                                 <tr>
                                     <td>Loại Xét Nghiệm</td>
@@ -96,26 +96,30 @@
                                     <td>
                                         <input type="text" name="cost_price" value="${test.cost_price}"/>
                                         <c:if test="${not empty cost_price_fail}">
-                                        <p style="color:red">${cost_price_fail}</p>
-                                    </c:if>
+                                            <p style="color:red">${cost_price_fail}</p>
+                                        </c:if>
                                     </td>
 
                                 </tr>
 
                                 <tr>
                                     <td>Giá bán</td>
-                                    <td><input type="text"  name="sell_price" value="${test.sell_price}"/></td>
+                                    <td>
+                                        <input type="text"  name="sell_price" value="${test.sell_price}"/>
+                                        <c:if test="${not empty sell_price_fail}">
+                                            <p style="color:red">${sell_price_fail}</p>
+                                        </c:if>
+                                    </td>
 
-                                    <c:if test="${not empty sell_price_fail}">
-                                        <p style="color:red">${sell_price_fail}</p>
-                                    </c:if>
+
                                 </tr>
                                 <tr>
                                     <td>Trạng thái</td>
                                     <td>
                                         <select style=" width: 200px;" name="is_active">
-                                            <option value="1" ${type_test.is_active == true ?"selected":""}>Hoạt Động</option>
-                                            <option value="0" ${type_test.is_active == false ?"selected":""}>Ngưng Hoạt Động</option>
+                                            <option value="1" ${test.is_active == true ?"selected":""}>Hoạt Động</option>
+                                            <option value="0" ${test.is_active == false ?"selected":""}>Ngưng Hoạt Động</option>
+
                                         </select>
                                     </td>
                                 </tr>

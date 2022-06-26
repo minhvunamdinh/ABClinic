@@ -90,7 +90,7 @@ public class AdminViewTestDetail extends HttpServlet {
             throws ServletException, IOException {
         try {
             int id = 0;
-            if (request.getParameter("id") == "") {
+            if (!request.getParameter("id").equals("") ) {
                 id = Integer.parseInt(request.getParameter("id"));
             }
 
@@ -114,7 +114,7 @@ public class AdminViewTestDetail extends HttpServlet {
                 valid = false;
             }
             TestDAO testDAO = new TestDAO();
-            boolean is_active = Boolean.parseBoolean(request.getParameter("type_id"));
+            boolean is_active = request.getParameter("is_active").equals("1");
             String form = request.getParameter("form");
             if (id == 0) {
                 if (!valid) {
