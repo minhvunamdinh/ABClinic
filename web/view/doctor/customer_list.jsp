@@ -16,26 +16,20 @@
     </head>
     <body>
 
-        <div class="header">
-            <a href="#default" class="logo"> ABClinic</a>
-            <div class="header-right">
-                <a class="${status == "Waiting"?"active":""}" href="customerlist?status=Waiting&recordsPerPage=3&currentPage=1">Danh sách chờ</a>
-                <a class="${status == "Doing"?"active":""}" href="customerlist?status=Doing&recordsPerPage=8&currentPage=1">Danh sách khám bệnh</a>
-                <a>${user.role} ${user.fullname}</a>
-            </div>
-        </div>
-        <div class="container">
-            <div class="row">
-                <table style="width:100%">
-                    <tr>
-                        <th>Mã bệnh nhân</th>
-                        <th>Họ và tên</th>
-                        <th>Bác sĩ</th>
-                        <th>Ngày khám</th>
-                        <th> Trạng Thái </th>
-                        <th>Mô tả</th>
-                        <th>Thao tác</th>
-                    </tr>
+       
+        <jsp:include page="../header/header.jsp"></jsp:include>
+            <div class="container">
+                <div class="row">
+                    <table style="width:100%">
+                        <tr>
+                            <th>Mã bệnh nhân</th>
+                            <th>Họ và tên</th>
+                            <th>Bác sĩ</th>
+                            <th>Ngày khám</th>
+                            <th> Trạng Thái </th>
+                            <th>Mô tả</th>
+                            <th>Thao tác</th>
+                        </tr>
                     <c:forEach var="customer" items="${requestScope.customer_list}">
                         <tr>
                             <td>${customer.code}</td>

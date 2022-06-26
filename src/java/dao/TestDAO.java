@@ -122,8 +122,8 @@ public class TestDAO extends DBConnection implements ITestDAO {
 
         return list_test;
     }
-    
-    public void change_status_test(String id, String status) throws Exception{
+
+    public void change_status_test(String id, String status) throws Exception {
         Connection con = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -141,6 +141,116 @@ public class TestDAO extends DBConnection implements ITestDAO {
             //close connection
             super.close(con, ps, rs);
         }
+    }
+
+    @Override
+    public Test get_test_by_id(String id) throws Exception {
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        String sql = "select * from Test test join TypeTest type_test on test.type_id = type_test.type_id  where test.id = ?";
+
+        try {
+            con = super.open();
+            ps = con.prepareStatement(sql);
+            ps.setString(1, id);
+            rs = ps.executeQuery();
+            //assign data to books
+            while (rs.next()) {
+                Test test = new Test();
+                test.setId(rs.getInt("id"));
+                test.setName(rs.getString("name"));
+                test.setType_id(rs.getInt("type_id"));
+                test.setCost_price(rs.getInt("cost_price"));
+                test.setSell_price(rs.getInt("sell_price"));
+                test.setIs_active(rs.getBoolean("is_active"));
+                test.setForm(rs.getString("form"));
+                test.setType_test_name(rs.getString("type_test_name"));
+                return test;
+            }
+        } catch (Exception ex) {
+            throw ex;
+        } finally {
+            //close connection
+            super.close(con, ps, rs);
+        }
+
+        return null;
+    }
+
+    @Override
+    public int update_test(Test test) throws Exception {
+        int result = 0;
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        String sql = "UPDATE [dbo].[Test]\n"
+                + "   SET [type_id] = ?\n"
+                + "      ,[name] = ?\n"
+                + "      ,[cost_price] = ?\n"
+                + "      ,[sell_price] = ?\n"
+                + "      ,[is_active] = ?\n"
+                + "      ,[form] = ?"
+                + " WHERE id=?\n";
+
+        try {
+            //open connection
+            con = super.open();
+            ps = con.prepareStatement(sql);
+            ps.setInt(1, test.getType_id());
+            ps.setString(2, test.getName());
+            ps.setInt(3, test.getCost_price());
+            ps.setInt(4, test.getSell_price());
+            ps.setInt(5, test.isIs_active() ? 1 : 0);
+            ps.setString(6, test.getForm());
+            ps.setInt(7, test.getId());
+
+            result = ps.executeUpdate();
+        } catch (Exception ex) {
+            throw ex;
+        } finally {
+            //close connection
+            super.close(con, ps, rs);
+        }
+        return result;
+
+    }
+
+    @Override
+    public int insert_test(Test test) throws Exception {
+        int result = 0;
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        String sql = "INSERT INTO [dbo].[Test]\n"
+                + "           ([type_id]\n"
+                + "           ,[name]\n"
+                + "           ,[cost_price]\n"
+                + "           ,[sell_price]\n"
+                + "           ,[is_active]\n"
+                + "           ,[form])\n"
+                + "     VALUES (?,?,?,?,?,?)";
+
+        try {
+            //open connection
+            con = super.open();
+            ps = con.prepareStatement(sql);
+            ps.setInt(1, test.getType_id());
+            ps.setString(2, test.getName());
+            ps.setInt(3, test.getCost_price());
+            ps.setInt(4, test.getSell_price());
+            ps.setInt(5, test.isIs_active() ? 1 : 0);
+            ps.setString(6, test.getForm());
+
+            result = ps.executeUpdate();
+        } catch (Exception ex) {
+            throw ex;
+        } finally {
+            //close connection
+            super.close(con, ps, rs);
+        }
+        return result;
+
     }
 
 }
