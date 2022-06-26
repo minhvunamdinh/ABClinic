@@ -18,16 +18,10 @@
     </head>
     <body>
 
-        <div class="header">
-            <a href="#default" class="logo"> ABClinic</a>
-            <div class="header-right">
-                <a class="${customer.status=="Waiting"?"active":""}" href="customerlist?status=Waiting&recordsPerPage=3&currentPage=1">Danh sách chờ</a>
-                <a class="${customer.status=="Doing"?"active":""}" href="customerlist?status=Doing&recordsPerPage=8&currentPage=1">Danh sách khám bệnh</a>
-                <a>${user.role} ${user.fullname}</a>
-            </div>
-        </div>
+        <jsp:include page="./header/header.jsp"></jsp:include>
 
-        <form style="margin: 0 10px;" action="customer_detail?id=${customer.id}" method="POST">
+
+            <form style="margin: 0 10px;" action="customer_detail?id=${customer.id}" method="POST">
 
             <table style="width:100%; ">
                 <tr>

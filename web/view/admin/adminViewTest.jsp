@@ -101,41 +101,14 @@
     </head>
 
     <body id="page-top" >
-        <div style="border: 2px solid; width: 90%;text-align: center;margin-left: 5%;background: #34e3a4" >
-            <div class="span6">
-                <h1 class="muted" style="color: red">ABClinnic</h1>
-                <c:if test="${null!=sessionScope.account}">
-
-                    <p style="float: right;margin-right: 5%">Đăng xuất</p>
-                    <p style="float: right;margin-right: 10%">Hello ${sessionScope.account.getUsername()}</p>
-
-                </c:if>
-                <c:if test="${null ==sessionScope.account}">
-
-                    <p style="float: right;margin-right: 5%">Đăng nhập</p>
+        <jsp:include page="../header/header.jsp"></jsp:include>
+            <button><a href="">Quản Lý Loại Xét Nghiệm</a></button>
+        
+        <c:if test="${not empty success}">
+            <p style="color:green">${success}</p>
+        </c:if>
 
 
-                </c:if>
-            </div>
-            <ul class="nav" start="1">
-                <li style="padding-left: 5%">
-                    <a href="../admin/adminPage.jsp">Home</a>
-                </li>
-
-                <li style="padding-left: 5%">
-                    <a href="../ABClinic/AdminViewAccountController">Account</a>
-                </li>
-
-                <li style="padding-left: 5%">
-                    <a href="#">Revenue</a>
-                </li>
-
-                <li style="padding-left: 5%">
-                    <a href="#">Management all</a>
-                </li>
-            </ul>
-
-        </div>
 
         <!-- Page Wrapper -->
         <div id="wrapper" style="width: 100%; margin-top: 5%">
@@ -168,7 +141,7 @@
                                                 <th>Giá gốc</th>
                                                 <th>Giá Bán</th>
                                                 <th>Trạng Thái</th>
-                                                <th>Kết quả</th>
+                                                <th>Form Kết quả</th>
                                                 <th>Chức năng</th>
                                             </tr>
 
@@ -190,7 +163,7 @@
                                                         </c:if>
                                                     </td>
                                                     <td>${test.form}</td>
-                                                    <td><button><a href="#">Cập nhật</a></button> </td>
+                                                    <td><button><a href="admin_test_detail?id=${test.id}">Cập nhật</a></button> </td>
                                                 </tr>
                                             </c:forEach>
 

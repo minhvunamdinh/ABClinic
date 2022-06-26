@@ -13,12 +13,54 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>JSP Page</title>
+        
+<link href="./view/bootstrap/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css"/>
+        <!-- Custom fonts for this template -->
+        <link
+            href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+            rel="stylesheet"/>
+
+        <!-- Custom styles for this template -->
+        <link href="./view/bootstrap/css/sb-admin-2.min.css" rel="stylesheet"/>
+
+        <!-- Custom styles for this page -->
+        <link href="./view/bootstrap/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet"/>
+
+        <!-- Bootstrap core JavaScript-->
+        <script src="./view/bootstrap/vendor/jquery/jquery.min.js"></script>
+        <script src="./view/bootstrap/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+        <!-- Core plugin JavaScript-->
+        <script src="./view/bootstrap/vendor/jquery-easing/jquery.easing.min.js"></script>
+
+        <!-- Custom scripts for all pages-->
+        <script src="./view/bootstrap/js/sb-admin-2.min.js"></script>
+
+        <!-- Page level plugins -->
+        <script src="./view/bootstrap/vendor/datatables/jquery.dataTables.min.js"></script>
+        <script src="./view/bootstrap/vendor/datatables/dataTables.bootstrap4.min.js"></script>
+
+        <!-- Page level custom scripts -->
+        <script src="./view/bootstrap/js/demo/datatables-demo.js"></script>
+        
+        <script src="./view/bootstrap/vendor/jquery/jquery.min.js"></script>
+        <script src="./view/bootstrap/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+        <!-- Custom scripts for all pages-->
+        <script src="./view/bootstrap/js/sb-admin-2.min.js"></script>
+
+        <!-- Page level plugins -->
+        <script src="./view/bootstrap/vendor/datatables/jquery.dataTables.min.js"></script>
+        <script src="./view/bootstrap/vendor/datatables/dataTables.bootstrap4.min.js"></script>
+
+        <!-- Page level custom scripts -->
+        <script src="./view/bootstrap/js/demo/datatables-demo.js"></script>
     </head>
     <body>
-        <jsp:include page="../header/adminHeader.jsp"></jsp:include>
+        <jsp:include page="../header/header.jsp"></jsp:include>
             
             <div class="row" >
-                <div class="col-md-8" style="margin-left: 40%;margin-top: 10%;">
+                <div class="col-md-8" style="margin-left: 20%;margin-top: 5%;">
                     <h2>Bảng hiển thị thông tin tài khoản</h2>
                     <div class=" col-md-9 col-lg-9 " >
                         <table class="table table-user-information">

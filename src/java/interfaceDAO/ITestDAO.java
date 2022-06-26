@@ -24,5 +24,11 @@ public interface ITestDAO {
     public ArrayList<Test> list_test_by_customer(String id) throws Exception;
 
     public void change_status_test(String id, String status) throws Exception;
-
+    
+    public Test get_test_by_id(String id) throws Exception;
+    
+    public int update_test(Test test) throws Exception;
+    
+    public int insert_test(Test test) throws Exception;
+    
 }

@@ -132,6 +132,8 @@ public class loginController extends HttpServlet {
                             response.addCookie(user);
                             response.addCookie(pass);
                         }
+                        User user = accountDAO.getProfileUser(account.getId() + "");
+                        request.getSession().setAttribute("user", user);
                         response.sendRedirect("AdminViewAccountController");
                     } else if (role == 2) {
                         request.getSession().setAttribute("account", account);
@@ -169,7 +171,6 @@ public class loginController extends HttpServlet {
                     request.getRequestDispatcher("view/login.jsp").forward(request, response);
                 }
 
-                
 //                response.sendRedirect("home");
             } else { // if account null
                 request.setAttribute("user", username);

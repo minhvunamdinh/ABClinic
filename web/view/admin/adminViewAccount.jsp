@@ -48,7 +48,7 @@
 
         <!-- Page level custom scripts -->
         <script src="./view/bootstrap/js/demo/datatables-demo.js"></script>
-        
+
         <script src="./view/bootstrap/vendor/jquery/jquery.min.js"></script>
         <script src="./view/bootstrap/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
@@ -61,119 +61,85 @@
 
         <!-- Page level custom scripts -->
         <script src="./view/bootstrap/js/demo/datatables-demo.js"></script>
-<!--        style="float: right;margin-right: 5%">Đăng nhập-->
-<style>
-.dropbtn {
-  background-color: #04AA6D;
-  color: white;
-  padding: 16px;
-  font-size: 12px;
-  border: none;
-}
+        <!--        style="float: right;margin-right: 5%">Đăng nhập-->
+        <style>
+            .dropbtn {
+                background-color: #04AA6D;
+                color: white;
+                padding: 16px;
+                font-size: 12px;
+                border: none;
+            }
 
-.dropdown {
-  position: relative;
-  display: inline-block;
-}
+            .dropdown {
+                position: relative;
+                display: inline-block;
+            }
 
-.dropdown-content {
-  display: none;
-  position: absolute;
-  background-color: #f1f1f1;
-  min-width: 100px;
-  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-  z-index: 1;
-}
+            .dropdown-content {
+                display: none;
+                position: absolute;
+                background-color: #f1f1f1;
+                min-width: 100px;
+                box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+                z-index: 1;
+            }
 
-.dropdown-content a {
-  color: black;
-  padding: 12px 16px;
-  text-decoration: none;
-  display: block;
-}
+            .dropdown-content a {
+                color: black;
+                padding: 12px 16px;
+                text-decoration: none;
+                display: block;
+            }
 
-.dropdown-content a:hover {background-color: #ddd;}
+            .dropdown-content a:hover {background-color: #ddd;}
 
-.dropdown:hover .dropdown-content {display: block;}
+            .dropdown:hover .dropdown-content {display: block;}
 
-.dropdown:hover .dropbtn {background-color: #3e8e41;}
-</style>
+            .dropdown:hover .dropbtn {background-color: #3e8e41;}
+        </style>
 
     </head>
-    
+
     <body id="page-top" >
-        <div style="border: 2px solid; width: 90%;text-align: center;margin-left: 5%;background: #34e3a4" >
-                 <div class="span6">
-                                    <h1 class="muted" style="color: red">ABClinnic</h1>
-                                     <c:if test="${null!=sessionScope.account}">
-                                         
-                                         <p style="float: right;margin-right: 5%">Đăng xuất</p>
-                                         <p style="float: right;margin-right: 10%">Hello ${sessionScope.account.getUsername()}</p>
-                                         
-                                    </c:if>
-                                     <c:if test="${null ==sessionScope.account}">
-                                         
-                                         <p style="float: right;margin-right: 5%">Đăng nhập</p>
-                                         
-                                         
-                                    </c:if>
-                  </div>
-                                    <ul class="nav" start="1">
-                                        <li style="padding-left: 5%">
-                                            <a href="../admin/adminPage.jsp">Home</a>
-                                        </li>
+       <jsp:include page="../header/header.jsp"></jsp:include>
 
-                                        <li style="padding-left: 5%">
-                                            <a href="../ABClinic/AdminViewAccountController">Account</a>
-                                        </li>
-
-                                        <li style="padding-left: 5%">
-                                            <a href="#">Revenue</a>
-                                        </li>
-
-                                        <li style="padding-left: 5%">
-                                            <a href="#">Management all</a>
-                                        </li>
-                                    </ul>
-            
-         </div>
-      
-        <!-- Page Wrapper -->
-        <div id="wrapper" style="width: 100%; margin-top: 10%">
+            <!-- Page Wrapper -->
+            <div id="wrapper" style="width: 100%; margin-top: 5%">
 
 
-            <!-- Content Wrapper -->
-            <div id="content-wrapper" class="d-flex flex-column">
+                <!-- Content Wrapper -->
+                <div id="content-wrapper" class="d-flex flex-column">
 
-                <!-- Main Content -->
-                <div id="content">
+                    <!-- Main Content -->
+                    <div id="content">
 
-                    <!-- Topbar -->
-                    <!-- End of Topbar -->
+                        <!-- Topbar -->
+                        <!-- End of Topbar -->
 
-                    <!-- Begin Page Content -->
-                    <div class="container-fluid">
+                        <!-- Begin Page Content -->
+                        <div class="container-fluid">
 
-                        <!-- Page Heading -->
-                        <!-- DataTales Example -->
-                        <div class="card shadow mb-4">
-                            
-                            <div class="card-body">
-                                <div class="table-responsive">
-                                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                                        <thead>
-                                            <tr>
-                                                <th>ID</th>
-                                                <th>Tài khoản</th>
-                                                <th>Hoạt động</th>
-                                                <th>Họ và tên</th>
-                                                <th>Ngày sinh</th>
-                                                <th>Địa chỉ</th>
-                                                <th>Chức năng</th>
-                                            </tr>
-                                            
-                                        </thead>
-                                        <tbody>
+                            <!-- Page Heading -->
+                            <!-- DataTales Example -->
+                            <div class="card shadow mb-4">
+
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                            <thead>
+                                                <tr>
+                                                    <th>ID</th>
+                                                    <th>Tài khoản</th>
+                                                    <th>Hoạt động</th>
+                                                    <th>Họ và tên</th>
+                                                    <th>Ngày sinh</th>
+                                                    <th>Địa chỉ</th>
+                                                    <th>Chức năng</th>
+                                                </tr>
+
+                                            </thead>
+                                            <tbody>
                                             <c:forEach var="rpt" items="${requestScope.listPage}">
                                                 <tr>
                                                     <td>${rpt.getId()}</td>
@@ -191,15 +157,15 @@
                                                         <div class="dropdown">
                                                             <button class="dropbtn">Chức năng</button>
                                                             <div class="dropdown-content">
-                                                              <a href="../ABClinic/AdminViewAccountDetailController?aid=${rpt.getId()}">Chi tiết</a>
-                                                              <a href="../ABClinic/AdminEditAccount?aid=${rpt.getId()}">Cập nhật</a>
-                                                              <a href="../ABClinic/AdminAcAccountController?aid=${rpt.getId()}&active=${rpt.getIs_active()}">Trạng thái</a>
+                                                                <a href="../ABClinic/AdminViewAccountDetailController?aid=${rpt.getId()}">Chi tiết</a>
+                                                                <a href="../ABClinic/AdminEditAccount?aid=${rpt.getId()}">Cập nhật</a>
+                                                                <a href="../ABClinic/AdminAcAccountController?aid=${rpt.getId()}&active=${rpt.getIs_active()}">Trạng thái</a>
                                                             </div>
-                                                      </div>
-                                                              </td>
+                                                        </div>
+                                                    </td>
                                                 </tr>
-                                             </c:forEach>
-                                            
+                                            </c:forEach>
+
                                         </tbody>
                                     </table>
                                 </div>
@@ -216,7 +182,7 @@
 
         </div>
 
-        
+
     </body>
 </html>
 
