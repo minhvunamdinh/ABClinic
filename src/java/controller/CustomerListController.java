@@ -82,7 +82,6 @@ public class CustomerListController extends HttpServlet {
             if (nOfPages % recordsPerPage > 0) {
                 nOfPages++;
             }
-
             request.setAttribute("noOfPages", nOfPages);
             request.setAttribute("currentPage", currentPage);
             request.setAttribute("recordsPerPage", recordsPerPage);

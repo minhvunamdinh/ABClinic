@@ -14,6 +14,30 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import model.Customer;
+import java.awt.Desktop;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import model.Export;
+import model.Test;
+import model.TypeTest;
+
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.Font;
+import org.apache.poi.ss.usermodel.IndexedColors;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 /**
  *
@@ -353,12 +377,17 @@ public class CustomerDAO extends DBConnection implements ICustomerDAO {
         return listCustomer;
     }
 
-    public List<Customer> getListCustomerByName(String name, String status) throws Exception {
+    public List<Customer> getListCustomerByName(String name, String status, String cusid) throws Exception {
         Connection con = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
         List<Customer> listCustomer = new ArrayList<>();
-        String sql = "select * from Customer cus join CusRes cusres on cus.id = cusres.cus_id WHERE cus.status Like '%" + status + "%' AND cus.fullname LIKE '%" + name + "%'";
+        String sql = "";
+        if (cusid.equals("")) {
+            sql = "select * from Customer cus join CusRes cusres on cus.id = cusres.cus_id WHERE cus.status Like '%" + status + "%' AND cus.fullname LIKE '%" + name + "%'";
+        } else {
+            sql = "select * from Customer cus join CusRes cusres on cus.id = cusres.cus_id WHERE cus.status Like '%" + status + "%' AND cus.fullname LIKE '%" + name + "%' AND cusres.cus_id like '%" + cusid + "%'";
+        }
 
         try {
             con = super.open();
@@ -409,23 +438,21 @@ public class CustomerDAO extends DBConnection implements ICustomerDAO {
         PreparedStatement ps = null;
         ResultSet rs = null;
         String sql = "INSERT INTO dbo.CusRes\n"
-                + "        ( code ,created_by ,created_at ,test_result ,examination_card ,time_return ,cus_id ,list_test ,note)\n"
+                + "        (  code ,created_by ,created_at ,test_result ,examination_card ,time_return ,cus_id ,list_test ,note)\n"
                 + "VALUES  ( ? ,? ,? ,? ,? ,? ,? ,? ,?)";
-        System.out.println(sql);
         try {
             //open connection
             con = super.open();
             ps = con.prepareStatement(sql);
-            ps.setString(1, "1");
-            ps.setString(2, "14");
-            ps.setString(3, java.time.LocalDate.now()+"");
-            ps.setString(4, "");
-            ps.setString(5, "");
-            ps.setString(6, "");
-            ps.setString(7, customer.getId()+"");
+            ps.setString(1, customer.getId() + "");
+            ps.setString(2, customer.getCreated_by());
+            ps.setString(3, java.time.LocalDate.now() + "");//
+            ps.setString(4, customer.getTest_result());
+            ps.setString(5, customer.getExamination_card());
+            ps.setString(6, customer.getTime_return());
+            ps.setString(7, customer.getCode() + "");
             ps.setString(8, "");
-            ps.setString(9, "");
-
+            ps.setString(9, customer.getNote());
             result = ps.executeUpdate();
         } catch (Exception ex) {
             throw ex;
@@ -436,11 +463,135 @@ public class CustomerDAO extends DBConnection implements ICustomerDAO {
         return result;
     }
 
-    public static void main(String[] args) throws Exception {
-        Customer customer = new Customer(3, "Tran", "0869", "1", "MV", "2000-12-12", "DB", "VN", "Dep trai", "abc", "", "", "", "", "", "", "");
+    public int countCusres() throws Exception {
+        int cusres = 0;
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        String sql = "SELECT* FROM dbo.CusRes";
+        try {
+            //open connection
+            con = super.open();
+            ps = con.prepareStatement(sql);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                cusres = cusres + 1;
+            }
+        } catch (Exception ex) {
+            throw ex;
+        } finally {
+            //close connection
+            super.close(con, ps, rs);
+        }
+        return cusres;
+    }
+
+    public int Lastitems() throws Exception {
+        int cusres = 0;
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        String sql = "SELECT TOP 1 * FROM dbo.Customer ORDER BY ID DESC";
+        try {
+            //open connection
+            con = super.open();
+            ps = con.prepareStatement(sql);
+            rs = ps.executeQuery();
+            Customer customer = new Customer();
+            while (rs.next()) {
+
+                customer.setId(rs.getInt("id"));
+            }
+            cusres = customer.getId();
+        } catch (Exception ex) {
+            throw ex;
+        } finally {
+            //close connection
+            super.close(con, ps, rs);
+        }
+        return cusres;
+    }
+
+    public void ExportTest(List<Test> ListTest, int id)
+            throws IOException, Exception {
+        CustomerDAO customer_dao = new CustomerDAO();
+        TestDAO tstdao = new TestDAO();
+        String folderFilePath = "C:\\Users\\Alienware\\OneDrive\\Desktop\\file_excel\\text.xlsx";
+        float total = 0;
+        String[] COLUMNs = {"STT", "Tên hàng hóa, dịch vụ", "Đơn vị", "Số Lượng", "Đơn giá", "BHYT chi trả", "Miễn giảm",
+            "Kết Quả"};
+        File file = new File(folderFilePath);
+        file.getParentFile().mkdirs();
+        try (Workbook workbook = new XSSFWorkbook(); OutputStream os = new FileOutputStream(folderFilePath);) {
+            Sheet sheet = workbook.createSheet("CustomersEYYC");
+            Font headerFont = workbook.createFont();
+            headerFont.setBold(true);
+            headerFont.setColor(IndexedColors.BLUE.getIndex());
+
+            CellStyle headerCellStyle = workbook.createCellStyle();
+            headerCellStyle.setFont(headerFont);
+
+            // Row for Header
+            Row headerRow = sheet.createRow(0);
+            List<TypeTest> typetest = tstdao.list_type_test();
+            // Header
+            for (int col = 0; col < COLUMNs.length; col++) {
+                Cell cell = headerRow.createCell(col);
+                cell.setCellValue(COLUMNs[col]);
+                cell.setCellStyle(headerCellStyle);
+            }
+            int type = 1;
+            int rowIdx = 1;
+            int index = 1;
+            List<Test> listCustomers = ListTest;
+            Customer customer = customer_dao.get_customer_detail(id + "");
+            String[] test = customer.getList_test().split(",");
+            for (int i = 0; i < test.length; i++) {
+                for (Test item : listCustomers) {
+                    if (item.getId() == Integer.parseInt(test[i].trim())) {
+                        for (TypeTest list : typetest) {
+                            if (type == list.getType_id()) {
+                                Row row1 = sheet.createRow(rowIdx);
+                                row1.createCell(0).setCellValue(list.getType_name());
+                                rowIdx++;
+                                type++;
+                                break;
+                            }
+                        }
+                        Row row = sheet.createRow(rowIdx);
+                        row.createCell(0).setCellValue(index);
+                        row.createCell(1).setCellValue(item.getName() != null ? String.valueOf(item.getName()) : "");
+                        row.createCell(2).setCellValue("Lần");
+                        row.createCell(3).setCellValue(1);
+                        row.createCell(4).setCellValue(item.getSell_price() + "" != null ? item.getSell_price() + "" : "");
+                        row.createCell(5).setCellValue(0);
+                        row.createCell(6).setCellValue(0);
+                        row.createCell(7).setCellValue(0);
+                        rowIdx++;
+                        index++;
+                        total += item.getSell_price() * 1;
+                    }
+                }
+            }
+
+//        
+//        String[] COLUMNs2 = { "", "", "","", "", "", "",""};
+//        for (int col = 0; col < COLUMNs2.length; col++) {
+//            Cell cell = headerRow.createCell(col);
+//            cell.setCellValue(COLUMNs2[col]);
+//            cell.setCellStyle(headerCellStyle);
+//        }
+            Row row = sheet.createRow(rowIdx);
+            row.createCell(4).setCellValue(total);
+
+            workbook.write(os);
+        }
+    }
+
+    public static void main(String[] args) throws IOException, Exception {
         CustomerDAO cus = new CustomerDAO();
-        System.out.println(cus.getListCustomerByName("B", ""));
-        cus.insertNewCustomerResult(customer);
+        TestDAO tstdao = new TestDAO();
+        cus.ExportTest(tstdao.list_test(), 3012);
     }
 
 }

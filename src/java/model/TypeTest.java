@@ -36,5 +36,10 @@ public class TypeTest {
 
     public TypeTest() {
     }
+
+    @Override
+    public String toString() {
+        return "TypeTest{" + "type_id=" + type_id + ", type_name=" + type_name + '}';
+    }
     
 }

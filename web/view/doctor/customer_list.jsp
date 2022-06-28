@@ -16,14 +16,8 @@
     </head>
     <body>
 
-        <div class="header">
-            <a href="#default" class="logo"> ABClinic</a>
-            <div class="header-right">
-                <a class="${status == "Waiting"?"active":""}" href="customerlist?status=Waiting&recordsPerPage=3&currentPage=1">Danh sách chờ</a>
-                <a class="${status == "Doing"?"active":""}" href="customerlist?status=Doing&recordsPerPage=8&currentPage=1">Danh sách khám bệnh</a>
-                <a>${user.role} ${user.fullname}</a>
-            </div>
-        </div>
+        <jsp:include page="header.jsp"/>
+        
         <div class="container">
             <div class="row">
                 <table style="width:100%">

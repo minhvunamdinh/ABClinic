@@ -6,7 +6,6 @@
 package controller;
 
 import dao.CustomerDAO;
-import dao.DoctorDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.logging.Level;
@@ -22,8 +21,8 @@ import javax.servlet.http.HttpSession;
  *
  * @author Alienware
  */
-@WebServlet(name = "CustomerSearchController", urlPatterns = {"/CustomerSearchController"})
-public class CustomerSearchController extends HttpServlet {
+@WebServlet(name = "WaitingListController", urlPatterns = {"/WaitingListController"})
+public class WaitingListController extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -36,14 +35,14 @@ public class CustomerSearchController extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        HttpSession session = request.getSession();
+                HttpSession session = request.getSession();
         CustomerDAO customerDao = new CustomerDAO();
         try {
-            request.getSession().setAttribute("listcustomer", customerDao.getListCustomerByName("", "Done",""));
+            request.getSession().setAttribute("listcustomer", customerDao.getListCustomerByName("", "Waiting",""));
         } catch (Exception ex) {
             Logger.getLogger(CustomerSearchController.class.getName()).log(Level.SEVERE, null, ex);
         }
-        request.getRequestDispatcher("view/recep/customer_list_recep.jsp").forward(request, response);
+        request.getRequestDispatcher("view/recep/waiting_list.jsp").forward(request, response);
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -72,26 +71,14 @@ public class CustomerSearchController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        HttpSession session = request.getSession();
+        processRequest(request, response);
         CustomerDAO customerDao = new CustomerDAO();
-        String search = request.getParameter("search");
-        String typesearch = request.getParameter("searching");
-        if (typesearch.equalsIgnoreCase("1")) {
-            try {
-                request.getSession().setAttribute("listcustomer", customerDao.getListCustomerByName(search,"Done",""));
-            } catch (Exception ex) {
-                Logger.getLogger(CustomerSearchController.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            request.getRequestDispatcher("view/recep/customer_list_recep.jsp").forward(request, response);
-        }else{
-            try {
-                request.getSession().setAttribute("listcustomer", customerDao.getListCustomerByName(search, "",""));
-            } catch (Exception ex) {
-                Logger.getLogger(CustomerSearchController.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            request.getRequestDispatcher("view/recep/customer_list_recep.jsp").forward(request, response);
+        try {
+            request.getSession().setAttribute("listcustomer", customerDao.getListCustomerByName("", "Waiting",""));
+        } catch (Exception ex) {
+            Logger.getLogger(CustomerSearchController.class.getName()).log(Level.SEVERE, null, ex);
         }
-
+        request.getRequestDispatcher("view/recep/waiting_list.jsp").forward(request, response);
     }
 
     /**

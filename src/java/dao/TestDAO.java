@@ -11,6 +11,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import model.Customer;
 import model.Test;
 import model.TypeTest;
 
@@ -86,6 +89,13 @@ public class TestDAO extends DBConnection implements ITestDAO {
     @Override
     public ArrayList<Test> list_test_by_customer(String id) throws Exception {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public static void main(String[] args) throws Exception {
+        TestDAO tstdao = new TestDAO();
+        // Danh sách xét nghiệm của bệnh nhân
+
+        System.out.println(tstdao.list_type_test().toString());
     }
 
 }

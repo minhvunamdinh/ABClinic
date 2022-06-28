@@ -88,4 +88,9 @@ public class Test {
         this.form = form;
     }
 
+    @Override
+    public String toString() {
+        return "Test{" + "id=" + id + ", type_id=" + type_id + ", name=" + name + ", cost_price=" + cost_price + ", sell_price=" + sell_price + ", is_active=" + is_active + ", form=" + form + '}';
+    }
+
 }

@@ -18,14 +18,7 @@
     </head>
     <body>
 
-        <div class="header">
-            <a href="#default" class="logo"> ABClinic</a>
-            <div class="header-right">
-                <a class="${customer.status=="Waiting"?"active":""}" href="customerlist?status=Waiting&recordsPerPage=3&currentPage=1">Danh sách chờ</a>
-                <a class="${customer.status=="Doing"?"active":""}" href="customerlist?status=Doing&recordsPerPage=8&currentPage=1">Danh sách khám bệnh</a>
-                <a>${user.role} ${user.fullname}</a>
-            </div>
-        </div>
+        <jsp:include page="header.jsp"/>
 
         <form style="margin: 0 10px;" action="customer_detail?id=${customer.id}" method="POST">
 
@@ -86,6 +79,7 @@
             </table>
             <c:if test="${customer.status.trim() == 'Đang khám'}">
                 <button><a href="order_test?cus_id=${customer.id}">Chỉ định xét nghiệm</a></button>
+                <button><a href="ExportTestController?cus_id=${customer.id}">Xuất File</a></button>
             </c:if>
             <button  value="submit" onclick="updateOk()">Lưu thông tin</button>
         </form>

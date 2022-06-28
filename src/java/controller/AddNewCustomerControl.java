@@ -45,6 +45,7 @@ public class AddNewCustomerControl extends HttpServlet {
         if (id == null || id.equals("null") || id.isEmpty()) {
             try {
                 Customer cus = customerDao.get_customer_detail(id);
+                request.setAttribute("id", "");
                 request.setAttribute("fullname", "");
                 request.setAttribute("phone", "");
                 request.setAttribute("age", "");
@@ -57,9 +58,10 @@ public class AddNewCustomerControl extends HttpServlet {
             } catch (Exception ex) {
                 Logger.getLogger(AddNewCustomerControl.class.getName()).log(Level.SEVERE, null, ex);
             }
-            request.getRequestDispatcher("view/insertorder.jsp").forward(request, response);
+            request.getRequestDispatcher("view/recep/insertorder.jsp").forward(request, response);
         } else {
             Customer cus = customerDao.get_customer_detail(id);
+            request.setAttribute("id", cus.getId());
             request.setAttribute("fullname", cus.getFullname());
             request.setAttribute("phone", cus.getPhone());
             request.setAttribute("age", cus.getDob());
@@ -68,13 +70,13 @@ public class AddNewCustomerControl extends HttpServlet {
             request.setAttribute("dob", cus.getDob());
             request.setAttribute("job", cus.getJob());
             request.setAttribute("gender", cus.getGender());
-            
+            request.setAttribute("customer", cus);
             try {
                 request.getSession().setAttribute("listdoctor", doctorDao.getAllDoctor());
             } catch (Exception ex) {
                 Logger.getLogger(AddNewCustomerControl.class.getName()).log(Level.SEVERE, null, ex);
             }
-            request.getRequestDispatcher("view/insertorder.jsp").forward(request, response);
+            request.getRequestDispatcher("view/recep/insertorder.jsp").forward(request, response);
         }
 
     }
@@ -109,24 +111,31 @@ public class AddNewCustomerControl extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        HttpSession session = request.getSession();
-        CustomerDAO customerDao = new CustomerDAO();
-        String phone = request.getParameter("phone");
-        String fullname = request.getParameter("fullname");
-        String country = request.getParameter("country");
-        String age = request.getParameter("age");
-        String email = request.getParameter("email");
-        String dob = request.getParameter("dob");
-        String gender = request.getParameter("gender");
-        String job = request.getParameter("job");
-        String status = request.getParameter("status");
-        CustomerDAO cus = new CustomerDAO();
-        Customer customer = new Customer(2, fullname, phone, gender, job, dob, "", country, status, "Waiting", "", "", "", "", "", "", "");
         try {
-            cus.insertNewCustomer(customer);
-            
-            request.getSession().setAttribute("listcustomer", customerDao.getListCustomerByName("", ""));
-            request.getRequestDispatcher("view/customer_list_recep.jsp").forward(request, response);
+            String id = request.getParameter("id");
+            HttpSession session = request.getSession();
+            DoctorDAO doctorDao = new DoctorDAO();
+            CustomerDAO customerDao = new CustomerDAO();
+            String phone = request.getParameter("phone");
+            String fullname = request.getParameter("fullname");
+            String country = request.getParameter("country");
+            String age = request.getParameter("age");
+            String email = request.getParameter("email");
+            String dob = request.getParameter("dob");
+            String gender = request.getParameter("gender");
+            String job = request.getParameter("job");
+            String status = request.getParameter("status");
+            String doctor = request.getParameter("doctor");
+            Customer customer = new Customer(customerDao.countCusres(), fullname, phone, gender, job, dob, "", country, status, "Waiting", customerDao.Lastitems()+"", "", "", "", "", "", "");
+            try {
+                customerDao.insertNewCustomer(customer);
+                customerDao.insertNewCustomerResult(customer);
+                customer.setCreated_by(doctor);
+                request.getSession().setAttribute("listcustomer", customerDao.getListCustomerByName("","",""));
+                request.getRequestDispatcher("view/recep/waiting_list.jsp").forward(request, response);
+            } catch (Exception ex) {
+                Logger.getLogger(AddNewCustomerControl.class.getName()).log(Level.SEVERE, null, ex);
+            }
         } catch (Exception ex) {
             Logger.getLogger(AddNewCustomerControl.class.getName()).log(Level.SEVERE, null, ex);
         }

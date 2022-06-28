@@ -36,7 +36,7 @@
                     <td>Công việc :<input name="job"  type="text" placeholder="Job" required value='<%=request.getAttribute("job")%>'></td>
                     <td>Chọn bác sĩ :<select name="doctor">
                             <c:forEach items="${sessionScope.listdoctor}" var="o">
-                                <option>${o.fullname}</option>
+                                <option value="${o.id}">${o.fullname}</option>
                             </c:forEach>
                         </select>
                     </td>
