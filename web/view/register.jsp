@@ -40,8 +40,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <input type="text" class="form-control" placeholder="FullName *" name="fullname" 
-                                           minlength="2" maxlength="250"
-                                           pattern="[a-zA-Z ]{2,250}" 
+                                           minlength="2" maxlength="50"
                                            title="Fullname can not contain number,nulll and not over 250 characters"
                                            required
                                            />

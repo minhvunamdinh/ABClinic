@@ -18,8 +18,10 @@
         <title>JSP Page</title>
     </head>
     <body>
-        <div class="container">  
-            <form class="contact" id="order_test" action="order_test?cus_id=${customer.id}" method="post">
+        <jsp:include page="../header/header.jsp"></jsp:include>
+
+            <div class="container">  
+                <form class="contact" id="order_test" action="order_test?cus_id=${customer.id}" method="post">
 
                 <div class="wd100">
                     <label name="">Chỉ định xét nghiệm</label>

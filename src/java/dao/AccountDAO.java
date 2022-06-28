@@ -14,6 +14,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.List;
 import model.Account;
 import model.User;
 
@@ -241,5 +242,135 @@ public class AccountDAO extends DBConnection implements IAccountDAO {
 
         return null;
     }
- 
+
+    
+    @Override
+    public ArrayList<Account> getTotalAccount() throws Exception{
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        ArrayList<Account> accounts = new ArrayList<>();
+        
+        String sql = "select *\n" +
+                "from Account,[Profile]\n" +
+                    "where Account.id =[Profile].[user_id]";
+        try {
+            //open connection
+            con = super.open();
+            ps = con.prepareStatement(sql);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                Account account = new Account();
+                account.setId(rs.getInt("id"));
+                account.setUsername(rs.getString("username"));
+                account.setIs_active(rs.getInt("is_active"));
+                account.setFullname(rs.getString("fullname"));
+                account.setDob(rs.getString("dob"));
+                account.setAddress(rs.getString("address"));
+                accounts.add(account);
+            }
+        } catch (SQLException ex) {
+            throw ex;
+        } finally {
+            //close connection
+            super.close(con, ps, rs);
+        }
+        return accounts;
+    }
+    
+    @Override
+    public ArrayList<Account> getAccountByID(int aid) throws Exception {
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        ArrayList<Account> accounts = new ArrayList<>();
+        String sql = "select *\n" +
+                "from Account,[Profile]\n" +
+                    "where Account.id =[Profile].[user_id] and Account.id=?";
+
+        try {
+            //open connection
+            con = super.open();
+            ps = con.prepareStatement(sql);
+            ps.setInt(1,aid);
+            rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Account account = new Account();
+                account.setId(rs.getInt("id"));
+                account.setUsername(rs.getString("username"));
+                account.setIs_active(rs.getInt("is_active"));
+                account.setFullname(rs.getString("fullname"));
+                account.setPhone(rs.getString("phone"));
+                account.setEmail(rs.getString("email"));
+                account.setDob(rs.getString("dob"));
+                account.setAddress(rs.getString("address"));
+                account.setGender(rs.getInt("gender"));
+                accounts.add(account);
+            }
+
+        } catch (SQLException ex) {
+            throw ex;
+        }  finally {
+            //close connection
+            super.close(con, ps, rs);
+        }
+
+        return accounts;
+    }
+    
+    @Override
+    public int updateAccount(Account account) throws Exception{
+        int result = 0;
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        String sql = " UPDATE [Profile] "
+                + "   SET [Profile].fullname = ? ,[Profile].address=?,[Profile].dob=?,[Profile].gender=?"
+                + " WHERE  [Profile].[user_id]=?";
+        try {
+            //open connection
+            con = super.open();
+            ps = con.prepareStatement(sql);
+            ps.setString(1, account.getFullname());
+            ps.setString(2, account.getAddress());
+            ps.setString(3, account.getDob());
+            ps.setInt(4, account.getGender());
+            ps.setInt(5, account.getId());
+            result = ps.executeUpdate();
+        } catch (SQLException ex) {
+            throw ex;
+        } finally {
+            //close connection
+            super.close(con, ps, rs);
+        }
+        return result;
+    }
+    
+    @Override
+    public int activeAccount(Account account) throws Exception{
+        int result = 0;
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        String sql = " UPDATE Account "
+                + "   SET is_active=?"
+                + " WHERE  Account.id=?";
+        try {
+            //open connection
+            con = super.open();
+            ps = con.prepareStatement(sql);
+            ps.setInt(1, account.getIs_active());
+            ps.setInt(2, account.getId());
+            result = ps.executeUpdate();
+        } catch (SQLException ex) {
+            throw ex;
+        } finally {
+            //close connection
+            super.close(con, ps, rs);
+        }
+        return result;
+    }
+    
+
 }

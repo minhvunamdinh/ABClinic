@@ -18,9 +18,11 @@
     </head>
     <body>
 
-        <jsp:include page="header.jsp"/>
+        <jsp:include page="./header/header.jsp"></jsp:include>
 
-        <form style="margin: 0 10px;" action="customer_detail?id=${customer.id}" method="POST">
+
+
+            <form style="margin: 0 10px;" action="customer_detail?id=${customer.id}" method="POST">
 
             <table style="width:100%; ">
                 <tr>

@@ -13,6 +13,8 @@ public class Test {
 
     private int id;
     private int type_id;
+    private String type_test_name;
+
     private String name;
     private int cost_price;
     private int sell_price;
@@ -20,6 +22,14 @@ public class Test {
     private String form;
 
     public Test() {
+    }
+
+    public String getType_test_name() {
+        return type_test_name;
+    }
+
+    public void setType_test_name(String type_test_name) {
+        this.type_test_name = type_test_name;
     }
 
     public Test(int id, int type_id, String name, int cost_price, int sell_price, boolean is_active, String form) {

@@ -11,6 +11,7 @@ and open the template in the editor.
 * {box-sizing: border-box;}
 a {
     text-decoration: none;
+    color: white;
 }
 body { 
     margin: 0;
@@ -20,7 +21,7 @@ body {
 .header {
     overflow: hidden;
     padding: 20px 10px;
-    background-color: #f1f1f1;
+    background-color: #ef4b4b;
 
 }
 
@@ -56,6 +57,7 @@ body {
 }
 .header-right a {
     margin:  0 20px;
+    color: palegoldenrod;
 }
 table, th, td {
     border:1px solid black;

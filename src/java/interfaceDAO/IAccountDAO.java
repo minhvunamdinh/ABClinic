@@ -25,4 +25,12 @@ public interface IAccountDAO {
     public Account checkAccountByUsernameAndPassword(String username, String password) throws Exception;
     
     public User getProfileUser(String id) throws Exception;
+    
+    public ArrayList<Account> getTotalAccount() throws Exception;
+    
+    public ArrayList<Account> getAccountByID(int aid) throws Exception;
+    
+    public int updateAccount(Account account) throws Exception;
+    
+    public int activeAccount(Account account) throws Exception;
 }
