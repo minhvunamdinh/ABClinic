@@ -1,0 +1,22 @@
+<header th:fragment="header" class="header dark-bg">
+    <div class="toggle-nav">
+        <div class="icon-reorder tooltips" data-original-title="Toggle Navigation" data-placement="bottom"><i
+                class="icon_menu"></i></div>
+    </div>
+
+    <!--logo start-->
+    <a href="#" class="logo">ABC <span class="lite">Clinic</span></a>
+    <!--logo end-->
+
+    <div class="top-nav notification-row" style="display: flex;">
+       	<div class="header-user-info">
+            <p th:if="${currentUser.role == 1}">Xin chào boss: [[${fullname}]]</p>
+            <p th:if="${currentUser.role == 2}">Xin chào bác sỹ: [[${fullname}]]</p>
+            <p th:if="${currentUser.role == 3}">Xin chào lễ tân: [[${fullname}]]</p>
+        </div>
+        <form th:action="@{/logout}" method="post">
+            <button class="btn-logout" type="submit">Đăng xuất</button>
+        </form>
+    </div>
+</header>
+<!--header end-->
