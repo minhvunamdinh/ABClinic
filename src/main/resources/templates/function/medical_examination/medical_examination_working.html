@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{index.html}">
+<head> </head>
+
+<body>
+    <div layout:fragment="content">
+    	<div class="wrapper" style="font-size: 20px;">
+	    	<div class="row">
+                <div class="col-md-3">
+                    <select id="lst-test" class="selectpicker form-control" data-live-search="true" multiple>
+                        <option th:each="item : ${lstTest}" th:text="${item.testName}"></option>
+                    </select>
+                    <button id="btn-confirm-test" class="btn btn-primary">Xác nhận</button>
+                </div>
+                <div class="col-md-6">
+                    <div id="form-working">
+                        <div class="row">
+                            <div class="col-md-4 text-center clinic-working-item">Mã</div>
+                            <div class="col-md-8 text-center clinic-working-item"><input type="text" class="form-control"></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4 text-center clinic-working-item">Bệnh nhân</div>
+                            <div class="col-md-8 text-center clinic-working-item">[[${clinicWorking.customer.fullname}]]</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4 text-center clinic-working-item">Bác sĩ khám</div>
+                            <div class="col-md-8 text-center clinic-working-item">[[${clinicWorking.account.fullname}]]</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4 text-center clinic-working-item">Ngày khám</div>
+                            <div class="col-md-8 text-center clinic-working-item">[[${#dates.format(clinicWorking.createdDate, 'dd-MM-yyyy')}]]</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4 text-center clinic-working-item">Ngày sinh</div>
+                            <div class="col-md-8 text-center clinic-working-item">[[${#dates.format(clinicWorking.customer.dob, 'dd-MM-yyyy')}]]</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4 text-center clinic-working-item">Giới tính</div>
+                            <div th:if="${clinicWorking.customer.gender == 1}" class="col-md-8 text-center clinic-working-item">Nam</div>
+                            <div th:if="${clinicWorking.customer.gender == 0}" class="col-md-8 text-center clinic-working-item">Nữ</div>
+                            <div th:if="${clinicWorking.customer.gender == -1}" class="col-md-8 text-center clinic-working-item">Khác</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4 text-center clinic-working-item">Quốc gia</div>
+                            <div class="col-md-8 text-center clinic-working-item">[[${clinicWorking.customer.country}]]</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4 text-center clinic-working-item">Số điện thoại</div>
+                            <div class="col-md-8 text-center clinic-working-item">[[${clinicWorking.customer.phone}]]</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4 text-center clinic-working-item">Kết quả chuẩn đoán</div>
+                            <div class="col-md-8 text-center clinic-working-item">
+                                <textarea style="height: 100px;" class="form-control"></textarea>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4 text-center clinic-working-item">Hẹn tái khám</div>
+                            <div class="col-md-8 text-center clinic-working-item">
+                                <input type="text" class="form-control">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4 text-center clinic-working-item">Các xét nghiệm đã chỉ định</div>
+                            <div class="col-md-8 text-center clinic-working-item">
+                                <textarea id="xn-chi-dinh" style="height: 100px;" class="form-control"></textarea>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4 text-center clinic-working-item">Tiền khám</div>
+                            <div class="col-md-8 text-center clinic-working-item">
+                                200.000 VNĐ
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                      <button id="btn-export-pdf" class="btn btn-primary">Xuất PDF</button>
+                    </div>
+                </div>
+                <div class="col-md-3"></div>
+            </div>
+        </div>
+    </div>
+    
+</body>
+
+</html>
+<style>
+    .clinic-working-item{
+        border: 1px solid;
+    }
+
+    textarea{
+        height: 150px;
+    }
+</style>
+<script>
+    $("#btn-confirm-test").click(function(){
+        console.log($("#lst-test").val())
+        var lstTestDate = $("#lst-test").val();
+        $("#xn-chi-dinh").val(lstTestDate)
+        console.log('xn: ', $("#xn-chi-dinh").val())
+    })
+
+    $("#btn-export-pdf").click(function(){
+        html2canvas($('#form-working')[0], {
+                onrendered: function (canvas) {
+                    console.log('form-working: ',$('#form-working')[0])
+                    console.log(canvas)
+                    debugger
+                    var data = canvas.toDataURL();
+                    var docDefinition = {
+                        content: [{
+                            image: data,
+                            width: 500
+                        }]
+                    };
+                    console.log('data: ',docDefinition)
+                    pdfMake.createPdf(docDefinition).download("cutomer-details.pdf");
+                }
+            });
+    })
+</script>
