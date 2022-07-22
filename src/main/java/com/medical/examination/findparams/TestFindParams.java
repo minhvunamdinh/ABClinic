@@ -5,6 +5,14 @@ public class TestFindParams {
 	private String testName;
 	private Double costPrice;
 	private Double sellPrice;
+	private Long testTypeId;
+	
+	public Long getTestTypeId() {
+		return testTypeId;
+	}
+	public void setTestTypeId(Long testTypeId) {
+		this.testTypeId = testTypeId;
+	}
 	public Long getId() {
 		return id;
 	}
@@ -28,6 +36,10 @@ public class TestFindParams {
 	}
 	public void setSellPrice(Double sellPrice) {
 		this.sellPrice = sellPrice;
+	}
+	
+	public TestFindParams(Long testTypeId) {
+		this.testTypeId = testTypeId;
 	}
 	
 }

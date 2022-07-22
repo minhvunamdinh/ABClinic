@@ -1,9 +1,7 @@
 package com.medical.examination.config;
 
-import java.util.regex.Pattern;
-
-import javax.servlet.http.HttpServletRequest;
-
+import com.medical.examination.service.impl.AccountDetailsServiceImpl;
+import com.medical.examination.utils.AuthTokenFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,18 +11,15 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.csrf.CsrfTokenRepository;
 import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
-import org.springframework.security.web.session.SessionManagementFilter;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 
-import com.medical.examination.filter.CrsfFilter;
-import com.medical.examination.service.impl.AccountDetailsServiceImpl;
-import com.medical.examination.utils.AuthTokenFilter;
+import javax.servlet.http.HttpServletRequest;
+import java.util.regex.Pattern;
 
 @SuppressWarnings("deprecation")
 @Configuration
@@ -36,8 +31,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	AccountDetailsServiceImpl accountDetailsServiceImpl;
 	@Autowired
 	private AuthEntryPointJwt unauthorizedHandler;
-	@Autowired
-    private CrsfFilter crsfFilter;
 	
 	@Bean
 	public AuthTokenFilter authenticationJwtTokenFilter() {
@@ -93,7 +86,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		.logout() // Cho phép logout
 		.permitAll()
 		.and()
-		.addFilterAfter(crsfFilter, SessionManagementFilter.class)
 		.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
 		
 //		http.cors().and().csrf().disable()

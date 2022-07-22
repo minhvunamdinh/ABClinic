@@ -1,20 +1,34 @@
 package com.medical.examination.request;
 
-import java.util.Date;
-
+import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import java.util.Date;
+
+@Data
 public class MedicalExaminationRequest {
 	private Long customerId;
+	@NotNull(message = "Thông tin bắt buộc!")
+	@NotEmpty(message = "Thông tin bắt buộc!")
 	private String fullname;
+	@NotNull(message = "Thông tin bắt buộc!")
 	private String phone;
 	@DateTimeFormat (pattern="yyyy-MM-dd")
+//	@NotNull(message = "Thông tin bắt buộc!")
 	private Date dob;
+	@NotNull(message = "Thông tin bắt buộc!")
 	private String email;
+	@NotNull(message = "Thông tin bắt buộc")
 	private String country;
+	@NotNull(message = "Thông tin bắt buộc")
 	private String address;
+	@NotNull(message = "Thông tin bắt buộc")
 	private String job;
+//	@NotNull(message = "Thông tin bắt buộc")
 	private Long gender;
+//	@NotNull(message = "Thông tin bắt buộc")
 	private Long accountId;
 	private String desc;
 	

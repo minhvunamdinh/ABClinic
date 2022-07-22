@@ -1,12 +1,11 @@
 package com.medical.examination.utils;
 
-import java.util.Collection;
-import java.util.Date;
-
+import com.medical.examination.entity.Account;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com.medical.examination.entity.Account;
+import java.util.Collection;
+import java.util.Date;
 
 public class AccountDetail implements UserDetails {
 

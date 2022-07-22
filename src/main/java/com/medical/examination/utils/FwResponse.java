@@ -1,7 +1,5 @@
 package com.medical.examination.utils;
 
-import java.util.Map;
-
 public class FwResponse {
   private String errCode;
   private String errMsg;
