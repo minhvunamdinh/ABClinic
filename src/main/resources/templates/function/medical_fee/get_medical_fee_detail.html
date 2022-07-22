@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{index.html}">
+<head> </head>
+
+<body>
+    <div layout:fragment="content">
+    	<div class="wrapper">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h3 class="page-header"><i class="fa fa-laptop"></i>Phiếu khám bệnh</h3>
+                    <ol class="breadcrumb">
+                        <li><i class="fa fa-home"></i><a th:href="@{/home}">Home</a></li>
+                        <li><i class="fa fa-laptop"></i>Thu tiền khám</li>
+                        <li><i class="fa fa-laptop"></i>Chi tiết phiếu xét nghiệm</li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="">
+            	<div class="row">
+                    <div class="col-md-3 text-right">Họ tên</div>
+                    <div class="col-md-3">[[${testResult.clinicWorking.customer.fullname}]]</div>
+                    <div class="col-md-3 text-right">Ngày sinh</div>
+                    <div class="col-md-3">[[${#dates.format(testResult.clinicWorking.customer.dob, 'dd-MM-yyyy')}]]</div>
+                    <div class="col-md-3 text-right">Giới tính</div>
+                    <div th:if="${testResult.clinicWorking.customer.gender == 1}" class="col-md-3">Nam</div>
+                    <div th:if="${testResult.clinicWorking.customer.gender == 0}" class="col-md-3">Nữ</div>
+                    <div th:if="${testResult.clinicWorking.customer.gender == -1}" class="col-md-3">Khác</div>
+                    <div class="col-md-3 text-right">SĐT</div>
+                    <div class="col-md-3">[[${testResult.clinicWorking.customer.phone}]]</div>
+                    <div class="col-md-3 text-right">Địa chỉ</div>
+                    <div class="col-md-9">[[${testResult.clinicWorking.customer.address}]]</div>
+                </div>
+                <div class="row" style="margin-bottom: 20px;margin-top: 20px;">
+                    <div class="container export-test-area" style="background-color: #91fffa;">
+                        <div class="row test-result-item text-center">
+						    <div class="col-md-3 test-type-item">Tên hàng hóa</div>
+						    <div class="col-md-3 test-type-item">Số lần</div>
+						    <div class="col-md-3 test-type-item">Đơn giá</div>
+						    <div class="col-md-3 test-type-item">Thành tiền</div>
+						</div>
+						<div class="row test-result-item text-center" th:each="item, state : ${lstTestComplete}">
+						    <div class="col-md-3 test-type-item">Xét nghiệm [[${item.testName}]]</div>
+						    <div class="col-md-3 test-type-item">1</div>
+						    <div class="col-md-3 test-type-item">[[${#numbers.formatDecimal(item.costPrice, 0, 'COMMA', 0, 'POINT')} + 'Đ']]</div>
+						    <div class="col-md-3 test-type-item">[[${#numbers.formatDecimal(item.SellPrice, 0, 'COMMA', 0, 'POINT')} + 'Đ']]</div>
+						</div>
+						<div class="row test-result-item text-center">
+						    <div class="col-md-3 test-type-item">Tiềm khám</div>
+						    <div class="col-md-3 test-type-item"></div>
+						    <div class="col-md-3 test-type-item"></div>
+						    <div class="col-md-3 test-type-item">200,000Đ</div>
+						</div>
+						<div class="row test-result-item text-center">
+						    <div class="col-md-3 test-type-item">Tổng tiền</div>
+						    <div class="col-md-3 test-type-item"></div>
+						    <div class="col-md-3 test-type-item"></div>
+						    <div class="col-md-3 test-type-item">[[${#numbers.formatDecimal(testResult.examinationFee + 200000, 0, 'COMMA', 0, 'POINT')} + 'Đ']]</div>
+						</div>
+						
+                    </div>
+                    
+                </div>
+            </div>
+            <div class="row text-center">
+				<div class="col-md-12">
+					<form action="#" th:action="@{'/post-medical-fee-detail/' + ${testResult.id}}" method="POST">
+						<button style="font-size: 18px;" class="btn btn-primary" type="submit">Xác nhận thanh toán</button>
+					</form>
+				</div>
+			</div>
+        </div>
+    </div>
+</body>
+
+</html>
