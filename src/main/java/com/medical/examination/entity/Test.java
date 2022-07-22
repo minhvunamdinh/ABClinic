@@ -56,5 +56,5 @@ public class Test {
 	public void setTestType(TestType testType) {
 		this.testType = testType;
 	}
-	
+
 }

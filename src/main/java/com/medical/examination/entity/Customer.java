@@ -46,7 +46,7 @@ public class Customer {
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "customer", cascade = CascadeType.REMOVE)
 	@JsonIgnore
 	private List<ClinicWorking> lstClinicWorking = new ArrayList<ClinicWorking>();
-	
+
 	public List<ClinicWorking> getLstClinicWorking() {
 		return lstClinicWorking;
 	}
@@ -113,5 +113,5 @@ public class Customer {
 	public void setDesc(String desc) {
 		this.desc = desc;
 	}
-	
+
 }

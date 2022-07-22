@@ -1,5 +1,7 @@
 package com.medical.examination.entity;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -29,11 +31,19 @@ public class TestResult {
 	@Column(name = "examination_card")
 	private String examinationCard;
 	@Column(name = "examination_fee")
-	private String examinationFee;
+	private Double examinationFee;
 	@Column(name = "time_return")
-	private String timeReturn;
+	private Date timeReturn;
 	@Column(name = "status")
-	private String status;
+	private Long status;
+	@Column(name = "diagnostic_result")
+	private String diagnosticResult;
+	@Column(name = "created_date")
+	private Date createdDate;
+	@Column(name = "total_cost_price")
+	private Double totalCostPrice;
+	@Column(name = "total_sell_price")
+	private Double totalSellPrice;
 	public Long getId() {
 		return id;
 	}
@@ -76,23 +86,47 @@ public class TestResult {
 	public void setExaminationCard(String examinationCard) {
 		this.examinationCard = examinationCard;
 	}
-	public String getExaminationFee() {
+	public Double getExaminationFee() {
 		return examinationFee;
 	}
-	public void setExaminationFee(String examinationFee) {
+	public void setExaminationFee(Double examinationFee) {
 		this.examinationFee = examinationFee;
 	}
-	public String getTimeReturn() {
+	public Date getTimeReturn() {
 		return timeReturn;
 	}
-	public void setTimeReturn(String timeReturn) {
+	public void setTimeReturn(Date timeReturn) {
 		this.timeReturn = timeReturn;
 	}
-	public String getStatus() {
+	public Long getStatus() {
 		return status;
 	}
-	public void setStatus(String status) {
+	public void setStatus(Long status) {
 		this.status = status;
 	}
-	
+	public String getDiagnosticResult() {
+		return diagnosticResult;
+	}
+	public void setDiagnosticResult(String diagnosticResult) {
+		this.diagnosticResult = diagnosticResult;
+	}
+	public Date getCreatedDate() {
+		return createdDate;
+	}
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
+	}
+	public Double getTotalCostPrice() {
+		return totalCostPrice;
+	}
+	public void setTotalCostPrice(Double totalCostPrice) {
+		this.totalCostPrice = totalCostPrice;
+	}
+	public Double getTotalSellPrice() {
+		return totalSellPrice;
+	}
+	public void setTotalSellPrice(Double totalSellPrice) {
+		this.totalSellPrice = totalSellPrice;
+	}
+
 }

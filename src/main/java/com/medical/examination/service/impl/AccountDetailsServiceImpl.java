@@ -24,7 +24,7 @@ public class AccountDetailsServiceImpl implements UserDetailsService {
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		Account account = accountRepository.findByUsername(username);
-		if(account == null) {
+		if(account == null || account.getIsActive() == 1) {
 			throw new UsernameNotFoundException(username);
 		}
 		ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();

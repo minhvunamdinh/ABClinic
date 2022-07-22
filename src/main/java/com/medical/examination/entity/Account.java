@@ -47,7 +47,7 @@ public class Account {
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "account", cascade = CascadeType.REMOVE)
 	@JsonIgnore
 	private List<ClinicWorking> lstClinicWorking = new ArrayList<ClinicWorking>();
-	
+
 	public List<ClinicWorking> getLstClinicWorking() {
 		return lstClinicWorking;
 	}
@@ -127,7 +127,7 @@ public class Account {
 		this.email = email;
 	}
 	public Account(String username, String password, Long isActive, String fullname, String address, Date dob,
-			Long gender, Long role, Long isWorking, Long status, String email) {
+				   Long gender, Long role, Long isWorking, Long status, String email) {
 		super();
 		this.username = username;
 		this.password = password;
@@ -142,7 +142,7 @@ public class Account {
 		this.email = email;
 	}
 	public Account(Long id, String username, String password, Long isActive, String fullname, String address, Date dob,
-			Long gender, Long role, Long isWorking, Long status, String email) {
+				   Long gender, Long role, Long isWorking, Long status, String email) {
 		super();
 		this.id = id;
 		this.username = username;
@@ -157,7 +157,7 @@ public class Account {
 		this.status = status;
 		this.email = email;
 	}
-	
+
 	public Account() {}
-	
+
 }
