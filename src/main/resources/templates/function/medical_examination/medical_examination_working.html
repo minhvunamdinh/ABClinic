@@ -1,123 +1,441 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{index.html}">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{index.html}">
+
 <head> </head>
 
 <body>
     <div layout:fragment="content">
-    	<div class="wrapper" style="font-size: 20px;">
-	    	<div class="row">
+        <div class="wrapper" style="font-size: 20px;">
+            <div class="row">
                 <div class="col-md-3">
-                    <select id="lst-test" class="selectpicker form-control" data-live-search="true" multiple>
-                        <option th:each="item : ${lstTest}" th:text="${item.testName}"></option>
-                    </select>
-                    <button id="btn-confirm-test" class="btn btn-primary">Xác nhận</button>
+
                 </div>
                 <div class="col-md-6">
-                    <div id="form-working">
-                        <div class="row">
-                            <div class="col-md-4 text-center clinic-working-item">Mã</div>
-                            <div class="col-md-8 text-center clinic-working-item"><input type="text" class="form-control"></div>
+                    <form id="form-working" action="#" th:action="@{'/medical-examination-working/' + ${clinicWorkingId} + '/' + ${type}}" th:object="${resultTestInvoiceRequest}" method="POST">
+                        <div th:if="${type == 'add'}" class="row">
+                            <div class="col-md-4 text-center clinic-working-item-left">Mã</div>
+                            <div class="col-md-8 text-center clinic-working-item-right"><input field="*{code}" name="code" style="font-size: 18px;" id="code" readonly type="text"
+                                    class="form-control"></div>
+                        </div>
+                        <div th:if="${type == 'edit'}" class="row">
+                            <div class="col-md-4 text-center clinic-working-item-left">Mã</div>
+                            <div class="col-md-8 text-center clinic-working-item-right"><input field="*{code}" name="code" style="font-size: 18px;" th:value="${clinicWorking.lstTestResult[0].code}" readonly type="text"
+                                    class="form-control"></div>
                         </div>
                         <div class="row">
-                            <div class="col-md-4 text-center clinic-working-item">Bệnh nhân</div>
-                            <div class="col-md-8 text-center clinic-working-item">[[${clinicWorking.customer.fullname}]]</div>
+                            <div class="col-md-4 text-center clinic-working-item-left">Bệnh nhân</div>
+                            <div class="col-md-8 clinic-working-item-right">
+                                [[${clinicWorking.customer.fullname}]]</div>
                         </div>
                         <div class="row">
-                            <div class="col-md-4 text-center clinic-working-item">Bác sĩ khám</div>
-                            <div class="col-md-8 text-center clinic-working-item">[[${clinicWorking.account.fullname}]]</div>
+                            <div class="col-md-4 text-center clinic-working-item-left">Bác sĩ khám</div>
+                            <div class="col-md-8 clinic-working-item-right">
+                                [[${clinicWorking.account.fullname}]]</div>
                         </div>
                         <div class="row">
-                            <div class="col-md-4 text-center clinic-working-item">Ngày khám</div>
-                            <div class="col-md-8 text-center clinic-working-item">[[${#dates.format(clinicWorking.createdDate, 'dd-MM-yyyy')}]]</div>
+                            <div class="col-md-4 text-center clinic-working-item-left">Ngày khám</div>
+                            <div class="col-md-8 clinic-working-item-right">
+                                [[${#dates.format(clinicWorking.createdDate, 'dd-MM-yyyy')}]]</div>
                         </div>
                         <div class="row">
-                            <div class="col-md-4 text-center clinic-working-item">Ngày sinh</div>
-                            <div class="col-md-8 text-center clinic-working-item">[[${#dates.format(clinicWorking.customer.dob, 'dd-MM-yyyy')}]]</div>
+                            <div class="col-md-4 text-center clinic-working-item-left">Ngày sinh</div>
+                            <div class="col-md-8 clinic-working-item-right">
+                                [[${#dates.format(clinicWorking.customer.dob, 'dd-MM-yyyy')}]]</div>
                         </div>
                         <div class="row">
-                            <div class="col-md-4 text-center clinic-working-item">Giới tính</div>
-                            <div th:if="${clinicWorking.customer.gender == 1}" class="col-md-8 text-center clinic-working-item">Nam</div>
-                            <div th:if="${clinicWorking.customer.gender == 0}" class="col-md-8 text-center clinic-working-item">Nữ</div>
-                            <div th:if="${clinicWorking.customer.gender == -1}" class="col-md-8 text-center clinic-working-item">Khác</div>
+                            <div class="col-md-4 text-center clinic-working-item-left">Giới tính</div>
+                            <div th:if="${clinicWorking.customer.gender == 1}"
+                                class="col-md-8 clinic-working-item-right">Nam</div>
+                            <div th:if="${clinicWorking.customer.gender == 0}"
+                                class="col-md-8 clinic-working-item-right">Nữ</div>
+                            <div th:if="${clinicWorking.customer.gender == -1}"
+                                class="col-md-8 clinic-working-item-right">Khác</div>
                         </div>
                         <div class="row">
-                            <div class="col-md-4 text-center clinic-working-item">Quốc gia</div>
-                            <div class="col-md-8 text-center clinic-working-item">[[${clinicWorking.customer.country}]]</div>
+                            <div class="col-md-4 text-center clinic-working-item-left">Quốc gia</div>
+                            <div class="col-md-8 clinic-working-item-right">
+                                [[${clinicWorking.customer.country}]]</div>
                         </div>
                         <div class="row">
-                            <div class="col-md-4 text-center clinic-working-item">Số điện thoại</div>
-                            <div class="col-md-8 text-center clinic-working-item">[[${clinicWorking.customer.phone}]]</div>
+                            <div class="col-md-4 text-center clinic-working-item-left">Số điện thoại</div>
+                            <div class="col-md-8 clinic-working-item-right">
+                                [[${clinicWorking.customer.phone}]]</div>
                         </div>
-                        <div class="row">
-                            <div class="col-md-4 text-center clinic-working-item">Kết quả chuẩn đoán</div>
-                            <div class="col-md-8 text-center clinic-working-item">
-                                <textarea style="height: 100px;" class="form-control"></textarea>
+                        <div th:if="${type=='add'}" class="row">
+                            <div class="col-md-4 text-center clinic-working-item-left">Kết quả chuẩn đoán</div>
+                            <div class="col-md-8 text-center clinic-working-item-right">
+                                <textarea field="*{diagnosticResult}" name="diagnosticResult" style="height: 100px; font-size: 18px;" class="form-control"></textarea>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-md-4 text-center clinic-working-item">Hẹn tái khám</div>
-                            <div class="col-md-8 text-center clinic-working-item">
-                                <input type="text" class="form-control">
+                        <div th:if="${type=='edit'}" class="row">
+                            <div class="col-md-4 text-center clinic-working-item-left">Kết quả chuẩn đoán</div>
+                            <div class="col-md-8 text-center clinic-working-item-right">
+                                <textarea disabled field="*{diagnosticResult}" th:text="${clinicWorking.lstTestResult[0].diagnosticResult}" name="diagnosticResult" style="height: 100px; font-size: 18px;" class="form-control"></textarea>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-md-4 text-center clinic-working-item">Các xét nghiệm đã chỉ định</div>
-                            <div class="col-md-8 text-center clinic-working-item">
-                                <textarea id="xn-chi-dinh" style="height: 100px;" class="form-control"></textarea>
+                        <div th:if="${type == 'edit'}" class="row">
+                            <div class="col-md-4 text-center clinic-working-item-left">Kết quả xét nghiệm</div>
+                            <div class="col-md-8 text-center clinic-working-item-right">
+                                <textarea field="*{testResult}" name="testResult" style="height: 100px; font-size: 18px;" class="form-control"></textarea>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-md-4 text-center clinic-working-item">Tiền khám</div>
-                            <div class="col-md-8 text-center clinic-working-item">
-                                200.000 VNĐ
+                        <div th:if="${type == 'edit'}" class="row">
+                            <div class="col-md-4 text-center clinic-working-item-left">Hẹn tái khám</div>
+                            <div class="col-md-8 text-center clinic-working-item-right">
+                                <input style="font-size: 18px;" field="*{timeReturn}" name="timeReturn" type="date" class="form-control">
                             </div>
                         </div>
-                    </div>
-                    <div class="row">
-                      <button id="btn-export-pdf" class="btn btn-primary">Xuất PDF</button>
-                    </div>
+                        <div class="row" th:if="${type=='add'}">
+                            <div class="col-md-4 text-center clinic-working-item-left">Các xét nghiệm đã chỉ định</div>
+                            <div class="col-md-8 text-center clinic-working-item-right">
+                                <textarea field="*{lstTest}" name="lstTest" id="xn-chi-dinh" style="height: 100px; font-size: 18px" class="form-control"></textarea>
+                            </div>
+                        </div>
+                        <div class="row" th:if="${type=='edit'}">
+                            <div class="col-md-4 text-center clinic-working-item-left">Các xét nghiệm đã chỉ định</div>
+                            <div class="col-md-8 text-center clinic-working-item-right">
+                                <textarea disabled field="*{lstTest}" th:text="${clinicWorking.lstTestResult[0].lstTest}" name="lstTest" id="xn-chi-dinh" style="height: 100px; font-size: 18px" class="form-control"></textarea>
+                            </div>
+                        </div>
+                        <div class="row" hidden>
+                            <div class="col-md-4 text-center clinic-working-item-left">Total costprice</div>
+                            <input type="text" id="totalCostPrice" name="totalCostPrice" field="*{totalCostPrice}">
+                        </div>
+                        <div class="row" hidden>
+                            <div class="col-md-4 text-center clinic-working-item-left">Total sellprice</div>
+                            <input type="text" id="totalSellPrice" name="totalSellPrice" field="*{totalSellPrice}">
+                        </div>
+                        <div class="">
+                            <div class="text-center">
+                                <button th:if="${type=='add'}" type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+                                    Chỉ định xét nghiệm
+                                </button>
+                                <button type="submit" class="btn btn-primary">
+                                    Hoàn thành
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                    
                 </div>
                 <div class="col-md-3"></div>
+
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    
+                    <!-- Modal -->
+                    <div class="modal fade modal-xl" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document" style="position: initial;">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Chỉ định xét nghiệm</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="test-area">
+                                        <div class="row">
+                                            <form id="test-form" class="col-md-12">
+                                                <div class="test-type-name"><label>Xét nghiệm hóa sinh</label></div>
+                                                <div class="col-md-12">
+                                                    <div class="row test-type-item">
+                                                        <div class="col-md-4" th:each="item, state : ${lstTestHoaSinh}">
+                                                            <input th:id="@{'xnhs' + ${state.index+1}}"
+                                                                th:name="@{'xnhs' + ${state.index+1}}" type="checkbox"
+                                                                th:value="@{${item.testName} + ' - ' + ${item.costPrice} + ' - ' + ${item.sellPrice}}">
+                                                            <label th:for="@{'xnhs' + ${state.index+1}}"
+                                                                th:text="@{ ${item.costPrice} ? ${item.testName} + ' - ' + ${#numbers.formatDecimal(item.costPrice, 0, 'COMMA', 0, 'POINT')} + 'Đ' : ${item.testName}}"></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="test-type-name"><label>Xét nghiệm huyết học</label></div>
+                                                <div class="col-md-12">
+                                                    <div class="row test-type-item">
+                                                        <div class="col-md-4" th:each="item, state : ${lstTestMau}">
+                                                            <input th:id="@{'xnmau' + ${state.index+1}}"
+                                                                th:name="@{'xnhs' + ${state.index+1}}" type="checkbox"
+                                                                th:value="@{${item.testName} + ' - ' + ${item.costPrice} + ' - ' + ${item.sellPrice}}">
+                                                            <label th:for="@{'xnmau' + ${state.index+1}}"
+                                                                th:text="@{ ${item.costPrice} ? ${item.testName} + ' - ' + ${#numbers.formatDecimal(item.costPrice, 0, 'COMMA', 0, 'POINT')} + 'Đ' : ${item.testName}}"></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="test-type-name"><label>Xét nghiệm vi sinh</label></div>
+                                                <div class="col-md-12">
+                                                    <div class="row test-type-item">
+                                                        <div class="col-md-4" th:each="item, state : ${lstTestViSinh}">
+                                                            <input th:id="@{'xnvisinh' + ${state.index+1}}"
+                                                                th:name="@{'xnhs' + ${state.index+1}}" type="checkbox"
+                                                                th:value="@{${item.testName} + ' - ' + ${item.costPrice} + ' - ' + ${item.sellPrice}}">
+                                                            <label th:for="@{'xnvisinh' + ${state.index+1}}"
+                                                                th:text="@{ ${item.costPrice} ? ${item.testName} + ' - ' + ${#numbers.formatDecimal(item.costPrice, 0, 'COMMA', 0, 'POINT')} + 'Đ' : ${item.testName}}"></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="test-type-name"><label>Xét nghiệm phân</label></div>
+                                                <div class="col-md-12">
+                                                    <div class="row test-type-item">
+                                                        <div class="col-md-4" th:each="item, state : ${lstTestPhan}">
+                                                            <input th:id="@{'xnphan' + ${state.index+1}}"
+                                                                th:name="@{'xnhs' + ${state.index+1}}" type="checkbox"
+                                                                th:value="@{${item.testName} + ' - ' + ${item.costPrice} + ' - ' + ${item.sellPrice}}">
+                                                            <label th:for="@{'xnphan' + ${state.index+1}}"
+                                                                th:text="@{ ${item.costPrice} ? ${item.testName} + ' - ' + ${#numbers.formatDecimal(item.costPrice, 0, 'COMMA', 0, 'POINT')} + 'Đ' : ${item.testName}}"></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="test-type-name"><label>Xét nghiệm nước tiểu</label></div>
+                                                <div class="col-md-12">
+                                                    <div class="row test-type-item">
+                                                        <div class="col-md-4"
+                                                            th:each="item, state : ${lstTestNuocTieu}">
+                                                            <input th:id="@{'xnnuoctieu' + ${state.index+1}}"
+                                                                th:name="@{'xnhs' + ${state.index+1}}" type="checkbox"
+                                                                th:value="@{${item.testName} + ' - ' + ${item.costPrice} + ' - ' + ${item.sellPrice}}">
+                                                            <label th:for="@{'xnnuoctieu' + ${state.index+1}}"
+                                                                th:text="@{ ${item.costPrice} ? ${item.testName} + ' - ' + ${#numbers.formatDecimal(item.costPrice, 0, 'COMMA', 0, 'POINT')} + 'Đ' : ${item.testName}}"></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12 text-center"><button id="btn-chidinh"
+                                                        type="button" class="btn btn-primary">Chỉ định</button></div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                    <div class="row" style="margin-top: 20px;">
+                                        <div class="col-md-4 text-right">
+                                            <label>Danh sách xét nghiệm</label>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <textarea id="testList" style="height: 150px; font-size: 18px;"
+                                                class="form-control"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-danger" data-dismiss="modal">Đóng</button>
+                                    <button type="button" class="btn btn-primary" id="btn-confirm" data-dismiss="modal">Xác nhận</button>
+                                    <button id="insideClinic" type="button" class="btn btn-primary" data-toggle="modal" href="#exportPdfInsideClinic">Xuất xét nghiệm có tại phòng
+                                        khám</button>
+                                    <button id="outsideClinic" type="button" class="btn btn-primary" data-toggle="modal" href="#exportPdfInsideClinic">Xuất xét nghiệm không có tại phòng
+                                        khám</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Modal chỉ định xét nghiệm tại phòng khám -->
+                    <div class="modal fade modal-xl" id="exportPdfInsideClinic" tabindex="-2" role="dialog" aria-labelledby="modalExportPdfInsideClinic" aria-hidden="true">
+                        <div class="modal-dialog" role="document" style="position: initial;">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="export-title"></h5>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="test-area" id="exportPdfFileInsideClinic">
+                                        <div class="row">
+                                            <div class="col-md-12 text-center" id="export-label"><h1></h1></div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-3 text-right">Họ tên</div>
+                                            <div class="col-md-3">[[${clinicWorking.customer.fullname}]]</div>
+                                            <div class="col-md-3 text-right">Ngày sinh</div>
+                                            <div class="col-md-3">[[${#dates.format(clinicWorking.customer.dob, 'dd-MM-yyyy')}]]</div>
+                                            <div class="col-md-3 text-right">Giới tính</div>
+                                            <div th:if="${clinicWorking.customer.gender == 1}" class="col-md-3">Nam</div>
+                                            <div th:if="${clinicWorking.customer.gender == 0}" class="col-md-3">Nữ</div>
+                                            <div th:if="${clinicWorking.customer.gender == -1}" class="col-md-3">Khác</div>
+                                            <div class="col-md-3 text-right">SĐT</div>
+                                            <div class="col-md-3">[[${clinicWorking.customer.phone}]]</div>
+                                            <div class="col-md-3 text-right">Địa chỉ</div>
+                                            <div class="col-md-9">[[${clinicWorking.customer.address}]]</div>
+                                        </div>
+                                        <div class="row" style="margin-bottom: 20px;margin-top: 20px;">
+                                            <div class="container export-test-area" style="background-color: #91fffa;">
+                                                
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-danger" data-dismiss="modal">Đóng</button>
+                                    <button id="btnExportPdfFileInsideClinic" type="button" class="btn btn-primary" >Xuất PDF</button>
+                                </div>
+                            </div>
+                        </div>
+                </div>
+                 <!-- Modal chỉ định xét nghiệm tại phòng khám -->
+                </div>
             </div>
         </div>
     </div>
-    
+    </div>
+
+
+
+
 </body>
 
 </html>
 <style>
-    .clinic-working-item{
-        border: 1px solid;
+    .modal {
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 2000;
+        display: none;
+        overflow: hidden;
+        outline: 0;
+        /* width: 100%; */
     }
 
-    textarea{
+    .modalExportPdfInsideClinic{
+        z-index: 2001;
+    }
+
+    @media (min-width: 576px) {
+        .modal-dialog {
+            max-width: 1500px;
+            margin: 1.75rem rem auto;
+        }
+    }
+
+    .clinic-working-item-left {
+        border-left: 1px solid;
+        border-top: 1px solid;
+        border-bottom: 1px solid;
+    }
+
+    .clinic-working-item-right {
+        border-top: 1px solid;
+        border-right: 1px solid;
+        border-bottom: 1px solid;
+    }
+
+    textarea {
         height: 150px;
+    }
+
+    .test-area {
+        border: 3px solid;
+        border-radius: 5px;
+    }
+
+    .test-area .test-type-name {
+        text-align: center;
+    }
+
+    .test-type-name label {
+        font-weight: bold;
+    }
+
+    .test-type-item {
+        border: 1px solid;
     }
 </style>
 <script>
-    $("#btn-confirm-test").click(function(){
+    $(document).ready(function(){
+        $("#code").val('BN_'+Math.floor(Math.random()*9999))
+    })
+    var lstObjectTest = [] //list xet nghiem de xuat PDF
+    $("#btn-chidinh").click(function () {
+        let values = {};
+        let results = []
+        $.each($('#test-form').serializeArray(), function (i, field) {
+            values[field.name] = field.value.testName;
+            results.push(field.value)
+        });
+        let lstTest = []
+        results.forEach(item => {
+            let itemSplited = item.split(" - ")
+            lstTest.push(itemSplited[0])
+            let objectTest = {
+                testName: itemSplited[0],
+                costPrice: itemSplited[1]!='null' ? itemSplited[1] : 0,
+                sellPrice: itemSplited[2]!='null' ? itemSplited[2] : 0
+            }
+            lstObjectTest.push(objectTest)
+        })
+        console.log('lst object: ', lstObjectTest)
+        $("#testList").val(lstTest)
+
+        $(".export-test-area").empty()
+        $(".export-test-area").append('<div class="row test-result-item text-center"><div class="col-md-3 test-type-item">Tên hàng hóa</div><div class="col-md-3 test-type-item">Số lần</div><div class="col-md-3 test-type-item">Đơn giá</div><div class="col-md-3 test-type-item">Thành tiền</div></div>')
+        let totalSellPrice = 0;
+        let totalCostPrice = 0;
+        lstObjectTest.forEach(item => {
+            let divTest = '<div class="row test-result-item text-center"><div class="col-md-3 test-type-item">Xét nghiệm '+item.testName+'</div><div class="col-md-3 test-type-item">1</div><div class="col-md-3 test-type-item">'+formatVnd(item.costPrice)+'</div><div class="col-md-3 test-type-item">'+formatVnd(item.sellPrice)+'</div></div>'
+            $(".export-test-area").append(divTest)
+            totalSellPrice += parseFloat(item.sellPrice);
+            totalCostPrice += parseFloat(item.costPrice);
+            debugger
+        })
+
+        $("#totalSellPrice").val(totalSellPrice)
+        $("#totalCostPrice").val(totalCostPrice)
+
+        console.log('total cost: ', totalCostPrice)
+        console.log('total sell: ', totalSellPrice)
+        
+        $(".export-test-area").append('<div class="row test-result-item text-center"><div class="col-md-12 test-type-item">&ensp;</div></div>')
+        $(".export-test-area").append('<div class="row test-result-item text-center"><div class="col-md-3 test-type-item">Tiền khám bệnh</div><div class="col-md-3 test-type-item"> </div><div class="col-md-3 test-type-item"> </div><div class="col-md-3 test-type-item">200,000Đ</div></div>')
+        $(".export-test-area").append('<div class="row test-result-item text-center"><div class="col-md-12 test-type-item">&ensp;</div></div>')
+        $(".export-test-area").append('<div class="row test-result-item text-center"><div class="col-md-3 test-type-item">Tổng tiền</div><div class="col-md-3 test-type-item"> </div><div class="col-md-3 test-type-item"> </div><div class="col-md-3 test-type-item">'+formatVnd(totalSellPrice + 200000)+'</div></div>')
+    })
+
+    function formatVnd(money) {
+        return Math.round(money).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,') + "Đ"
+    }
+
+    const selectElement = document.querySelector('#test-form');
+
+    selectElement.addEventListener('change', (event) => {
+        console.log(event)
+        const result = document.querySelector('.result');
+        //result.textContent = `You like ${event.target.value}`;
+    });
+
+    function myFunction(value) {
+        console.log(value)
+        //$("#testList").val(value)
+    }
+    $("#btn-confirm-test").click(function () {
         console.log($("#lst-test").val())
         var lstTestDate = $("#lst-test").val();
         $("#xn-chi-dinh").val(lstTestDate)
         console.log('xn: ', $("#xn-chi-dinh").val())
     })
 
-    $("#btn-export-pdf").click(function(){
-        html2canvas($('#form-working')[0], {
-                onrendered: function (canvas) {
-                    console.log('form-working: ',$('#form-working')[0])
-                    console.log(canvas)
-                    debugger
-                    var data = canvas.toDataURL();
-                    var docDefinition = {
-                        content: [{
-                            image: data,
-                            width: 500
-                        }]
-                    };
-                    console.log('data: ',docDefinition)
-                    pdfMake.createPdf(docDefinition).download("cutomer-details.pdf");
-                }
-            });
+    $('#insideClinic').click(function(){
+        $('#export-title').text('Chỉ định xét nghiệm trong phòng khám')
+        $('#export-label').text('Phiếu yêu cầu xét nghiệm trong phòng khám')
+    })
+
+    $('#outsideClinic').click(function(){
+        $('#export-title').text('Chỉ định xét nghiệm ngoài phòng khám')
+        $('#export-label').text('Phiếu yêu cầu xét nghiệm ngoài phòng khám')
+    })
+
+    $('#btn-confirm').click(function(){
+        $('#xn-chi-dinh').val($('#testList').val())
+    })
+
+    $("#btnExportPdfFileInsideClinic").click(function () {
+        html2canvas($('#exportPdfFileInsideClinic')[0], {
+            onrendered: function (canvas) {
+                var data = canvas.toDataURL();
+                var docDefinition = {
+                    content: [{
+                        image: data,
+                        width: 500,
+                    }]
+                };
+                pdfMake.createPdf(docDefinition).download("tests-inside-clinic.pdf");
+            }
+        });
     })
 </script>

@@ -38,6 +38,8 @@
                                 <option value="" selected>-- Chọn trạng thái --</option>
                                 <option value=0>Chưa khám</option>
                                 <option value=1>Đang khám</option>
+                                <option value=2>Chờ kết quả xét nghiệm</option>
+                                <option value=3>Đã khám</option>
                             </select>
                         </div>
                         <div class="col-md-2">
@@ -71,10 +73,14 @@
                         <td th:text="${item.account.fullname}"></td>
                         <td th:text="${item.no}"></td>
                         <td th:text="${#dates.format(item.createdDate, 'dd-MM-yyyy')}"></td>
-                        <td th:text="${item.status == 0 ? 'Chưa khám' : 'Đang khám'}"></td>
+                        <td th:if="${item.status == 0}">Chưa khám</td>
+                        <td th:if="${item.status == 1}">Đang khám</td>
+                        <td th:if="${item.status == 2}">Chờ kết quả xét nghiệm</td>
+                        <td th:if="${item.status == 3}">Đã khám</td>
                         <td>
                         	<a th:href="@{'/medical-examination/' + ${item.id}}"><button class="btn btn-success">Chi tiết</button></a>
-                        	<a th:if="${currentUser.role == 2}" th:href="@{'/medical-examination-working/' + ${item.id}}"><button class="btn btn-primary">Thêm vào khám</button></a>
+                        	<a th:if="${currentUser.role == 2 && item.status == 0}" th:href="@{'/medical-examination-working/' + ${item.id} + '/add'}"><button class="btn btn-primary">Thêm vào khám</button></a>
+                        	<a th:if="${currentUser.role == 2 && item.status == 2 && item.lstTestResult.size() > 0 && item.lstTestResult.get(0).getStatus == 1}" th:href="@{'/medical-examination-working/' + ${item.id} + '/edit'}"><button class="btn btn-primary">Cập nhật kết quả xét nghiệm</button></a>
                         </td>
                       </tr>
                     </tbody>

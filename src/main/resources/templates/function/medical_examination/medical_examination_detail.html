@@ -61,12 +61,32 @@
                         <div class="col-md-6 text-center detail-table-item">Ghi chú</div>
                         <div class="col-md-6 text-center detail-table-item" th:text="${clinicWorking.customer.desc}"></div>
                     </div>
+                    <div th:if="${clinicWorking.lstTestResult.size() > 0}" class="row">
+                        <div class="col-md-6 text-center detail-table-item">Ngày khám</div>
+                        <div class="col-md-6 text-center detail-table-item" th:text="${#dates.format(clinicWorking.lstTestResult[0].createdDate, 'dd-MM-yyyy')}"></div>
+                    </div>
+                    <div th:if="${clinicWorking.lstTestResult.size() > 0}" class="row">
+                        <div class="col-md-6 text-center detail-table-item">Hẹn tái khám</div>
+                        <div class="col-md-6 text-center detail-table-item" th:text="${#dates.format(clinicWorking.lstTestResult[0].timeReturn, 'dd-MM-yyyy')}"></div>
+                    </div>
+                    <div th:if="${clinicWorking.lstTestResult.size() > 0}" class="row">
+                        <div class="col-md-6 text-center detail-table-item">Kết quả chuẩn đoán</div>
+                        <div class="col-md-6 text-center detail-table-item" th:text="${clinicWorking.lstTestResult[0].diagnosticResult}"></div>
+                    </div>
+                    <div th:if="${clinicWorking.lstTestResult.size() > 0}" class="row">
+                        <div class="col-md-6 text-center detail-table-item">Xét nghiệm đã chỉ định</div>
+                        <div class="col-md-6 text-center detail-table-item" th:text="${clinicWorking.lstTestResult[0].lstTest}"></div>
+                    </div>
+                    <div th:if="${clinicWorking.lstTestResult.size() > 0}" class="row">
+                        <div class="col-md-6 text-center detail-table-item">Kết quả xét nghiệm</div>
+                        <div class="col-md-6 text-center detail-table-item" th:text="${clinicWorking.lstTestResult[0].testResult}"></div>
+                    </div>      
                 </div>
                 <div class="col-md-3"></div>
             </div>
             <div class="text-center" style="margin-top: 20px;">
                 <a th:href="@{/medical-examination}"><button class="btn btn-danger">Trở về</button></a>
-                <a th:if="${currentUser.role == 2}" th:href="@{'/medical-examination-working/' + ${clinicWorking.id}}"><button class="btn btn-primary">Thêm vào khám</button></a>
+                <a th:if="${currentUser.role == 2 && clinicWorking.status == 1}" th:href="@{'/medical-examination-working/' + ${clinicWorking.id} + '/add'}"><button class="btn btn-primary">Thêm vào khám</button></a>
             </div>
         </div>
     </div>
