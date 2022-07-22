@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{index.html}">
+<head> 
+<style>
+	.test-type-item {
+	    border: 1px solid;
+	}
+	
+	.invoice-title{
+		font-weight: bold;
+		font-size: 24px
+	}
+	
+	.invoice-lable{
+		font-weight: bold;
+		font-size: 18px
+	}
+</style>
+</head>
+
+<body>
+    <div layout:fragment="content">
+    	<div class="wrapper">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h3 class="page-header"><i class="fa fa-laptop"></i>Phiếu khám bệnh</h3>
+                    <ol class="breadcrumb">
+                        <li><i class="fa fa-home"></i><a th:href="@{/home}">Home</a></li>
+                        <li><i class="fa fa-laptop"></i>Hóa đơn</li>
+                        <li><i class="fa fa-laptop"></i>Chi tiết hóa đơn</li>
+                    </ol>
+                </div>
+            </div>
+			
+            <div id="invoice" class="container" style="border: 3px solid; border-radius: 5px;">
+            	<div class="text-center">
+            		<div class="invoice-title">
+            			HÓA ĐƠN CHI PHÍ
+            		</div>
+            	</div>
+            	<div class="row">
+                    <div class="col-md-3 text-right">Họ tên</div>
+                    <div class="col-md-3">[[${invoice.clinicWorking.customer.fullname}]]</div>
+                    <div class="col-md-3 text-right">Ngày sinh</div>
+                    <div class="col-md-3">[[${#dates.format(invoice.clinicWorking.customer.dob, 'dd-MM-yyyy')}]]</div>
+                    <div class="col-md-3 text-right">Giới tính</div>
+                    <div th:if="${invoice.clinicWorking.customer.gender == 1}" class="col-md-3">Nam</div>
+                    <div th:if="${invoice.clinicWorking.customer.gender == 0}" class="col-md-3">Nữ</div>
+                    <div th:if="${invoice.clinicWorking.customer.gender == -1}" class="col-md-3">Khác</div>
+                    <div class="col-md-3 text-right">SĐT</div>
+                    <div class="col-md-3">[[${invoice.clinicWorking.customer.phone}]]</div>
+                    <div class="col-md-3 text-right">Địa chỉ</div>
+                    <div class="col-md-9">[[${invoice.clinicWorking.customer.address}]]</div>
+                </div>
+                <div class="row" style="margin-bottom: 20px;margin-top: 20px;">
+                    <div class="container export-test-area" style="background-color: #91fffa;">
+                        <div class="row test-result-item text-center">
+						    <div class="col-md-3 test-type-item invoice-lable">Tên hàng hóa</div>
+						    <div class="col-md-3 test-type-item invoice-lable">Số lần</div>
+						    <div class="col-md-3 test-type-item invoice-lable">Đơn giá</div>
+						    <div class="col-md-3 test-type-item invoice-lable">Thành tiền</div>
+						</div>
+						<div class="row test-result-item text-center" th:each="item, state : ${lstTestComplete}">
+						    <div class="col-md-3 test-type-item">Xét nghiệm [[${item.testName}]]</div>
+						    <div class="col-md-3 test-type-item">1</div>
+						    <div class="col-md-3 test-type-item">[[${#numbers.formatDecimal(item.costPrice, 0, 'COMMA', 0, 'POINT')} + 'Đ']]</div>
+						    <div class="col-md-3 test-type-item">[[${#numbers.formatDecimal(item.SellPrice, 0, 'COMMA', 0, 'POINT')} + 'Đ']]</div>
+						</div>
+						<div class="row test-result-item text-center">
+						    <div class="col-md-3 test-type-item">&nbsp;</div>
+						    <div class="col-md-3 test-type-item">&nbsp;</div>
+						    <div class="col-md-3 test-type-item">&nbsp;</div>
+						    <div class="col-md-3 test-type-item">&nbsp;</div>
+						</div>
+						<div class="row test-result-item text-center">
+						    <div class="col-md-3 test-type-item">Tiềm khám</div>
+						    <div class="col-md-3 test-type-item"></div>
+						    <div class="col-md-3 test-type-item"></div>
+						    <div class="col-md-3 test-type-item">200,000Đ</div>
+						</div>
+						<div class="row test-result-item text-center">
+						    <div class="col-md-3 test-type-item">&nbsp;</div>
+						    <div class="col-md-3 test-type-item">&nbsp;</div>
+						    <div class="col-md-3 test-type-item">&nbsp;</div>
+						    <div class="col-md-3 test-type-item">&nbsp;</div>
+						</div>
+						<div class="row test-result-item text-center">
+						    <div class="col-md-3 test-type-item">Thuốc đặc biệt</div>
+						    <div class="col-md-3 test-type-item"></div>
+						    <div class="col-md-3 test-type-item"></div>
+						    <div class="col-md-3 test-type-item">0Đ</div>
+						</div>
+						<div class="row test-result-item text-center">
+						    <div class="col-md-3 test-type-item">&nbsp;</div>
+						    <div class="col-md-3 test-type-item">&nbsp;</div>
+						    <div class="col-md-3 test-type-item">&nbsp;</div>
+						    <div class="col-md-3 test-type-item">&nbsp;</div>
+						</div>
+						<div class="row test-result-item text-center">
+						    <div class="col-md-3 test-type-item">Tổng tiền</div>
+						    <div class="col-md-3 test-type-item"></div>
+						    <div class="col-md-3 test-type-item"></div>
+						    <div class="col-md-3 test-type-item">[[${#numbers.formatDecimal(invoice.totalSellPrice, 0, 'COMMA', 0, 'POINT')} + 'Đ']]</div>
+						</div>
+						
+                    </div>
+                    
+                </div>
+            </div>
+            <div class="row text-center" style="margin-top: 20px;">
+				<div class="col-md-12">
+					<a th:href="@{/invoice}"><button style="font-size: 18px;" class="btn btn-danger" type="submit">Trở về</button></a>
+					<button id="exportInvoice" style="font-size: 18px;" class="btn btn-primary" type="submit">Xuất hóa đơn</button>
+				</div>
+			</div>
+        </div>
+    </div>
+
+</body>
+
+</html>
+
+<script>
+$("#exportInvoice").click(function () {
+        html2canvas($('#invoice')[0], {
+            onrendered: function (canvas) {
+                var data = canvas.toDataURL();
+                var docDefinition = {
+                    content: [{
+                        image: data,
+                        width: 500,
+                    }]
+                };
+                pdfMake.createPdf(docDefinition).download("invoice.pdf");
+            }
+        });
+    })
+</script>
