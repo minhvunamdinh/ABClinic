@@ -7,6 +7,8 @@ import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import com.medical.examination.entity.*;
+import com.medical.examination.findparams.InvoiceFindParams;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -22,11 +24,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import com.medical.examination.entity.Account;
-import com.medical.examination.entity.ClinicWorking;
-import com.medical.examination.entity.Customer;
-import com.medical.examination.entity.Test;
-import com.medical.examination.entity.TestResult;
 import com.medical.examination.findparams.AccountFindParams;
 import com.medical.examination.findparams.ClinicWorkingFindParams;
 import com.medical.examination.findparams.CustomerFindParams;
@@ -195,5 +192,38 @@ public class RoutingController extends BaseController {
 			model.addAttribute("clinicWorking", clinicWorking);
 		}
 		return createView(model, "function/medical_examination/medical_examination_working.html");
+	}
+	@GetMapping("/invoice")
+	public String viewInvoicePage(Model model) {
+		try {
+			model.addAttribute("title", "Hóa đơn");
+			InvoiceFindParams findParams = new InvoiceFindParams();
+			List<Invoice> lstInvoice = this.invoiceService.findInvoice(PageRequest.of(0, 1000), findParams).getContent();
+			model.addAttribute("lstInvoice", lstInvoice);
+			return createView(model, "function/invoice/invoice_list.html");
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	@GetMapping("/invoice-detail/{id}")
+	public String viewInvoiceDetail(@PathVariable("id") Long id, Model model) {
+		try {
+			model.addAttribute("title", "Chi tiết Hóa đơn");
+			Invoice invoice = this.invoiceService.getInvoiceById(id);
+			String[] lstTest = invoice.getLstTest().split(",");
+			List<Test> lstTestComplete = new ArrayList<Test>();
+			for(String item : lstTest) {
+				Test test = this.testService.findByTestName(item.trim());
+				lstTestComplete.add(test);
+			}
+			model.addAttribute("invoice", invoice);
+			model.addAttribute("lstTestComplete", lstTestComplete);
+			return createView(model, "function/invoice/invoice_detail.html");
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 }
