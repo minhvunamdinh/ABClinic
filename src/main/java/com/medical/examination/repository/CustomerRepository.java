@@ -1,11 +1,12 @@
 package com.medical.examination.repository;
 
-import com.medical.examination.entity.Customer;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
+
+import com.medical.examination.entity.Customer;
 
 public interface CustomerRepository extends CrudRepository<Customer, Long>,
 PagingAndSortingRepository<Customer, Long>, JpaSpecificationExecutor<Customer> {

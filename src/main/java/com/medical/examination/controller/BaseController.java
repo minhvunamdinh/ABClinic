@@ -1,12 +1,14 @@
 package com.medical.examination.controller;
 
-import com.medical.examination.utils.AccountDetail;
+import javax.annotation.PostConstruct;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 import org.springframework.ui.Model;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
+import com.medical.examination.utils.AccountDetail;
 
 public class BaseController {
 	

@@ -1,8 +1,8 @@
 package com.medical.examination.request;
 
-import org.springframework.format.annotation.DateTimeFormat;
-
 import java.util.Date;
+
+import org.springframework.format.annotation.DateTimeFormat;
 
 public class ResultTestInvoiceRequest {
 	private String code;

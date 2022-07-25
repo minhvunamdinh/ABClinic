@@ -1,11 +1,13 @@
 package com.medical.examination.request;
 
-import lombok.Data;
-import org.springframework.format.annotation.DateTimeFormat;
+import java.util.Date;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import java.util.Date;
+
+import org.springframework.format.annotation.DateTimeFormat;
+
+import lombok.Data;
 
 @Data
 public class MedicalExaminationRequest {

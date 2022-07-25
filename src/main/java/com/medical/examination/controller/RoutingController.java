@@ -1,11 +1,16 @@
 package com.medical.examination.controller;
 
-import com.medical.examination.entity.*;
-import com.medical.examination.findparams.*;
-import com.medical.examination.request.MedicalExaminationRequest;
-import com.medical.examination.request.ResultTestInvoiceRequest;
-import com.medical.examination.service.*;
-import com.medical.examination.utils.AccountDetail;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Optional;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -14,15 +19,36 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import com.medical.examination.entity.Account;
+import com.medical.examination.entity.ClinicWorking;
+import com.medical.examination.entity.Customer;
+import com.medical.examination.entity.Invoice;
+import com.medical.examination.entity.Test;
+import com.medical.examination.entity.TestResult;
+import com.medical.examination.findparams.AccountFindParams;
+import com.medical.examination.findparams.ClinicWorkingFindParams;
+import com.medical.examination.findparams.CustomerFindParams;
+import com.medical.examination.findparams.InvoiceFindParams;
+import com.medical.examination.findparams.TestFindParams;
+import com.medical.examination.findparams.TestResultFindParams;
+import com.medical.examination.request.MedicalExaminationRequest;
+import com.medical.examination.request.ResultTestInvoiceRequest;
+import com.medical.examination.service.AccountService;
+import com.medical.examination.service.ClinicWorkingService;
+import com.medical.examination.service.CustomerService;
+import com.medical.examination.service.InvoiceService;
+import com.medical.examination.service.TestResultService;
+import com.medical.examination.service.TestService;
+import com.medical.examination.service.TestTypeService;
+import com.medical.examination.utils.AccountDetail;
 
 @Controller
 public class RoutingController extends BaseController {
