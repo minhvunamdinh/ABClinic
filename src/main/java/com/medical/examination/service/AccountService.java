@@ -1,13 +1,10 @@
 package com.medical.examination.service;
 
-import java.util.Optional;
-
+import com.medical.examination.entity.Account;
+import com.medical.examination.findparams.AccountFindParams;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.validation.annotation.Validated;
-
-import com.medical.examination.entity.Account;
-import com.medical.examination.findparams.AccountFindParams;
 
 @Validated
 public interface AccountService {

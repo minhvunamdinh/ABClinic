@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{index.html}">
+<head> </head>
+
+<body>
+    <div layout:fragment="content">
+    	<div class="wrapper">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h3 class="page-header"><i class="fa fa-laptop"></i>Danh mục</h3>
+                    <ol class="breadcrumb">
+                        <li><i class="fa fa-home"></i><a th:href="@{/home}">Home</a></li>
+                        <li><i class="fa fa-laptop"></i>Danh sách Bệnh nhân</li>
+                    </ol>
+                </div>
+            </div>
+            
+            <div class="row">
+                <form class="form-group col-md-12" th:action="@{/customer-list}" th:object="${findParams}" method="GET">
+                    <div class="col-md-12">
+                        <div class="col-md-3">
+                            <label>Họ tên</label>
+                            <input style="font-size: 16px;" type="text" class="form-control" th:field="*{fullname}" id="fullname"  name="fullname">
+                        </div>
+                        <div class="col-md-3">
+                            <label>Giới tính</label>
+                            <select style="font-size: 16px; height: 34px;" class="form-control" id="gender"  name="gender">
+                                <option style="font-size: 16px;" value="" selected>-- Chọn Giới tính --</option>
+                                <option style="font-size: 16px;" value=1>Nam</option>
+                                <option style="font-size: 16px;" value=0>Nữ</option>
+                                <option style="font-size: 16px;" value=-1>Khác</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label>Số điện thoại</label>
+                            <input style="font-size: 16px;" type="text" class="form-control" th:field="*{phone}" id="phone"  name="phone">
+                        </div>
+                        <div class="col-md-3">
+                            <label>Email</label>
+                            <input style="font-size: 16px;" type="text" class="form-control" th:field="*{email}" id="email"  name="email">
+                        </div>
+                        <div class="col-md-2">
+                            <br>
+                            <button style="font-size: 16px;" type="submit" class="btn btn-primary">Tìm kiếm</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            
+            <a th:href="@{/customer/create}"><button style="margin-top: 20px; font-size: 16px;" class="btn btn-primary">Thêm mới</button></a>
+
+            <div class="row" style="margin-top: 20px;">
+                <table class="table">
+                    
+                    <thead class="thead-dark">
+                      <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Họ tên</th>
+                        <th scope="col">Ngày sinh</th>
+                        <th scope="col">Giới tính</th>
+                        <th scope="col">Số điện thoại</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Thao tác</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr th:each="item, state : ${lstCustomer}">
+                        <th scope="row" th:text="${state.index+1}"></th>
+                        <td th:text="${item.fullname}"></td>
+                        <td th:text="${#dates.format(item.dob, 'dd-MM-yyyy')}"></td>
+                        <td th:if="${item.gender == 1}">Nam</td><td th:if="${item.gender == 0}">Nữ</td><td th:if="${item.gender == -1}">Khác</td>
+                        <td th:text="${item.phone}"></td>
+                        <td th:text="${item.email}"></td>
+                        <td style="color: #fff;">
+                        	<a style="font-size: 16px;" th:href="@{'/customer/read/' + ${item.id}}" class="btn btn-success">Chi tiết</a>
+                        	<a style="font-size: 16px;" th:href="@{'/customer/update/' + ${item.id}}" class="btn btn-primary">Sửa</a>
+                        	<!--<a th:href="@{'/customer/delete/' + ${item.id}}" style="font-size: 16px;" class="btn btn-danger" th:data-confirm="|Bạn muốn xóa bản ghi này?|" onclick="if (!confirm(this.getAttribute('data-confirm'))) return false">Xóa</a>-->
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <th:block class="text-center">
+                    <nav aria-label="Page navigation" style="text-align: center; width: 100%;">
+                    <ul class="pagination justify-content-end">
+                            <li class="page-item" th:classappend="${pageIndex} <= 0 ? 'disabled' : ''">
+                            	<a class="page-link" th:href="@{'/customer-list?page='+ ${pageIndex-1}}"><</a>
+                            </li>
+
+                            <li  th:classappend="${pageIndex} != ${index-1} ? 'page-item' :'page-item active' "
+                                th:each="index : ${#numbers.sequence(1, totalPages)}">
+                            <a class="page-link" th:href="@{'/customer-list?page='+ ${index-1}}" th:text="${index}">1</a>
+                            </li>
+
+                            <li class="page-item" th:classappend="${pageIndex} >= ${totalPages} - 1 ? 'disabled' : ''">
+                            <a class="page-link" th:href="@{'/customer-list?page='+ ${pageIndex+1}}">></a>
+                            </li>
+                        </ul>
+                    </nav>
+                  </th:block>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

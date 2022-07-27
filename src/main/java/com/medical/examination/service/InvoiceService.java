@@ -1,11 +1,10 @@
 package com.medical.examination.service;
 
+import com.medical.examination.entity.Invoice;
+import com.medical.examination.findparams.InvoiceFindParams;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.validation.annotation.Validated;
-
-import com.medical.examination.entity.Invoice;
-import com.medical.examination.findparams.InvoiceFindParams;
 
 @Validated
 public interface InvoiceService {

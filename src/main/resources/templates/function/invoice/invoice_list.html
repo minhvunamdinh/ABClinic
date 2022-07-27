@@ -36,7 +36,7 @@
                         <td th:text="${#dates.format(item.createdDate, 'dd-MM-yyyy')}"></td>
                         <td th:text="${#numbers.formatDecimal(item.totalSellPrice, 0, 'COMMA', 0, 'POINT')} + 'Đ'"></td>
                         <td>
-                        	<a th:href="@{'/invoice-detail/' + ${item.id}}"><button class="btn btn-success">Chi tiết hóa đơn</button></a>
+                        	<a th:href="@{'/invoice-detail/' + ${item.id}}"><button style="font-size: 16px;" class="btn btn-success">Chi tiết hóa đơn</button></a>
                         </td>
                       </tr>
                     </tbody>

@@ -21,36 +21,36 @@
                         <div class="col-md-3">
                             <label>Bác sĩ</label>
                             <select class="selectpicker form-control" th:field="*{accountId}" id="accountId"  name="accountId" data-live-search="true">
-                            	<option value="" selected>-- Chọn bác sĩ --</option>
-                                <option th:each="item : ${lstDoctor}" th:value="${item.id}" th:text="${item.fullname}"></option>
+                            	<option style="font-size: 16px;" value="" selected>-- Chọn bác sĩ --</option>
+                                <option style="font-size: 16px;" th:each="item : ${lstDoctor}" th:value="${item.id}" th:text="${item.fullname}"></option>
                               </select>
                         </div>
                         <div class="col-md-3">
                             <label>Bệnh nhân</label>
                             <select class="selectpicker form-control" th:field="*{customerId}" id="customerId"  name="customerId" data-live-search="true">
-                            	<option value="" selected>-- Chọn bệnh nhân --</option>
-                                <option th:each="item : ${lstCustomer}" th:value="${item.id}" th:text="${item.fullname}"></option>
+                            	<option style="font-size: 16px;" value="" selected>-- Chọn bệnh nhân --</option>
+                                <option style="font-size: 16px;" th:each="item : ${lstCustomer}" th:value="${item.id}" th:text="@{${item.fullname} + ' - ' + ${item.phone}}"></option>
                               </select>
                         </div>
                         <div class="col-md-3">
                             <label>Trạng thái</label>
-                            <select class="form-control" th:field="*{status}" id="status"  name="status">
-                                <option value="" selected>-- Chọn trạng thái --</option>
-                                <option value=0>Chưa khám</option>
-                                <option value=1>Đang khám</option>
-                                <option value=2>Chờ kết quả xét nghiệm</option>
-                                <option value=3>Đã khám</option>
+                            <select class="form-control dropdown-toggle" th:field="*{status}" id="status"  name="status">
+                                <option style="font-size: 16px;" value="" selected>-- Chọn trạng thái --</option>
+                                <option style="font-size: 16px;" value=0>Chưa khám</option>
+                                <option style="font-size: 16px;" value=1>Đang khám</option>
+                                <option style="font-size: 16px;" value=2>Chờ kết quả xét nghiệm</option>
+                                <option style="font-size: 16px;" value=3>Đã khám</option>
                             </select>
                         </div>
                         <div class="col-md-2">
                             <br>
-                            <button type="submit" class="btn btn-primary">Tìm kiếm</button>
+                            <button style="font-size: 16px;" type="submit" class="btn btn-primary">Tìm kiếm</button>
                         </div>
                     </div>
                 </form>
             </div>
 
-            <a th:idd th:href="@{/medical-examination-add}"><button style="margin-top: 20px;" class="btn btn-primary">Tạo phiếu khám</button></a>
+            <a th:href="@{/medical-examination-add}"><button style="margin-top: 20px; font-size: 16px;" class="btn btn-primary">Tạo phiếu khám</button></a>
 
             <div class="row" style="margin-top: 20px;">
                 <table class="table">
@@ -59,6 +59,7 @@
                       <tr>
                         <th scope="col">#</th>
                         <th scope="col">Bệnh nhân</th>
+                        <th scope="col">Số điện thoại</th>
                         <th scope="col">Bác sĩ khám</th>
                         <th scope="col">Số thứ tự khám</th>
                         <th scope="col">Ngày khám</th>
@@ -70,6 +71,7 @@
                       <tr th:each="item, state : ${lstClinicWorking}">
                         <th scope="row" th:text="${state.index+1}"></th>
                         <td th:text="${item.customer.fullname}"></td>
+                        <td th:text="${item.customer.phone}"></td>
                         <td th:text="${item.account.fullname}"></td>
                         <td th:text="${item.no}"></td>
                         <td th:text="${#dates.format(item.createdDate, 'dd-MM-yyyy')}"></td>
@@ -78,15 +80,16 @@
                         <td th:if="${item.status == 2}">Chờ kết quả xét nghiệm</td>
                         <td th:if="${item.status == 3}">Đã khám</td>
                         <td>
-                        	<a th:href="@{'/medical-examination/' + ${item.id}}"><button class="btn btn-success">Chi tiết</button></a>
-                        	<a th:if="${currentUser.role == 2 && item.status == 0}" th:href="@{'/medical-examination-working/' + ${item.id} + '/add'}"><button class="btn btn-primary">Thêm vào khám</button></a>
-                        	<a th:if="${currentUser.role == 2 && item.status == 2 && item.lstTestResult.size() > 0 && item.lstTestResult.get(0).getStatus == 1}" th:href="@{'/medical-examination-working/' + ${item.id} + '/edit'}"><button class="btn btn-primary">Cập nhật kết quả xét nghiệm</button></a>
+                        	<a th:href="@{'/medical-examination/' + ${item.id}}"><button style="font-size: 16px;" class="btn btn-success">Chi tiết</button></a>
+                        	<a th:if="${currentUser.role == 2 && item.status == 0}" th:href="@{'/medical-examination-working/' + ${item.id} + '/add'}"><button style="font-size: 16px;" class="btn btn-primary" th:data-confirm="|Bạn muốn thêm bệnh nhân ${item.customer.fullname} vào khám?|" onclick="if (!confirm(this.getAttribute('data-confirm'))) return false">Thêm vào khám</button></a>
+                        	<a th:if="${currentUser.role == 2 && item.status == 2 && item.lstTestResult.size() > 0 && item.lstTestResult.get(0).getStatus == 1}" th:href="@{'/medical-examination-working/' + ${item.id} + '/edit'}"><button style="font-size: 16px;" class="btn btn-primary">Cập nhật kết quả xét nghiệm</button></a>
+                        	<a th:href="@{'/medical-examination/delete/' + ${item.id}}" th:if="${item.status == 0}" style="font-size: 16px; color: #fff;" class="btn btn-danger" th:data-confirm="|Bạn muốn xóa bản ghi này?|" onclick="if (!confirm(this.getAttribute('data-confirm'))) return false">Xóa</a>
                         </td>
                       </tr>
                     </tbody>
                   </table>
-                  <th:block th:if="${pageIndex > 0}">
-                    <nav aria-label="Page navigation" style="text-align: center;">
+                  <th:block th:if="${totalElements > 0}">
+                    <nav aria-label="Page navigation" style="text-align: center; width: 100%;">
                     <ul class="pagination justify-content-end">
                             <li class="page-item" th:classappend="${pageIndex} <= 0 ? 'disabled' : ''">
                             <a class="page-link" th:href="@{'/medical-examination?page='+ ${pageIndex-1}}"><</a>
@@ -103,9 +106,13 @@
                         </ul>
                     </nav>
                   </th:block>
+                  
             </div>
         </div>
     </div>
+    
+		
+		
 </body>
 
 </html>

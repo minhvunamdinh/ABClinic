@@ -1,24 +1,21 @@
 package com.medical.examination.service.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
-
+import com.medical.examination.entity.Account;
+import com.medical.examination.findparams.AccountFindParams;
+import com.medical.examination.repository.AccountRepository;
+import com.medical.examination.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import com.medical.examination.entity.Account;
-import com.medical.examination.findparams.AccountFindParams;
-import com.medical.examination.repository.AccountRepository;
-import com.medical.examination.service.AccountService;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class AccountServiceImpl implements AccountService {
@@ -59,6 +56,9 @@ public class AccountServiceImpl implements AccountService {
 					}
 					if (findParams.getIsWorking() != null) {
 						predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("isWorking"), findParams.getIsWorking())));
+					}
+					if (findParams.getIsActive() != null) {
+						predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("isActive"), findParams.getIsActive())));
 					}
 					if (findParams.getRole() != null) {
 						predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("role"), findParams.getRole())));

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{index.html}">
+<head> 
+<style>
+	.test-type-item {
+	    border: 1px solid;
+	}
+	
+	.invoice-title{
+		font-weight: bold;
+		font-size: 24px
+	}
+	
+	.invoice-lable{
+		font-weight: bold;
+		font-size: 18px
+	}
+</style>
+</head>
+
+<body>
+    <div layout:fragment="content">
+    	<div class="wrapper">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h3 class="page-header"><i class="fa fa-laptop"></i>Phiếu khám bệnh</h3>
+                    <ol class="breadcrumb">
+                        <li><i class="fa fa-home"></i><a th:href="@{/home}">Home</a></li>
+                        <li><i class="fa fa-laptop"></i>Danh sách bệnh nhân</li>
+                        <li><i class="fa fa-laptop"></i>[[${title}]]</li>
+                    </ol>
+                </div>
+            </div>
+			
+            <div class="container">
+            	<div class="text-center" style="margin-top: 20px;">
+            		<div class="row-size">
+								<h1>[[${title}]] thông tin bệnh nhân</h1>
+							</div>
+					<form class="text-insert" action="#" th:action="@{/customer/create}" th:object="${customer}" method="post">
+                            <div class="row row-size">
+                                <div class="col-md-3">Họ và tên<span style="color: red;"> *</span></div>
+                                <div class="col-md-3">
+                                	<input style="font-size: 16px;" type="text" class="form-control" th:field="*{fullname}" id="fullname" name="fullname">
+                                	<span style="color: red;" th:if="${#fields.hasErrors('fullname')}" th:errors="*{fullname}"></span>
+                                </div>
+                                <div class="col-md-3">Ngày sinh<span style="color: red;"> *</span></div>
+                                <div class="col-md-3">
+                                	<input style="font-size: 16px;" type="date" class="form-control" th:field="*{dob}" id="dob" name="dob">
+                                	<span style="color: red;" th:if="${#fields.hasErrors('dob')}" th:errors="*{dob}"></span>
+                                </div>
+                            </div>
+                            
+                            <div class="row row-size">
+                                <div class="col-md-3">Giới tính<span style="color: red;"> *</span></div>
+                                <div class="col-md-3">
+                                    <select style="font-size: 16px; height: 34px;" class="form-control" th:field="*{gender}" id="gender" name="gender">
+                                        <option value="" selected>-- Chọn Giới tính --</option>
+                                        <option value=1>Nam</option>
+                                        <option value=0>Nữ</option>
+                                        <option value=-1>Khác</option>
+                                    </select>
+                                    <span style="color: red;" th:if="${#fields.hasErrors('gender')}" th:errors="*{gender}"></span>
+                                </div>
+                                <div class="col-md-3">Số điện thoại<span style="color: red;"> *</span></div>
+                                <div class="col-md-3">
+                                	<input style="font-size: 16px;" type="text" class="form-control" th:field="*{phone}" id="phone" name="phone">
+                                	<span style="color: red;" th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}"></span>
+                                </div>
+                            </div>
+
+                            <div class="row row-size">
+                                <div class="col-md-3">Email<span style="color: red;"> *</span></div>
+                                <div class="col-md-3">
+                                	<input style="font-size: 16px;" type="email" class="form-control" th:field="*{email}" id="email" name="email">
+                                	<span style="color: red;" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
+                                </div>
+                                <div class="col-md-3">Địa chỉ<span style="color: red;"> *</span></div>
+                                <div class="col-md-3">
+                                	<input style="font-size: 16px;" type="text" class="form-control" th:field="*{address}" id="address" name="address">
+                                	<span style="color: red;" th:if="${#fields.hasErrors('address')}" th:errors="*{address}"></span>
+                                </div>
+                            </div>
+                            <div class="row row-size">
+                                <div class="col-md-3">Nghề nghiệp<span style="color: red;"> *</span></div>
+                                <div class="col-md-3">
+                                	<input style="font-size: 16px;" type="text" class="form-control" th:field="*{job}" id="job" name="job">
+                                	<span style="color: red;" th:if="${#fields.hasErrors('job')}" th:errors="*{job}"></span>
+                                </div>
+                                <div class="col-md-3">Quốc tịch<span style="color: red;"> *</span></div>
+                                <div class="col-md-3">
+                                	<input style="font-size: 16px;" type="text" class="form-control" th:field="*{country}" id="country" name="country">
+                                	<span style="color: red;" th:if="${#fields.hasErrors('country')}" th:errors="*{country}"></span>
+                                </div>
+                            </div>
+                            <div class="row row-size">
+                                <div class="col-md-3">Ghi chú</div>
+                                <div class="col-md-9">
+                                    <textarea class="form-control" th:field="*{desc}" id="desc" name="desc" style="height: 150px; font-size: 16px;"></textarea>
+
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+	                            <a th:href="@{/customer-list}"><button style="font-size: 18px;" class="btn btn-danger" type="button">Trở về</button></a>
+	                            <button style="font-size: 18px;" class="btn btn-primary" type="submit">Thêm mới</button>
+	                        </div>
+                    </form>
+                    
+				</div>
+            </div>
+            
+        </div>
+    </div>
+
+</body>
+
+</html>
+
+<script>
+
+</script>

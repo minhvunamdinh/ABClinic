@@ -22,14 +22,14 @@
                     	<form th:action="@{/medical-examination-add}" th:object="${findParams}" method="GET">
                         <div class="col-md-3">
                             <label>Bệnh nhân</label>
-                            <select class="selectpicker form-control" data-live-search="true" th:field="*{id}">
-                                <option value="" selected>-- Chọn bệnh nhân --</option>
-                                <option th:each="item : ${lstCustomer}" th:value="${item.id}" th:text="${item.fullname}"></option>
+                            <select class="selectpicker form-control dropdown-toggle" data-live-search="true" th:field="*{id}">
+                                <option style="font-size:16px;" value="" selected>-- Chọn bệnh nhân --</option>
+                                <option style="font-size:16px;" th:each="item : ${lstCustomer}" th:value="${item.id}" th:text="@{ ${item.fullname} + ' - ' + ${item.phone}}"></option>
                               </select>
                         </div>
                         <div class="col-md-2">
                             <br>
-                            <button type="submit" class="btn btn-primary">Xác nhận</button>
+                            <button style="font-size:16px;" type="submit" class="btn btn-primary">Xác nhận</button>
                         </div>
                         </form>
                     </div>
@@ -37,85 +37,100 @@
             </div>            
 
             <div class="row" style="margin-top: 20px;">
-                <form id="addform" action="#" th:action="@{/medical-examination-add}" th:object="${medicalExaminationRequest}" method="POST">
-                	<div class="col-md-3 mb-3" style="display: none">
-                        <div class="form-group" >
-                            <label >id<i style="color: red;">(*)</i></label>
-                            <input type="text" class="form-control" th:field="*{customerId}" id="customerId"  name="customerId">
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="form-group" >
-                            <label >Họ và tên<i style="color: red;">(*)</i></label>
-                            <input type="text" class="form-control" th:field="*{fullname}" id="fullname"  name="fullname">
-                            <p class="alert alert-danger" th:if="${#fields.hasErrors('fullname')}" th:errors="*{fullname}">
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="form-group" >
-                            <label >Số điện thoại<i style="color: red;">(*)</i></label>
-                            <input type="text" class="form-control" th:field="*{phone}" id="phone"  name="phone">
-                            <p class="alert alert-danger" th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}">
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="form-group" >
-                            <label >Ngày sinh<i style="color: red;">(*)</i></label>
-                            <input type="date" class="form-control" th:field="*{dob}" id="dob"  name="dob">
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="form-group" >
-                            <label >Email<i style="color: red;">(*)</i></label>
-                            <input type="text" class="form-control" th:field="*{email}" id="email"  name="email">
-                            <p class="alert alert-danger" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="form-group" >
-                            <label >Quốc tịch<i style="color: red;">(*)</i></label>
-                            <input type="text" class="form-control" th:field="*{country}" id="country"  name="country">
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="form-group" >
-                            <label >Địa chỉ<i style="color: red;">(*)</i></label>
-                            <input type="text" class="form-control" th:field="*{address}" id="address"  name="address">
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="form-group" >
-                            <label >Nghề nghiệp<i style="color: red;">(*)</i></label>
-                            <input type="text" class="form-control" th:field="*{job}" id="job"  name="job">
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="form-group" >
-                            <label >Giới tính<i style="color: red;">(*)</i></label>
-                            <select class="form-control" th:field="*{gender}" id="gender"  name="gender">
-                                <option value="" selected>-- Chọn giới tính --</option>
-                                <option value=1>Nam</option>
-                                <option value=0>Nữ</option>
-                                <option value=-1>Khác</option>
-                            </select>
-                        </div>
+                <form class="col-md-12" id="addform" action="#" th:action="@{/medical-examination-add}" th:object="${medicalExaminationRequest}" method="POST">
+                	<div class="row">
+                		<div class="col-md-3" style="display: none">
+	                        <div class="form-group" >
+	                            <label >id<i style="color: red;">*</i></label>
+	                            <input style="font-size: 16px" type="text" class="form-control" th:field="*{customerId}" id="customerId"  name="customerId">
+	                        </div>
+	                    </div>
+	                    <div class="col-md-3">
+	                        <div class="form-group" >
+	                            <label >Họ và tên<i style="color: red;">*</i></label>
+	                            <input style="font-size: 16px" type="text" class="form-control" th:field="*{fullname}" id="fullname"  name="fullname">
+	                            <span style="color: red;" th:if="${#fields.hasErrors('fullname')}" th:errors="*{fullname}"></span>
+	                        </div>
+	                    </div>
+	                    <div class="col-md-3">
+	                        <div class="form-group" >
+	                            <label >Số điện thoại<i style="color: red;">*</i></label>
+	                            <input style="font-size: 16px" type="text" class="form-control" th:field="*{phone}" id="phone"  name="phone">
+	                            <span style="color: red;" th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}"></span>
+	                        </div>
+	                    </div>
+	                    <div class="col-md-3">
+	                        <div class="form-group" >
+	                            <label >Ngày sinh<i style="color: red;">*</i></label>
+	                            <input style="font-size: 16px" type="date" class="form-control" th:field="*{dob}" id="dob"  name="dob">
+	                            <span style="color: red;" th:if="${#fields.hasErrors('dob')}" th:errors="*{dob}"></span>
+	                        </div>
+	                    </div>
+	                    <div class="col-md-3">
+	                        <div class="form-group" >
+	                            <label >Email<i style="color: red;">*</i></label>
+	                            <input style="font-size: 16px" type="email" class="form-control" th:field="*{email}" id="email"  name="email">
+	                            <span style="color: red;" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
+	                        </div>
+	                    </div>
+                	</div>
+                    
+                    <div class="row">
+                    	<div class="col-md-3">
+	                        <div class="form-group" >
+	                            <label >Quốc tịch<i style="color: red;">*</i></label>
+	                            <input style="font-size: 16px" type="text" class="form-control" th:field="*{country}" id="country"  name="country">
+	                            <span style="color: red;" th:if="${#fields.hasErrors('country')}" th:errors="*{country}"></span>
+	                        </div>
+	                    </div>
+	                    <div class="col-md-3">
+	                        <div class="form-group" >
+	                            <label >Địa chỉ<i style="color: red;">*</i></label>
+	                            <input style="font-size: 16px" type="text" class="form-control" th:field="*{address}" id="address"  name="address">
+	                            <span style="color: red;" th:if="${#fields.hasErrors('address')}" th:errors="*{address}"></span>
+	                        </div>
+	                    </div>
+	                    <div class="col-md-3">
+	                        <div class="form-group" >
+	                            <label >Nghề nghiệp<i style="color: red;">*</i></label>
+	                            <input style="font-size: 16px" type="text" class="form-control" th:field="*{job}" id="job"  name="job">
+	                            <span style="color: red;" th:if="${#fields.hasErrors('job')}" th:errors="*{job}"></span>
+	                        </div>
+	                    </div>
+	                    <div class="col-md-3">
+	                        <div class="form-group" >
+	                            <label >Giới tính<i style="color: red;">*</i></label>
+	                            <select class="form-control dropdown-toggle" th:field="*{gender}" id="gender"  name="gender">
+	                                <option style="font-size: 16px" value="" selected>-- Chọn giới tính --</option>
+	                                <option style="font-size: 16px" value=1>Nam</option>
+	                                <option style="font-size: 16px" value=0>Nữ</option>
+	                                <option style="font-size: 16px" value=-1>Khác</option>
+	                            </select>
+	                            <span style="color: red;" th:if="${#fields.hasErrors('gender')}" th:errors="*{gender}"></span>
+	                        </div>
+	                    </div>
                     </div>
                     
-                    <div class="col-md-9">
-                        <div class="" >
-                            <label>Ghi chú</label>
-                            <textarea class="form-control" th:field="*{desc}" id="desc" name="desc"></textarea>
+                    <div class="row">
+                    	<div class="col-md-9">
+	                        <div class="" >
+	                            <label>Ghi chú</label>
+	                            <textarea style="font-size: 16px" class="form-control" th:field="*{desc}" id="desc" name="desc"></textarea>
+	                        </div>
+	                    </div>
+	                    <div class="col-md-3">
+	                        <label>Bác sĩ khám<i style="color: red;">*</i></label>
+	                        <select class="selectpicker form-control dropdown-toggle" th:field="*{accountId}" id="accountId"  name="accountId" data-live-search="true">
+	                        	<option style="font-size: 16px;" value="" selected>-- Chọn bác sĩ --</option>
+	                            <option style="font-size: 16px;" th:each="item : ${lstDoctor}" th:value="${item.id}" th:text="${item.fullname}"></option>
+	                          </select>
+	                          <span style="color: red;" th:if="${#fields.hasErrors('accountId')}" th:errors="*{accountId}"></span>
+	                    </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 text-center">
+                        	<button style="margin-top: 20px; font-size:16px;" class="btn btn-primary" type="submit">Tạo phiếu khám</button>
                         </div>
-                    </div>
-                    <div class="col-md-3">
-                        <label>Bác sĩ khám<i style="color: red;">(*)</i></label>
-                        <select class="selectpicker form-control" id="accountId"  name="accountId" data-live-search="true">
-                        	<option value="" selected>-- Chọn bác sĩ --</option>
-                            <option th:each="item : ${lstDoctor}" th:value="${item.id}" th:text="${item.fullname}"></option>
-                          </select>
-                    </div>
-                    <div class="col-md-3" style="text-align: center;">
-                        <button style="margin-top: 20px;" class="btn btn-primary" type="submit">Tạo phiếu khám</button>
                     </div>
                 </form>
             </div>
