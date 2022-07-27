@@ -5,11 +5,11 @@
     </div>
 
     <!--logo start-->
-    <a href="#" class="logo">ABC <span class="lite">Clinic</span></a>
+    <a href="index.html" class="logo">ABC <span class="lite">Clinic</span></a>
     <!--logo end-->
 
     <div class="top-nav notification-row" style="display: flex;">
-        <div class="header-user-info">
+       	<div class="header-user-info">
             <p th:if="${currentUser.role == 1}">Xin chào boss: [[${fullname}]]</p>
             <p th:if="${currentUser.role == 2}">Xin chào bác sỹ: [[${fullname}]]</p>
             <p th:if="${currentUser.role == 3}">Xin chào lễ tân: [[${fullname}]]</p>
