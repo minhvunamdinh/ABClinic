@@ -55,7 +55,8 @@
 	                    <div class="col-md-3">
 	                        <div class="form-group" >
 	                            <label >Số điện thoại<i style="color: red;">*</i></label>
-	                            <input style="font-size: 16px" type="text" class="form-control" th:field="*{phone}" id="phone"  name="phone">
+	                            <input style="font-size: 16px" type="text" class="form-control" th:field="*{phone}" id="phone"  name="phone" pattern="^[0][0-9]{10}"
+								title="Số điện thoại phải 10 số!">
 	                            <span style="color: red;" th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}"></span>
 	                        </div>
 	                    </div>
@@ -79,7 +80,8 @@
                     	<div class="col-md-3">
 	                        <div class="form-group" >
 	                            <label >Quốc tịch<i style="color: red;">*</i></label>
-	                            <input style="font-size: 16px" type="text" class="form-control" th:field="*{country}" id="country"  name="country">
+	                            <input style="font-size: 16px" type="text" class="form-control" th:field="*{country}" id="country"  name="country" maxlength="50"
+								title="Quốc tịch không quá 50 ký tự!">
 	                            <span style="color: red;" th:if="${#fields.hasErrors('country')}" th:errors="*{country}"></span>
 	                        </div>
 	                    </div>
