@@ -2,6 +2,7 @@ package com.medical.examination.request;
 
 import java.util.Date;
 
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
@@ -16,21 +17,27 @@ public class MedicalExaminationRequest {
 	@NotEmpty(message = "Thông tin bắt buộc!")
 	private String fullname;
 	@NotNull(message = "Thông tin bắt buộc!")
+	@NotEmpty(message = "Thông tin bắt buộc!")
 	private String phone;
 	@DateTimeFormat (pattern="yyyy-MM-dd")
-//	@NotNull(message = "Thông tin bắt buộc!")
+	@NotNull(message = "Thông tin bắt buộc!")
 	private Date dob;
 	@NotNull(message = "Thông tin bắt buộc!")
+	@NotEmpty(message = "Thông tin bắt buộc!")
+	@Email
 	private String email;
 	@NotNull(message = "Thông tin bắt buộc")
+	@NotEmpty(message = "Thông tin bắt buộc!")
 	private String country;
 	@NotNull(message = "Thông tin bắt buộc")
+	@NotEmpty(message = "Thông tin bắt buộc!")
 	private String address;
 	@NotNull(message = "Thông tin bắt buộc")
+	@NotEmpty(message = "Thông tin bắt buộc!")
 	private String job;
-//	@NotNull(message = "Thông tin bắt buộc")
+	@NotNull(message = "Thông tin bắt buộc")
 	private Long gender;
-//	@NotNull(message = "Thông tin bắt buộc")
+	@NotNull(message = "Thông tin bắt buộc")
 	private Long accountId;
 	private String desc;
 	

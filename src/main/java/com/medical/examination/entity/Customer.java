@@ -13,6 +13,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -25,28 +28,37 @@ public class Customer {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	@Column(name = "fullname")
+	@NotEmpty(message = "Thông tin bắt buộc!")
 	private String fullname;
 	@Column(name = "phone")
+	@NotEmpty(message = "Thông tin bắt buộc!")
 	private String phone;
 	@Column(name = "gender")
+	@NotNull(message = "Thông tin bắt buộc!")
 	private Long gender;
 	@Column(name = "job")
+	@NotEmpty(message = "Thông tin bắt buộc!")
 	private String job;
 	@Column(name = "address")
+	@NotEmpty(message = "Thông tin bắt buộc!")
 	private String address;
 	@Column(name = "dob")
 	@DateTimeFormat (pattern="yyyy-MM-dd")
+	@NotNull(message = "Thông tin bắt buộc!")
 	private Date dob;
 	@Column(name = "country")
+	@NotEmpty(message = "Thông tin bắt buộc!")
 	private String country;
 	@Column(name = "email")
+	@NotEmpty(message = "Thông tin bắt buộc!")
+	@Email(message = "Sai định dạng email!")
 	private String email;
 	@Column(name = "`desc`")
 	private String desc;
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "customer", cascade = CascadeType.REMOVE)
-	@JsonIgnore
+	//@JsonIgnore
 	private List<ClinicWorking> lstClinicWorking = new ArrayList<ClinicWorking>();
-
+	
 	public List<ClinicWorking> getLstClinicWorking() {
 		return lstClinicWorking;
 	}
@@ -113,5 +125,5 @@ public class Customer {
 	public void setDesc(String desc) {
 		this.desc = desc;
 	}
-
+	
 }

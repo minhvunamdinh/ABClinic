@@ -8,6 +8,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 import net.bytebuddy.utility.nullability.MaybeNull;
 
@@ -18,13 +20,18 @@ public class Test {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	@Column(name="test_name")
+	@NotNull(message = "Thông tin bắt buộc!")
+	@NotEmpty(message = "Thông tin bắt buộc!")
 	private String testName;
 	@Column(name="cost_price")
+	@NotNull(message = "Thông tin bắt buộc!")
 	private Double costPrice;
 	@Column(name="sell_price")
+	@NotNull(message = "Thông tin bắt buộc!")
 	private Double sellPrice;
 	@ManyToOne
 	@JoinColumn(name = "test_type_id")
+	@NotNull(message = "Thông tin bắt buộc!")
 	private TestType testType;
 	public Long getId() {
 		return id;
@@ -56,5 +63,5 @@ public class Test {
 	public void setTestType(TestType testType) {
 		this.testType = testType;
 	}
-
+	
 }

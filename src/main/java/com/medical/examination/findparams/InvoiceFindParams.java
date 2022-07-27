@@ -7,6 +7,7 @@ public class InvoiceFindParams {
 	private String lstMedical;
 	private Double totalCostPrice;
 	private Double totalSellPrice;
+	private Long month;
 	public Long getId() {
 		return id;
 	}
@@ -42,5 +43,11 @@ public class InvoiceFindParams {
 	}
 	public void setTotalSellPrice(Double totalSellPrice) {
 		this.totalSellPrice = totalSellPrice;
+	}
+	public Long getMonth() {
+		return month;
+	}
+	public void setMonth(Long month) {
+		this.month = month;
 	}
 }

@@ -6,6 +6,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "test_type")
@@ -14,6 +16,8 @@ public class TestType {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	@Column(name = "type_name")
+	@NotNull(message = "Thông tin bắt buộc!")
+	@NotEmpty(message = "Thông tin bắt buộc!")
 	private String typeName;
 	public Long getId() {
 		return id;

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{index.html}">
+<head> 
+<style>
+	.test-type-item {
+	    border: 1px solid;
+	}
+	
+	.invoice-title{
+		font-weight: bold;
+		font-size: 24px
+	}
+	
+	.invoice-lable{
+		font-weight: bold;
+		font-size: 18px
+	}
+</style>
+</head>
+
+<body>
+    <div layout:fragment="content">
+    	<div class="wrapper">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h3 class="page-header"><i class="fa fa-laptop"></i>Danh sách loại xét nghiệm</h3>
+                    <ol class="breadcrumb">
+                        <li><i class="fa fa-home"></i><a th:href="@{/home}">Home</a></li>
+                        <li><i class="fa fa-laptop"></i>Danh sách loại xét nghiệm</li>
+                        <li><i class="fa fa-laptop"></i>[[${title}]]</li>
+                    </ol>
+                </div>
+            </div>
+			
+            <div class="container">
+            	<div class="text-center" style="margin-top: 20px;">
+            		<div class="row-size">
+								<h1>[[${title}]] thông tin loại xét nghiệm</h1>
+							</div>
+					<form class="text-insert" action="#" th:action="@{/test/update/{id}(id=${test.id})}" th:object="${test}" method="post">
+                            <div class="row row-size">
+                                <div class="col-md-6">Tên xét nghiệm<span style="color: red;"> *</span></div>
+                                <div class="col-md-6">
+                                	<input th:if="${type == 'read'}" readOnly style="font-size: 16px;" type="text" class="form-control" th:field="*{testName}" id="testName" name="testName">
+                                	<input th:if="${type == 'update'}" style="font-size: 16px;" type="text" class="form-control" th:field="*{testName}" id="testName" name="testName">
+                                	<span style="color: red;" th:if="${#fields.hasErrors('testName')}" th:errors="*{testName}"></span>
+                                </div>
+                                <div style="margin-top: 20px;" class="col-md-6">Đơn giá<span style="color: red;"> *</span></div>
+                                <div style="margin-top: 20px;" class="col-md-6">
+                                	<input th:if="${type == 'read'}" readOnly style="font-size: 16px;" type="number" class="form-control" th:field="*{costPrice}" id="costPrice" name="costPrice">
+                                	<input th:if="${type == 'update'}" style="font-size: 16px;" type="number" class="form-control" th:field="*{costPrice}" id="costPrice" name="costPrice">
+                                	<span style="color: red;" th:if="${#fields.hasErrors('costPrice')}" th:errors="*{costPrice}"></span>
+                                </div>
+                            </div>
+                            
+                            <div class="row row-size">
+                                <div style="margin-top: 20px;" class="col-md-6">Giá bán<span style="color: red;"> *</span></div>
+                                <div style="margin-top: 20px;" class="col-md-6">
+                                	<input th:if="${type == 'read'}" readOnly style="font-size: 16px;" type="number" class="form-control" th:field="*{sellPrice}" id="sellPrice" name="sellPrice">
+                                	<input th:if="${type == 'update'}" style="font-size: 16px;" type="number" class="form-control" th:field="*{sellPrice}" id="sellPrice" name="sellPrice">
+                                	<span style="color: red;" th:if="${#fields.hasErrors('sellPrice')}" th:errors="*{sellPrice}"></span>
+                                </div>
+                                <div style="margin-top: 20px;" class="col-md-6">Loại xét nghiệm<span style="color: red;"> *</span></div>
+                                <div style="margin-top: 20px;" class="col-md-6">
+                                	<select th:if="${type == 'read'}" disabled class="selectpicker form-control dropdown-toggle" th:field="*{testType}" id="testType"  name="testType" data-live-search="true">
+			                        	<option style="font-size: 16px;" value="" selected>-- Chọn loại xét nghiệm --</option>
+			                            <option style="font-size: 16px;" th:each="item : ${lstTestType}" th:value="${item.id}" th:text="${item.typeName}"></option>
+		                          </select>
+                                	<select th:if="${type == 'update'}" class="selectpicker form-control dropdown-toggle" th:field="*{testType}" id="testType"  name="testType" data-live-search="true">
+			                        	<option style="font-size: 16px;" value="" selected>-- Chọn loại xét nghiệm --</option>
+			                            <option style="font-size: 16px;" th:each="item : ${lstTestType}" th:value="${item.id}" th:text="${item.typeName}"></option>
+		                          </select>
+		                          <span style="color: red;" th:if="${#fields.hasErrors('testType')}" th:errors="*{testType}"></span>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-12">
+	                            <a th:href="@{/test-list}"><button style="font-size: 18px;" class="btn btn-danger" type="button">Trở về</button></a>
+	                            <button th:if="${type == 'update'}" style="font-size: 18px;" class="btn btn-success" type="submit">Cập nhật</button>
+	                        </div>
+                    </form>
+                    
+				</div>
+            </div>
+            
+        </div>
+    </div>
+
+</body>
+
+</html>
+
+<script>
+
+</script>

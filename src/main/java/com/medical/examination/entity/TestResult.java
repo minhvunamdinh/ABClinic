@@ -128,5 +128,5 @@ public class TestResult {
 	public void setTotalSellPrice(Double totalSellPrice) {
 		this.totalSellPrice = totalSellPrice;
 	}
-
+	
 }

@@ -1,0 +1,67 @@
+	<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{index.html}">
+<head> 
+<style>
+	.test-type-item {
+	    border: 1px solid;
+	}
+	
+	.invoice-title{
+		font-weight: bold;
+		font-size: 24px
+	}
+	
+	.invoice-lable{
+		font-weight: bold;
+		font-size: 18px
+	}
+</style>
+</head>
+
+<body>
+    <div layout:fragment="content">
+    	<div class="wrapper">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h3 class="page-header"><i class="fa fa-laptop"></i>Danh sách loại xét nghiệm</h3>
+                    <ol class="breadcrumb">
+                        <li><i class="fa fa-home"></i><a th:href="@{/home}">Home</a></li>
+                        <li><i class="fa fa-laptop"></i>Danh sách loại xét nghiệm</li>
+                        <li><i class="fa fa-laptop"></i>[[${title}]]</li>
+                    </ol>
+                </div>
+            </div>
+			
+            <div class="container">
+            	<div class="text-center" style="margin-top: 20px;">
+            		<div class="row-size">
+								<h1>[[${title}]] thông tin loại xét nghiệm</h1>
+							</div>
+					<form class="text-insert" action="#" th:action="@{/test-type/create}" th:object="${testType}" method="post">
+                            <div class="row row-size">
+                                <div class="col-md-6">Tên loại xét nghiệm<span style="color: red;"> *</span></div>
+                                <div class="col-md-6">
+                                	<input style="font-size: 16px;" type="text" class="form-control" th:field="*{typeName}" id="typeName" name="typeName">
+                                	<span style="color: red;" th:if="${#fields.hasErrors('typeName')}" th:errors="*{typeName}"></span>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-12">
+	                            <a th:href="@{/test-type-list}"><button style="font-size: 18px;" class="btn btn-danger" type="button">Trở về</button></a>
+	                            <button style="font-size: 18px;" class="btn btn-primary" type="submit">Thêm mới</button>
+	                        </div>
+                    </form>
+                    
+				</div>
+            </div>
+            
+        </div>
+    </div>
+
+</body>
+
+</html>
+
+<script>
+
+</script>

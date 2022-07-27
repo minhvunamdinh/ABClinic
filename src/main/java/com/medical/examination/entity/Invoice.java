@@ -24,9 +24,9 @@ public class Invoice {
 	@Column(name = "lst_medicine")
 	private String lstMedicine;
 	@Column(name = "total_cost_price")
-	private Double totalCostPrice;
+	private double totalCostPrice;
 	@Column(name = "total_sell_price")
-	private Double totalSellPrice;
+	private double totalSellPrice;
 	@Column(name = "created_date")
 	private Date createdDate;
 	@ManyToOne
@@ -56,16 +56,16 @@ public class Invoice {
 	public void setLstMedicine(String lstMedical) {
 		this.lstMedicine = lstMedical;
 	}
-	public Double getTotalCostPrice() {
+	public double getTotalCostPrice() {
 		return totalCostPrice;
 	}
-	public void setTotalCostPrice(Double totalCostPrice) {
+	public void setTotalCostPrice(double totalCostPrice) {
 		this.totalCostPrice = totalCostPrice;
 	}
-	public Double getTotalSellPrice() {
+	public double getTotalSellPrice() {
 		return totalSellPrice;
 	}
-	public void setTotalSellPrice(Double totalSellPrice) {
+	public void setTotalSellPrice(double totalSellPrice) {
 		this.totalSellPrice = totalSellPrice;
 	}
 	public Date getCreatedDate() {

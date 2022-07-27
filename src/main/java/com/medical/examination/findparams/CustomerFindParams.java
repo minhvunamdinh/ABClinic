@@ -2,6 +2,8 @@ package com.medical.examination.findparams;
 
 import java.util.Date;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 public class CustomerFindParams {
 	private Long id;
 	private String fullname;
@@ -9,6 +11,7 @@ public class CustomerFindParams {
 	private Long gender;
 	private String job;
 	private String address;
+	@DateTimeFormat (pattern="yyyy-MM-dd")
 	private Date dob;
 	private String country;
 	private String email;

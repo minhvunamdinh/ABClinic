@@ -1,21 +1,24 @@
 package com.medical.examination.service.impl;
 
-import com.medical.examination.entity.TestResult;
-import com.medical.examination.findparams.TestResultFindParams;
-import com.medical.examination.repository.TestResultRepository;
-import com.medical.examination.service.TestResultService;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
-import java.util.ArrayList;
-import java.util.List;
+import com.medical.examination.entity.Test;
+import com.medical.examination.entity.TestResult;
+import com.medical.examination.findparams.TestResultFindParams;
+import com.medical.examination.repository.TestResultRepository;
+import com.medical.examination.service.TestResultService;
 
 @Service
 public class TestResultServiceImpl implements TestResultService {
