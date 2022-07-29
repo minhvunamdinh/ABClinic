@@ -61,6 +61,9 @@ public class InvoiceServiceImpl implements InvoiceService {
 						predicates.add(criteriaBuilder.and(criteriaBuilder.like(criteriaBuilder.lower(root.get("code")),
 								"%" + findParams.getCode().trim().toLowerCase() + "%")));
 					}
+					if(findParams.getAccountId() != null) {
+						predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("clinicWorking").get("account").get("id"),findParams.getAccountId())));
+					}
 					if(findParams.getMonth() != null) {
 						Date firstDayOfMonth = new Date();
 						firstDayOfMonth.setDate(1);

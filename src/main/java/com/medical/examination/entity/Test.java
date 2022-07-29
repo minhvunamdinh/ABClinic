@@ -33,6 +33,8 @@ public class Test {
 	@JoinColumn(name = "test_type_id")
 	@NotNull(message = "Thông tin bắt buộc!")
 	private TestType testType;
+	@Column(name = "status")
+	private Long status;
 	public Long getId() {
 		return id;
 	}
@@ -62,6 +64,12 @@ public class Test {
 	}
 	public void setTestType(TestType testType) {
 		this.testType = testType;
+	}
+	public Long getStatus() {
+		return status;
+	}
+	public void setStatus(Long status) {
+		this.status = status;
 	}
 	
 }

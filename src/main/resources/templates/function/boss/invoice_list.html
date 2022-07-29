@@ -36,6 +36,13 @@
                                 <option style="font-size: 16px;" value=12>Tháng 12</option>
                             </select>
                         </div>
+                        <div class="col-md-3">
+	                        <label>Bác sĩ khám<i style="color: red;">*</i></label>
+	                        <select class="selectpicker form-control dropdown-toggle" th:field="*{accountId}" id="accountId"  name="accountId" data-live-search="true">
+	                        	<option style="font-size: 16px;" value="" selected>-- Chọn bác sĩ --</option>
+	                            <option style="font-size: 16px;" th:each="item : ${lstBacSi}" th:value="${item.id}" th:text="${item.fullname}"></option>
+	                          </select>
+	                    </div>
                         <div class="col-md-2">
                             <br>
                             <button style="font-size: 16px;" type="submit" class="btn btn-primary">Tìm kiếm</button>

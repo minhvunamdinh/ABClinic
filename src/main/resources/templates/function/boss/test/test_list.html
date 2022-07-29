@@ -15,6 +15,36 @@
                 </div>
             </div>
             
+            <div class="row">
+                <form class="form-group col-md-12" th:action="@{/test-list}" th:object="${findParams}" method="GET">
+                    <div class="col-md-12">
+                        <div class="col-md-3">
+                            <label>Tên xét nghiệm</label>        
+                            <input type="text" th:field="*{testName}" id="testName"  name="testName" class="form-control" style="font-size: 16px; height: 34px;">
+                        </div>
+                        <div class="col-md-3">
+	                        <label>Loại xét nghiệm<i style="color: red;">*</i></label>
+	                        <select class="selectpicker form-control dropdown-toggle" th:field="*{testTypeId}" id="testTypeId"  name="testTypeId" data-live-search="true">
+	                        	<option style="font-size: 16px;" value="" selected>-- Chọn loại xét nghiệm --</option>
+	                            <option style="font-size: 16px;" th:each="item : ${lstTestType}" th:value="${item.id}" th:text="${item.typeName}"></option>
+	                          </select>
+	                    </div>
+	                    <div class="col-md-3">
+	                        <label>Trạng thái<i style="color: red;">*</i></label>
+	                        <select class="selectpicker form-control dropdown-toggle" th:field="*{status}" id="status"  name="status" data-live-search="true">
+	                        	<option style="font-size: 16px;" value="" selected>-- Chọn trạng thái --</option>
+	                            <option style="font-size: 16px;" value=0>Vô hiệu lực</option>
+	                            <option style="font-size: 16px;" value=1>Có hiệu lực</option>
+	                          </select>
+	                    </div>
+                        <div class="col-md-2">
+                            <br>
+                            <button style="font-size: 16px;" type="submit" class="btn btn-primary">Tìm kiếm</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            
             <a th:href="@{/test/create}"><button style="margin-top: 20px; font-size: 16px;" class="btn btn-primary">Thêm mới</button></a>
 
             <div class="row" style="margin-top: 20px;">
@@ -27,6 +57,7 @@
                         <th scope="col">Đơn giá</th>
                         <th scope="col">Giá bán</th>
                         <th scope="col">Loại xét nghiệm</th>
+                        <th scope="col">Trạng thái</th>
                         <th scope="col">Thao tác</th>
                       </tr>
                     </thead>
@@ -43,10 +74,14 @@
                         	<p th:unless="${item.sellPrice}">0Đ</p>
                         </td>
                         <td th:text="${item.testType.typeName}"></td>
+                        <td th:if="${item.status == 1}"><p style="background-color: #007bff; font-weight: bold; text-align: center; color: #fff;">Có hiệu lực</p></td>
+                        <td th:if="${item.status == 0}"><p style="background-color: #dc3545; font-weight: bold; text-align: center; color: #fff;">Vô hiệu lực</p></td>
                         <td>
                         	<a style="font-size: 16px;" th:href="@{'/test/read/' + ${item.id}}" class="btn btn-success">Chi tiết</a>
                         	<a style="font-size: 16px;" th:href="@{'/test/update/' + ${item.id}}" class="btn btn-primary">Sửa</a>
-                        	<a th:href="@{'/test/delete/' + ${item.id}}" style="font-size: 16px; color: #fff;" class="btn btn-danger" th:data-confirm="|Bạn muốn xóa bản ghi này?|" onclick="if (!confirm(this.getAttribute('data-confirm'))) return false">Xóa</a>
+                        	<!--<a th:href="@{'/test/delete/' + ${item.id}}" style="font-size: 16px; color: #fff;" class="btn btn-danger" th:data-confirm="|Bạn muốn xóa bản ghi này?|" onclick="if (!confirm(this.getAttribute('data-confirm'))) return false">Xóa</a>-->
+                        	<a th:if="${item.status == 0}" th:href="@{'/test-update-status/active/' + ${item.id}}" style="font-size: 16px; color: #fff;" class="btn btn-primary" th:data-confirm="|Bạn muốn kích hoạt xét nghiệm này?|" onclick="if (!confirm(this.getAttribute('data-confirm'))) return false">Kích hoạt</a>
+                        	<a th:if="${item.status == 1}" th:href="@{'/test-update-status/deactive/' + ${item.id}}" style="font-size: 16px; color: #fff;" class="btn btn-danger" th:data-confirm="|Bạn muốn vô hiệu hóa xét nghiệm này?|" onclick="if (!confirm(this.getAttribute('data-confirm'))) return false">Vô hiệu hóa</a>
                         </td>
                       </tr>
                     </tbody>

@@ -6,6 +6,7 @@ public class TestFindParams {
 	private Double costPrice;
 	private Double sellPrice;
 	private Long testTypeId;
+	private Long status;
 	
 	public Long getTestTypeId() {
 		return testTypeId;
@@ -38,8 +39,15 @@ public class TestFindParams {
 		this.sellPrice = sellPrice;
 	}
 	
-	public TestFindParams(Long testTypeId) {
+	public TestFindParams(Long testTypeId, Long status) {
 		this.testTypeId = testTypeId;
+		this.status = status;
+	}
+	public Long getStatus() {
+		return status;
+	}
+	public void setStatus(Long status) {
+		this.status = status;
 	}
 	
 }

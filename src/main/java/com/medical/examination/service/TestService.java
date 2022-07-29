@@ -2,12 +2,14 @@ package com.medical.examination.service;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
 import com.medical.examination.entity.Test;
 import com.medical.examination.findparams.TestFindParams;
 
 @Validated
+@Transactional
 public interface TestService {
 	Test saveTest(Test test);
 	void deleteTest(Long id);
@@ -15,4 +17,5 @@ public interface TestService {
 	Test getTestByTestName(String testName);
 	Test findByTestName(String testName);
 	Page<Test> findTest(Pageable pageable, TestFindParams findParams);
+	void updateTestStatus(Long id, Long status);
 }

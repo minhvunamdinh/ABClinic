@@ -261,11 +261,11 @@ public class RoutingController extends BaseController {
 				this.clinicWorkingService.updateClinicWorking(clinicWorking); //Cap nhat lai ban ghi trang thai dang kham
 				
 				//Lay data xet nghiem
-				List<Test> lstTestMau = this.testService.findTest(PageRequest.of(0, 100), new TestFindParams(1L)).getContent();
-				List<Test> lstTestHoaSinh = this.testService.findTest(PageRequest.of(0, 100), new TestFindParams(2L)).getContent();
-				List<Test> lstTestViSinh = this.testService.findTest(PageRequest.of(0, 100), new TestFindParams(3L)).getContent();
-				List<Test> lstTestPhan = this.testService.findTest(PageRequest.of(0, 100), new TestFindParams(4L)).getContent();
-				List<Test> lstTestNuocTieu = this.testService.findTest(PageRequest.of(0, 100), new TestFindParams(5L)).getContent();
+				List<Test> lstTestMau = this.testService.findTest(PageRequest.of(0, 100), new TestFindParams(1L, 1L)).getContent();
+				List<Test> lstTestHoaSinh = this.testService.findTest(PageRequest.of(0, 100), new TestFindParams(2L, 1L)).getContent();
+				List<Test> lstTestViSinh = this.testService.findTest(PageRequest.of(0, 100), new TestFindParams(3L, 1L)).getContent();
+				List<Test> lstTestPhan = this.testService.findTest(PageRequest.of(0, 100), new TestFindParams(4L, 1L)).getContent();
+				List<Test> lstTestNuocTieu = this.testService.findTest(PageRequest.of(0, 100), new TestFindParams(5L, 1L)).getContent();
 				model.addAttribute("lstTestMau", lstTestMau);
 				model.addAttribute("lstTestHoaSinh", lstTestHoaSinh);
 				model.addAttribute("lstTestViSinh", lstTestViSinh);
@@ -734,16 +734,20 @@ public class RoutingController extends BaseController {
 		try {
 			model.addAttribute("title", "Danh sách xét nghiệm");
 			Pageable pageAble = PageRequest.of(page, 10, Sort.by(Sort.Order.desc("id")));
-			Page<Test> testDate = this.testService.findTest(pageAble, findParams);
+			Page<Test> testData = this.testService.findTest(pageAble, findParams);
 			
-			if(testDate != null) {
-				model.addAttribute("pageSize", testDate.getSize());
-				model.addAttribute("pageIndex", testDate.getNumber());
-				model.addAttribute("totalPages", testDate.getTotalPages());
-				model.addAttribute("totalElements", testDate.getTotalElements());
-				List<Test> lstTest = testDate.getContent();
+			if(testData != null) {
+				model.addAttribute("pageSize", testData.getSize());
+				model.addAttribute("pageIndex", testData.getNumber());
+				model.addAttribute("totalPages", testData.getTotalPages());
+				model.addAttribute("totalElements", testData.getTotalElements());
+				List<Test> lstTest = testData.getContent();
 				model.addAttribute("lstTest", lstTest);
-				
+			}
+			
+			List<TestType> lstTestType = this.testTypeService.findTestType(PageRequest.of(0, 1000), null).getContent();
+			if(lstTestType != null) {
+				model.addAttribute("lstTestType", lstTestType);
 			}
 			
 			return createView(model, "function/boss/test/test_list.html");
@@ -850,6 +854,27 @@ public class RoutingController extends BaseController {
 		} catch (Exception e) {
 			e.printStackTrace();
 			redirAttrs.addFlashAttribute("error", "Xóa thất bại!");
+			return null;
+		}
+	}
+	
+	@GetMapping("/test-update-status/{type}/{id}")
+	public String updateTestStatus(@PathVariable("id") Long id, @PathVariable("type") String type, Model model, RedirectAttributes redirAttrs) {
+		try {
+			if(type.equals("active")) {
+				this.testService.updateTestStatus(id, 1L);
+				model.addAttribute("success", "Thao tác thành công!");
+			}else if(type.equals("deactive")){
+				this.testService.updateTestStatus(id, 0L);
+				model.addAttribute("success", "Thao tác thành công!");
+			}else {
+				model.addAttribute("error", "Thao tác thất bại!");
+			}
+			
+			return "redirect:/test-list";
+		} catch (Exception e) {
+			e.printStackTrace();
+			redirAttrs.addFlashAttribute("error", "Thao tác thất bại!");
 			return null;
 		}
 	}

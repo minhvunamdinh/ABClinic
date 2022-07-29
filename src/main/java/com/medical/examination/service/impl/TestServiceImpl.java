@@ -60,6 +60,9 @@ public class TestServiceImpl implements TestService {
 					if (findParams.getTestTypeId() != null) {
 						predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("testType").get("id"), findParams.getTestTypeId())));
 					}
+					if(findParams.getStatus() != null) {
+						predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("status"), findParams.getStatus())));
+					}
 				}
 				return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
 			}
@@ -75,6 +78,11 @@ public class TestServiceImpl implements TestService {
 	@Override
 	public Test findByTestName(String testName) {
 		return this.testRepository.findByTestName(testName);
+	}
+
+	@Override
+	public void updateTestStatus(Long id, Long status) {
+		this.testRepository.updateTestStatus(id, status);
 	}
 
 }
