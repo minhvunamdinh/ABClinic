@@ -81,8 +81,8 @@
                             <div class="row row-size">
                                 <div class="col-md-3">Email<span style="color: red;"> *</span></div>
                                 <div class="col-md-3">
-                                	<input th:if="${type == 'read'}" readOnly style="font-size: 16px;" type="email" class="form-control" th:field="*{email}" id="email" name="email">
-                                	<input th:if="${type == 'update'}" style="font-size: 16px;" type="email" class="form-control" th:field="*{email}" id="email" name="email">
+                                	<input th:if="${type == 'read'}" readOnly style="font-size: 16px;" type="text" class="form-control" th:field="*{email}" id="email" name="email">
+                                	<input th:if="${type == 'update'}" style="font-size: 16px;" type="text" class="form-control" th:field="*{email}" id="email" name="email">
                                 	<span style="color: red;" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
                                 </div>
                                 <div class="col-md-3">Địa chỉ<span style="color: red;"> *</span></div>

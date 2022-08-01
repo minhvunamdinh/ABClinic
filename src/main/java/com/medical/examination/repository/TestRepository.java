@@ -24,7 +24,6 @@ PagingAndSortingRepository<Test, Long>, JpaSpecificationExecutor<Test> {
 	public Test findByTestName(String testName);
 	
 	@Modifying
-//	@Query(value = "UPDATE test SET test.status = :status WHERE test.id = :id", nativeQuery = true)
 	@Query(value = "UPDATE Test t SET t.status = :status WHERE t.id = :id")
 	public void updateTestStatus(@Param("id") Long id, @Param("status") Long status);
 }

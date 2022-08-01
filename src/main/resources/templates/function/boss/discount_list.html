@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{index.html}">
+<head> </head>
+
+<body>
+	
+    <div layout:fragment="content">
+    	<div class="wrapper">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h3 class="page-header"><i class="fa fa-laptop"></i>Phiếu khám bệnh</h3>
+                    <ol class="breadcrumb">
+                        <li><i class="fa fa-home"></i><a th:href="@{/home}">Home</a></li>
+                        <li><i class="fa fa-laptop"></i>Doanh thu phòng khám</li>
+                    </ol>
+                </div>
+            </div>
+            
+            <div class="row">
+                <form class="form-group col-md-12" th:action="@{/list-invoice}" th:object="${findParams}" method="GET">
+                    <div class="col-md-12">
+                        <div class="col-md-3">
+                            <label>Tháng</label>
+                            <select th:field="*{month}" style="font-size: 16px; height: 34px;" class="form-control" id="month"  name="month">
+                                <option style="font-size: 16px;" value="" selected>-- Chọn tháng --</option>
+                                <option style="font-size: 16px;" value=1>Tháng 1</option>
+                                <option style="font-size: 16px;" value=2>Tháng 2</option>
+                                <option style="font-size: 16px;" value=3>Tháng 3</option>
+                                <option style="font-size: 16px;" value=4>Tháng 4</option>
+                                <option style="font-size: 16px;" value=5>Tháng 5</option>
+                                <option style="font-size: 16px;" value=6>Tháng 6</option>
+                                <option style="font-size: 16px;" value=7>Tháng 7</option>
+                                <option style="font-size: 16px;" value=8>Tháng 8</option>
+                                <option style="font-size: 16px;" value=9>Tháng 9</option>
+                                <option style="font-size: 16px;" value=10>Tháng 10</option>
+                                <option style="font-size: 16px;" value=11>Tháng 11</option>
+                                <option style="font-size: 16px;" value=12>Tháng 12</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+	                        <label>Bác sĩ khám<i style="color: red;">*</i></label>
+	                        <select class="selectpicker form-control dropdown-toggle" th:field="*{accountId}" id="accountId"  name="accountId" data-live-search="true">
+	                        	<option style="font-size: 16px;" value="" selected>-- Chọn bác sĩ --</option>
+	                            <option style="font-size: 16px;" th:each="item : ${lstBacSi}" th:value="${item.id}" th:text="${item.fullname}"></option>
+	                          </select>
+	                    </div>
+                        <div class="col-md-2">
+                            <br>
+                            <button style="font-size: 16px;" type="submit" class="btn btn-primary">Tìm kiếm</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+			<div class="text-right">
+			
+				<button id="tinhChietKhau" style="font-size: 16px;" class="btn btn-success" data-toggle="modal" data-target="#exampleModal">Tính chiết khấu</button>
+				
+				<!-- Modal -->
+                <div class="modal fade modal-xl" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document" style="position: initial; max-width: 1500px;">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                            	<p>Chiết khấu doanh thu tháng <b class="chietkhau" id="chietkhau"></b></p>
+                                
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div id="chiet-khau-area" class="modal-body">
+                            	<h1 style="text-align: center">CHIẾT KHẤU DOANH THU THÁNG <b class="chietkhau" id="chietkhau"></b></h1>
+                                <div class="row" style="font-size: 24px;">
+                                    <div class="col-md-6 text-right"><b>Tổng đơn giá:</b> </div>
+                                    <div class="col-md-6 text-left">
+                                        <input th:if="${countTotalCostPrice}" style="border: none;" hidden type="text" id="countTotalCostPrice" th:value="${countTotalCostPrice}" th:text="${#numbers.formatDecimal(countTotalCostPrice, 0, 'COMMA', 0, 'POINT')} + 'Đ'">
+                                    </div>
+                                    <div class="col-md-6 text-right"><b>Tổng thành tiền: </b></div>
+                                    <div class="col-md-6 text-left">
+                                        <input th:if="${countTotalSellPrice}" style="border: none;" hidden type="text" id="countTotalSellPrice" th:value="${countTotalSellPrice}" th:text="${#numbers.formatDecimal(countTotalSellPrice, 0, 'COMMA', 0, 'POINT')} + 'Đ'">
+                                    </div>
+                                    <div class="col-md-6 text-right"><b>Tổng tiền lãi: </b></div>
+                                    <div class="col-md-6 text-left">
+                                        <input th:if="${countTotalInterest}" style="border: none;" hidden type="text" id="countTotalInterest" th:value="${countTotalInterest}" th:text="${#numbers.formatDecimal(countTotalInterest, 0, 'COMMA', 0, 'POINT')} + 'Đ'">
+                                    </div>
+                                </div>
+
+                                <div class="row" style="font-size: 24px; margin-right: 0; margin-left: 0; background-color: #0062cc; color: #fff; margin-top: 20px;">
+                                    <div class="col-md-3 text-center">STT</div>
+                                    <div class="col-md-3 text-center">Tên bác sĩ</div>
+                                    <div class="col-md-3 text-center">% chiết khấu</div>
+                                    <div class="col-md-3 text-center">Tiền nhận</div>
+                                </div>
+
+                                <form id="form-chiet-khau">
+                                    <div th:each="item, state : ${lstBacSi}" class="row" style="font-size: 24px; margin-right: 0; margin-left: 0; margin-top: 10px;">
+                                        <div class="col-md-3 text-center" th:text="${state.index+1}"></div>
+                                        <div class="col-md-3 text-center" th:text="${item.fullname}"></div>
+                                        <div class="col-md-3 text-center"><input class="form-control" th:id="@{'chietkhau' + ${state.index+1}}" th:name="@{'chietkhau' + ${state.index+1}}" type="number" min="1" max="100" value="0" style="font-size: 16px; color: #000;"></div>
+                                        <div class="col-md-3 text-center"><input th:id="@{'tiennhan' + ${state.index+1}}" th:name="@{'tiennhan' + ${state.index+1}}" readonly class="form-control" type="text" style="font-size: 16px;"></div>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="text-center" style="margin-top: 20px;">
+                                <button type="button" id="btn-tinh-tien" class="btn btn-primary" style="font-size: 16px;">Tính tiền</button>
+                                <button hidden type="button" id="btn-export-pdf" class="btn btn-success" style="font-size: 16px;">Xuất PDF</button>
+                                <a th:href="@{/discount-list-invoice}"><button hidden type="button" id="btn-confirm" class="btn btn-primary" style="font-size: 16px;">Xác nhận</button></a>
+                            </div>
+                            <div class="modal-footer">
+                                <button style="font-size: 16px;" type="button" class="btn btn-danger" data-dismiss="modal">Đóng</button>
+                                <!--<button style="font-size: 16px;" type="button" class="btn btn-primary">Xác nhận</button>-->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+			</div>
+            <div class="row" style="margin-top: 20px;">
+                <table class="table">
+                    
+                    <thead class="thead-dark">
+                      <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Bệnh nhân</th>
+                        <th scope="col">Bác sĩ khám</th>
+                        <th scope="col">Ngày tạo</th>
+                        <th scope="col">Tổng đơn giá</th>
+                        <th scope="col">Tổng thành tiền</th>
+                        <th scope="col">Tiền lãi</th>
+                        <th class="noExl" scope="col">Chiết khấu</th>
+                        <th class="noExl" scope="col">Thao tác</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr th:each="item, state : ${lstInvoice}">
+                        <th scope="row" th:text="${state.index+1}"></th>
+                        <td th:text="${item.clinicWorking.customer.fullname}"></td>
+                        <td th:text="${item.clinicWorking.account.fullname}"></td>
+                        <td th:text="${#dates.format(item.createdDate, 'dd-MM-yyyy')}"></td>
+                        <td th:text="${#numbers.formatDecimal(item.totalCostPrice, 0, 'COMMA', 0, 'POINT')} + 'Đ'"></td>
+                        <td th:text="${#numbers.formatDecimal(item.totalSellPrice, 0, 'COMMA', 0, 'POINT')} + 'Đ'"></td>
+                        <td th:text="${#numbers.formatDecimal((item.totalSellPrice - item.totalCostPrice), 0, 'COMMA', 0, 'POINT')} + 'Đ'"></td>
+                        <td class="noExl" >
+                        	<p th:if="${item.isDiscounted == 0}">Chưa chiết khấu</p>
+                        	<p th:if="${item.isDiscounted == 1}">Đã chiết khấu</p>
+                        </td>
+                        <td class="noExl">
+                        	<a th:href="@{'/view-invoice-detail/' + ${item.id}}"><button style="font-size: 16px;" class="btn btn-success">Chi tiết hóa đơn</button></a>
+                        </td>
+                      </tr>
+                    </tbody>
+                    <thead class="thead-dark">
+                      <tr>
+                        <th scope="col">Tổng</th>
+                        <th scope="col"></th>
+                        <th scope="col"></th>
+                        <th scope="col"></th>
+                        <th scope="col"><p th:if="${countTotalCostPrice != null && countTotalCostPrice > 0}" scope="col" th:text="${#numbers.formatDecimal(countTotalCostPrice, 0, 'COMMA', 0, 'POINT')} + 'Đ'"></p></th>
+                        <th scope="col"><p th:if="${countTotalSellPrice != null && countTotalSellPrice > 0}" scope="col" th:text="${#numbers.formatDecimal(countTotalSellPrice, 0, 'COMMA', 0, 'POINT')} + 'Đ'"></p></th>
+                        <th scope="col"><p th:if="${countTotalInterest != null && countTotalInterest > 0}" scope="col" th:text="${#numbers.formatDecimal(countTotalInterest, 0, 'COMMA', 0, 'POINT')} + 'Đ'"></p></th>
+                        <th scope="col"></th>
+                      </tr>
+                    </thead>
+                  </table>
+                  <th:block th:if="${totalElements > 0}">
+                    <nav aria-label="Page navigation" style="text-align: center; width: 100%;">
+                    <ul class="pagination justify-content-end">
+                            <li class="page-item" th:classappend="${pageIndex} <= 0 ? 'disabled' : ''">
+                            <a class="page-link" th:href="@{'/list-invoice?page='+ ${pageIndex-1}}"><</a>
+                            </li>
+
+                            <li  th:classappend="${pageIndex} != ${index-1} ? 'page-item' :'page-item active' "
+                                th:each="index : ${#numbers.sequence(1, totalPages)}">
+                            <a class="page-link" th:href="@{'/list-invoice?page='+ ${index-1}}" th:text="${index}">1</a>
+                            </li>
+
+                            <li class="page-item" th:classappend="${pageIndex} >= ${totalPages} - 1 ? 'disabled' : ''">
+                            <a class="page-link" th:href="@{'/list-invoice?page='+ ${pageIndex+1}}">></a>
+                            </li>
+                        </ul>
+                    </nav>
+                  </th:block>
+            </div>
+        </div>
+    </div>
+    
+    
+</body>
+
+</html>
+<script src="//cdn.jsdelivr.net/gh/rainabba/jquery-table2excel@1.1.0/dist/jquery.table2excel.min.js"></script>
+<script  th:inline="javascript">
+    function formatVnd(money) {
+        return Math.round(money).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,') + "Đ"
+    }
+
+	$("#tinhChietKhau").click(function(){
+		$(".chietkhau").text($("#month").val())
+    });
+
+    $("#btn-tinh-tien").click(function(){
+		var formData = $("#form-chiet-khau").serializeArray();
+        var totalChietKhau = 0;
+        var chietKhauArray = []
+        for(var i = 1; i <= formData.length/2; i++){
+            let idChietKhau = "#chietkhau" + i;
+            let chietKhauItem = $(idChietKhau).val()
+            chietKhauArray.push(chietKhauItem);
+            totalChietKhau += parseInt(chietKhauItem);
+            console.log('chietkhau: ',$(idChietKhau).val())
+        }
+
+        if(totalChietKhau > 100){
+            alert('Tổng chiết khấu lớn hơn 100%')
+            return;
+        }
+        
+        var tongTienLai = $("#countTotalInterest").val();
+        
+        if(!tongTienLai){
+        	alert('Không có doanh thu!');
+        	return;
+        }
+
+		var tienLaiArray = []
+        for(var i = 1; i <= formData.length/2; i++){
+            let idTienNhan = "#tiennhan" + i;
+            let giaTritongTienLai = parseInt(tongTienLai)
+            let tienLai = (giaTritongTienLai * chietKhauArray[i-1])/100
+            tienLaiArray.push(tienLai);
+            $(idTienNhan).val(formatVnd(tienLai))
+        }
+        console.log('chiet khau:', chietKhauArray)
+        console.log('tien lai:', tienLaiArray)
+        $("#btn-export-pdf").removeAttr("hidden")
+        $("#btn-confirm").removeAttr("hidden")
+    });
+    
+    $("#btn-export-pdf").click(function () {
+    	console.log($('#chiet-khau-area')[0])
+        html2canvas($('#chiet-khau-area')[0], {
+            onrendered: function (canvas) {
+                var data = canvas.toDataURL();
+                var docDefinition = {
+                    content: [{
+                        image: data,
+                        width: 500,
+                    }]
+                };
+                pdfMake.createPdf(docDefinition).download("chiet-khau.pdf");
+            }
+        });
+    })
+
+	$("#btn-export").click(function(){
+		$(".table").table2excel({
+			exclude: ".noExl",
+			name: "doanhthu",
+			filename: "doanhthu"
+		});
+    });
+    
+</script>

@@ -1,6 +1,8 @@
 package com.medical.examination.service.impl;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,6 +30,9 @@ public class CustomerServiceImpl implements CustomerService {
 
 	@Override
 	public Customer saveCustomer(Customer customer) {
+		if(customer.getId() == null) {
+			customer.setCreatedDate(new Date());
+		}
 		return this.customerRepository.save(customer);
 	}
 
@@ -67,6 +72,36 @@ public class CustomerServiceImpl implements CustomerService {
 					}
 					if (findParams.getGender() != null) {
 						predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("gender"), findParams.getGender())));
+					}
+					if(findParams.isFindNewCustomer() == true) {
+						Date firstDayOfMonth = new Date();
+						firstDayOfMonth.setDate(1);
+						firstDayOfMonth.setMonth((int) (new Date().getMonth()));
+						firstDayOfMonth.setHours(0);
+						firstDayOfMonth.setMinutes(0);
+						firstDayOfMonth.setSeconds(0);
+
+						Date newDateLastDayOfMonth = new Date();
+						newDateLastDayOfMonth.setMonth((int) (firstDayOfMonth.getMonth() - 1));
+						newDateLastDayOfMonth.setHours(23);
+						newDateLastDayOfMonth.setMinutes(59);
+						newDateLastDayOfMonth.setSeconds(59);
+						
+				        Calendar calendar = Calendar.getInstance();  
+				        calendar.setTime(newDateLastDayOfMonth);  
+
+				        calendar.add(Calendar.MONTH, 1);  
+				        calendar.set(Calendar.DAY_OF_MONTH, 1);  
+				        calendar.add(Calendar.DATE, -1);  
+
+				        Date lastDayOfMonth = calendar.getTime();
+				        
+				        System.out.println("1: " + firstDayOfMonth);
+				        System.out.println("2: " + lastDayOfMonth);
+				        
+						predicates.add(criteriaBuilder.and(criteriaBuilder.greaterThanOrEqualTo(root.get("createdDate"), firstDayOfMonth)));
+						predicates.add(criteriaBuilder.and(criteriaBuilder.lessThanOrEqualTo(root.get("createdDate"), lastDayOfMonth)));
+						
 					}
 				}
 				return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));

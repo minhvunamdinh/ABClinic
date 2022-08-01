@@ -65,6 +65,12 @@ public class InvoiceServiceImpl implements InvoiceService {
 					if(findParams.getAccountId() != null) {
 						predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("clinicWorking").get("account").get("id"),findParams.getAccountId())));
 					}
+					if(findParams.getAccountName() != null) {
+						predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("clinicWorking").get("account").get("fullname"),findParams.getAccountName())));
+					}
+					if(findParams.getIsDiscount() != null) {
+						predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("isDiscounted"),findParams.getIsDiscount())));
+					}
 					if(findParams.getMonth() != null) {
 						Date firstDayOfMonth = new Date();
 						firstDayOfMonth.setDate(1);
@@ -121,6 +127,11 @@ public class InvoiceServiceImpl implements InvoiceService {
         Date lastDayOfMonth = calendar.getTime();
         System.out.println("First Day of Month: " + firstDayOfMonth);  
         System.out.println("Last Day of Month: " + lastDayOfMonth);
+	}
+
+	@Override
+	public void updateIsDiscounted(Long id, Long isDiscounted) {
+		this.invoiceRepository.updateIsDiscounted(id, isDiscounted);
 	}
 
 }

@@ -14,8 +14,10 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -29,9 +31,11 @@ public class Customer {
 	private Long id;
 	@Column(name = "fullname")
 	@NotEmpty(message = "Thông tin bắt buộc!")
+	@Size(min = 6, max = 255, message = "Độ dài phải từ 6 đến 255 ký tự")
 	private String fullname;
 	@Column(name = "phone")
 	@NotEmpty(message = "Thông tin bắt buộc!")
+	@Size(min = 10, max = 10, message = "Số điện thoại phải có 10 chữ số")
 	private String phone;
 	@Column(name = "gender")
 	@NotNull(message = "Thông tin bắt buộc!")
@@ -50,11 +54,14 @@ public class Customer {
 	@NotEmpty(message = "Thông tin bắt buộc!")
 	private String country;
 	@Column(name = "email")
-	@NotEmpty(message = "Thông tin bắt buộc!")
+	@NotBlank(message = "Thông tin bắt buộc!")
 	@Email(message = "Sai định dạng email!")
 	private String email;
 	@Column(name = "`desc`")
 	private String desc;
+	@Column(name = "created_date")
+	@DateTimeFormat (pattern="yyyy-MM-dd")
+	private Date createdDate;
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "customer", cascade = CascadeType.REMOVE)
 	//@JsonIgnore
 	private List<ClinicWorking> lstClinicWorking = new ArrayList<ClinicWorking>();
@@ -124,6 +131,12 @@ public class Customer {
 	}
 	public void setDesc(String desc) {
 		this.desc = desc;
+	}
+	public Date getCreatedDate() {
+		return createdDate;
+	}
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
 	}
 	
 }
