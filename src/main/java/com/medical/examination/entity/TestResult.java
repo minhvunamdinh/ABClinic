@@ -44,6 +44,8 @@ public class TestResult {
 	private Double totalCostPrice;
 	@Column(name = "total_sell_price")
 	private Double totalSellPrice;
+	@Column(name = "is_called")
+	private Long isCalled;
 	public Long getId() {
 		return id;
 	}
@@ -127,6 +129,12 @@ public class TestResult {
 	}
 	public void setTotalSellPrice(Double totalSellPrice) {
 		this.totalSellPrice = totalSellPrice;
+	}
+	public Long getIsCalled() {
+		return isCalled;
+	}
+	public void setIsCalled(Long isCalled) {
+		this.isCalled = isCalled;
 	}
 	
 }

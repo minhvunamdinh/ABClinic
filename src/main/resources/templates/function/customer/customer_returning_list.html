@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{index.html}">
+<head> </head>
+
+<body>
+    <div layout:fragment="content">
+    	<div class="wrapper">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h3 class="page-header"><i class="fa fa-laptop"></i>Danh mục</h3>
+                    <ol class="breadcrumb">
+                        <li><i class="fa fa-home"></i><a th:href="@{/home}">Home</a></li>
+                        <li><i class="fa fa-laptop"></i>Danh sách Bệnh nhân</li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="row" style="margin-top: 20px;">
+                <table class="table">
+                    
+                    <thead class="thead-dark">
+                      <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Mã hồ sơ</th>
+                        <th scope="col">Bệnh nhân</th>
+                        <th scope="col">Số điện thoại</th>
+                        <th scope="col">Bác sĩ khám</th>
+                        <th scope="col">Ngày khám</th>
+                        <th scope="col">Trạng thái</th>
+                        <th scope="col">Thao tác</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr th:each="item, state : ${lstTestResult}">
+                        <th scope="row" th:text="${state.index+1}"></th>
+                        <td th:text="${item.code}"></td>
+                        <td th:text="${item.clinicWorking.customer.fullname}"></td>
+                        <td th:text="${item.clinicWorking.customer.phone}"></td>
+                        <td th:text="${item.clinicWorking.account.fullname}"></td>
+                        <td th:text="${#dates.format(item.createdDate, 'dd-MM-yyyy')}"></td>
+                        <td th:if="${item.isCalled==0}">Chưa liên hệ</td>
+                        <td th:if="${item.isCalled==1}">Đã liên hệ</td>
+                        <td style="color: #fff;">
+                        	<a style="font-size: 16px;" th:href="@{'/customer-returning-detail/' + ${item.id}}" class="btn btn-success">Chi tiết</a>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <th:block class="text-center">
+                    <nav aria-label="Page navigation" style="text-align: center; width: 100%;">
+                    <ul class="pagination justify-content-end">
+                            <li class="page-item" th:classappend="${pageIndex} <= 0 ? 'disabled' : ''">
+                            	<a class="page-link" th:href="@{'/customer-returning-list?page='+ ${pageIndex-1}}"><</a>
+                            </li>
+
+                            <li  th:classappend="${pageIndex} != ${index-1} ? 'page-item' :'page-item active' "
+                                th:each="index : ${#numbers.sequence(1, totalPages)}">
+                            <a class="page-link" th:href="@{'/customer-returning-list?page='+ ${index-1}}" th:text="${index}">1</a>
+                            </li>
+
+                            <li class="page-item" th:classappend="${pageIndex} >= ${totalPages} - 1 ? 'disabled' : ''">
+                            <a class="page-link" th:href="@{'/customer-returning-list?page='+ ${pageIndex+1}}">></a>
+                            </li>
+                        </ul>
+                    </nav>
+                  </th:block>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

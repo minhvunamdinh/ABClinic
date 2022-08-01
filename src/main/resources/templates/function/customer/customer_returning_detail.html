@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{index.html}">
+<head> </head>
+
+<body>
+    <div layout:fragment="content">
+    	<div class="wrapper">
+	    	<div class="row">
+                <div class="col-lg-12">
+                    <h3 class="page-header"><i class="fa fa-laptop"></i>Chi tiết lịch hẹn khám</h3>
+                    <ol class="breadcrumb">
+                        <li><i class="fa fa-home"></i><a th:href="@{/home}">Home</a></li>
+                        <li><i class="fa fa-laptop"></i>Danh sách bệnh nhân hẹn khám</li>
+                        <li><i class="fa fa-laptop"></i>Chi tiết lịch hẹn khám</li>
+                    </ol>
+                </div>
+            </div>
+            <div class="text-center"><h1>CHI TIẾT PHIẾU KHÁM BỆNH</h1></div>
+            <div class="row" style="background-color: #fff; padding-bottom: 30px;">
+                <div class="col-md-3"></div>
+                <div class="col-md-6 detail-table" style=" background-color: #91fffa;">
+                    <div class="row">
+                        <div class="col-md-6 text-center detail-table-item">Họ và tên</div>
+                        <div class="col-md-6 text-center detail-table-item" th:text="${testResult.clinicWorking.customer.fullname}"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 text-center detail-table-item">Bác sĩ khám</div>
+                        <div class="col-md-6 text-center detail-table-item" th:text="${testResult.clinicWorking.account.fullname}"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 text-center detail-table-item">Ngày khám</div>
+                        <div class="col-md-6 text-center detail-table-item" th:text="${#dates.format(testResult.clinicWorking.createdDate, 'dd-MM-yyyy')}"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 text-center detail-table-item">Ngày sinh</div>
+                        <div class="col-md-6 text-center detail-table-item" th:text="${#dates.format(testResult.clinicWorking.customer.dob, 'dd-MM-yyyy')}"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 text-center detail-table-item">Giới tính</div>
+                        <div class="col-md-6 text-center detail-table-item" th:if="${testResult.clinicWorking.customer.gender==1}">Nam</div>
+                        <div class="col-md-6 text-center detail-table-item" th:if="${testResult.clinicWorking.customer.gender==0}">Nữ</div>
+                        <div class="col-md-6 text-center detail-table-item" th:if="${testResult.clinicWorking.customer.gender==-1}">Khác</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 text-center detail-table-item">Quốc gia</div>
+                        <div class="col-md-6 text-center detail-table-item" th:text="${testResult.clinicWorking.customer.country}"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 text-center detail-table-item">Công việc</div>
+                        <div class="col-md-6 text-center detail-table-item" th:text="${testResult.clinicWorking.customer.job}"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 text-center detail-table-item">Email</div>
+                        <div class="col-md-6 text-center detail-table-item" th:text="${testResult.clinicWorking.customer.email}"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 text-center detail-table-item">Số điện thoại</div>
+                        <div class="col-md-6 text-center detail-table-item" th:text="${testResult.clinicWorking.customer.phone}"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 text-center detail-table-item">Ghi chú</div>
+                        <div class="col-md-6 text-center detail-table-item" th:text="${testResult.clinicWorking.customer.desc}"></div>
+                    </div>
+                    <div  class="row">
+                        <div class="col-md-6 text-center detail-table-item">Ngày khám</div>
+                        <div class="col-md-6 text-center detail-table-item" th:text="${#dates.format(testResult.createdDate, 'dd-MM-yyyy')}"></div>
+                    </div>
+                    <div  class="row">
+                        <div class="col-md-6 text-center detail-table-item">Hẹn tái khám</div>
+                        <div class="col-md-6 text-center detail-table-item" th:text="${#dates.format(testResult.timeReturn, 'dd-MM-yyyy')}"></div>
+                    </div>
+                    <div  class="row">
+                        <div class="col-md-6 text-center detail-table-item">Kết quả chuẩn đoán</div>
+                        <div class="col-md-6 text-center detail-table-item" th:text="${testResult.diagnosticResult}"></div>
+                    </div>
+                    <div  class="row">
+                        <div class="col-md-6 text-center detail-table-item">Xét nghiệm đã chỉ định</div>
+                        <div class="col-md-6 text-center detail-table-item" th:text="${testResult.lstTest}"></div>
+                    </div>
+                    <div  class="row">
+                        <div class="col-md-6 text-center detail-table-item">Kết quả xét nghiệm</div>
+                        <div class="col-md-6 text-center detail-table-item" th:text="${testResult.testResult}"></div>
+                    </div>      
+                </div>
+                <div class="col-md-3"></div>
+            </div>
+            <div class="text-center" style="margin-top: 20px;">
+                <a th:href="@{/customer-returning-list}"><button style="font-size: 16px;" class="btn btn-danger">Trở về</button></a>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

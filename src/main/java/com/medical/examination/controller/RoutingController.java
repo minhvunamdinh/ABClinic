@@ -383,6 +383,44 @@ public class RoutingController extends BaseController {
 		}
 	}
 	
+	@GetMapping("/customer-returning-list")
+	public String viewCustomerReturningPage(@RequestParam(name = "page", defaultValue = "0") int page, Model model, @ModelAttribute("findParams") TestResultFindParams findParams) {
+		try {
+			model.addAttribute("title", "Danh sách bệnh nhân hẹn khám");
+			Pageable pageAble = PageRequest.of(page, 10, Sort.by(Sort.Order.desc("id")));
+			Page<TestResult> testResultData = this.testResultService.findTestResult(pageAble, findParams);
+			if(testResultData != null) {
+				model.addAttribute("pageSize", testResultData.getSize());
+				model.addAttribute("pageIndex", testResultData.getNumber());
+				model.addAttribute("totalPages", testResultData.getTotalPages());
+				model.addAttribute("totalElements", testResultData.getTotalElements());
+				List<TestResult> lstTestResult = testResultData.getContent();
+				model.addAttribute("lstTestResult", lstTestResult);
+			}
+			
+			return createView(model, "function/customer/customer_returning_list.html");
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	@GetMapping("/customer-returning-detail/{id}")
+	public String viewCustomerReturningDetailPage(@PathVariable("id") Long id, Model model) {
+		try {
+			model.addAttribute("title", "Chi tiết bệnh nhân hẹn khám");
+			TestResult testResult = this.testResultService.getTestResultById(id);
+			if(testResult != null) {
+				model.addAttribute("testResult", testResult);
+			}
+			
+			return createView(model, "function/customer/customer_returning_detail.html");
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
 	@GetMapping("/invoice")
 	public String viewInvoicePage(Model model) {
 		try {
