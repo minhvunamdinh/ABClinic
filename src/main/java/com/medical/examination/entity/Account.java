@@ -13,6 +13,13 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.AssertTrue;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
+
+import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -33,6 +40,7 @@ public class Account {
 	@Column(name = "address")
 	private String address;
 	@Column(name = "dob")
+	@DateTimeFormat (pattern="yyyy-MM-dd")
 	private Date dob;
 	@Column(name = "gender")
 	private Long gender;

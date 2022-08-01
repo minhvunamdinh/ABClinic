@@ -1,6 +1,7 @@
 package com.medical.examination.repository;
 
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
@@ -18,4 +19,8 @@ PagingAndSortingRepository<Account, Long>, JpaSpecificationExecutor<Account> {
 	
 	@Query(value = "SELECT a FROM Account a WHERE a.id = :id")
 	Account getAccountById(@Param("id") Long id);
+	
+	@Modifying
+	@Query(value = "UPDATE Account c SET c.isActive = :status WHERE c.id = :id")
+	public void updateAccountStatus(@Param("id") Long id, @Param("status") Long status);
 }

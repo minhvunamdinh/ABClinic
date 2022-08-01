@@ -9,6 +9,8 @@ public class InvoiceFindParams {
 	private Double totalSellPrice;
 	private Long month;
 	private Long accountId;
+	private String accountName;
+	private Long isDiscount;
 	public Long getId() {
 		return id;
 	}
@@ -56,5 +58,17 @@ public class InvoiceFindParams {
 	}
 	public void setAccountId(Long accountId) {
 		this.accountId = accountId;
+	}
+	public Long getIsDiscount() {
+		return isDiscount;
+	}
+	public void setIsDiscount(Long isDiscount) {
+		this.isDiscount = isDiscount;
+	}
+	public String getAccountName() {
+		return accountName;
+	}
+	public void setAccountName(String accountName) {
+		this.accountName = accountName;
 	}
 }

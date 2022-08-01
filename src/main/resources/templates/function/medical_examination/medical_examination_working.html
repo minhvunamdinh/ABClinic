@@ -220,7 +220,7 @@
                                     <button type="button" class="btn btn-primary" id="btn-confirm" data-dismiss="modal">Xác nhận</button>
                                     <button id="insideClinic" type="button" class="btn btn-primary" data-toggle="modal" href="#exportPdfInsideClinic">Xuất xét nghiệm có tại phòng
                                         khám</button>
-                                    <button id="outsideClinic" type="button" class="btn btn-primary" data-toggle="modal" href="#exportPdfInsideClinic">Xuất xét nghiệm không có tại phòng
+                                    <button id="outsideClinic" type="button" class="btn btn-primary" data-toggle="modal" href="#exportPdfOutsideClinic">Xuất xét nghiệm không có tại phòng
                                         khám</button>
                                 </div>
                             </div>
@@ -231,7 +231,7 @@
                         <div class="modal-dialog" role="document" style="position: initial;">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title" id="export-title"></h5>
+                                    <h5 class="modal-title" id="export-title">Chỉ định xét nghiệm ngoài phòng khám</h5>
                                 </div>
                                 <div class="modal-body">
                                     <div class="test-area" id="exportPdfFileInsideClinic">
@@ -266,14 +266,51 @@
                             </div>
                         </div>
                 </div>
-                 <!-- Modal chỉ định xét nghiệm tại phòng khám -->
-                </div>
             </div>
+            <!-- Modal chỉ định xét nghiệm ngoài phòng khám -->
+                    <div class="modal fade modal-xl" id="exportPdfOutsideClinic" tabindex="-2" role="dialog" aria-labelledby="modalExportPdfOutsideClinic" aria-hidden="true">
+                        <div class="modal-dialog" role="document" style="position: initial;">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Chỉ định xét nghiệm ngoài phòng khám</h5>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="test-area" id="exportPdfFileOutsideClinic">
+                                        <div class="row">
+                                            <div class="col-md-12 text-center"><h1>Phiếu yêu cầu xét nghiệm ngoài phòng khám</h1></div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-3 text-right">Họ tên</div>
+                                            <div class="col-md-3">[[${clinicWorking.customer.fullname}]]</div>
+                                            <div class="col-md-3 text-right">Ngày sinh</div>
+                                            <div class="col-md-3">[[${#dates.format(clinicWorking.customer.dob, 'dd-MM-yyyy')}]]</div>
+                                            <div class="col-md-3 text-right">Giới tính</div>
+                                            <div th:if="${clinicWorking.customer.gender == 1}" class="col-md-3">Nam</div>
+                                            <div th:if="${clinicWorking.customer.gender == 0}" class="col-md-3">Nữ</div>
+                                            <div th:if="${clinicWorking.customer.gender == -1}" class="col-md-3">Khác</div>
+                                            <div class="col-md-3 text-right">SĐT</div>
+                                            <div class="col-md-3">[[${clinicWorking.customer.phone}]]</div>
+                                            <div class="col-md-3 text-right">Địa chỉ</div>
+                                            <div class="col-md-9">[[${clinicWorking.customer.address}]]</div>
+                                        </div>
+                                        <div class="row" style="margin-bottom: 20px;margin-top: 20px;">
+                                            <div class="container export-test-area-outside" style="background-color: #91fffa;">
+                                                
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-danger" data-dismiss="modal">Đóng</button>
+                                    <button id="btnExportPdfFileOutsideClinic" type="button" class="btn btn-primary" >Xuất PDF</button>
+                                </div>
+                            </div>
+                        </div>
+                </div>
+                 <!-- Modal chỉ định xét nghiệm tại phòng khám -->
         </div>
     </div>
     </div>
-
-
 
 
 </body>
@@ -295,6 +332,10 @@
 
     .modalExportPdfInsideClinic{
         z-index: 2001;
+    }
+    
+    .modalExportPdfOutsideClinic{
+        z-index: 200000;
     }
 
     @media (min-width: 576px) {
@@ -343,6 +384,7 @@
     })
     var lstObjectTest = [] //list xet nghiem de xuat PDF
     $("#btn-chidinh").click(function () {
+    	debugger
         let values = {};
         let results = []
         $.each($('#test-form').serializeArray(), function (i, field) {
@@ -361,30 +403,47 @@
             lstObjectTest.push(objectTest)
         })
         console.log('lst object: ', lstObjectTest)
+        
+        var lstObjectTestOutside = [] //list xet nghiem ngoai phong kham de xuat PDF
+        var lstObjectTestInside = [] //list xet nghiem ngoai phong kham de xuat PDF
+        lstObjectTest.forEach(item => {
+            if(item.costPrice == 0){
+            	lstObjectTestOutside.push(item);
+            }else{
+            	lstObjectTestInside.push(item);
+            }
+        })
         $("#testList").val(lstTest)
 
         $(".export-test-area").empty()
         $(".export-test-area").append('<div class="row test-result-item text-center"><div class="col-md-3 test-type-item">Tên hàng hóa</div><div class="col-md-3 test-type-item">Số lần</div><div class="col-md-3 test-type-item">Đơn giá</div><div class="col-md-3 test-type-item">Thành tiền</div></div>')
         let totalSellPrice = 0;
         let totalCostPrice = 0;
-        lstObjectTest.forEach(item => {
+        lstObjectTestInside.forEach(item => {
             let divTest = '<div class="row test-result-item text-center"><div class="col-md-3 test-type-item">Xét nghiệm '+item.testName+'</div><div class="col-md-3 test-type-item">1</div><div class="col-md-3 test-type-item">'+formatVnd(item.costPrice)+'</div><div class="col-md-3 test-type-item">'+formatVnd(item.sellPrice)+'</div></div>'
             $(".export-test-area").append(divTest)
             totalSellPrice += parseFloat(item.sellPrice);
             totalCostPrice += parseFloat(item.costPrice);
-            debugger
         })
 
         $("#totalSellPrice").val(totalSellPrice)
         $("#totalCostPrice").val(totalCostPrice)
-
-        console.log('total cost: ', totalCostPrice)
-        console.log('total sell: ', totalSellPrice)
         
         $(".export-test-area").append('<div class="row test-result-item text-center"><div class="col-md-12 test-type-item">&ensp;</div></div>')
         $(".export-test-area").append('<div class="row test-result-item text-center"><div class="col-md-3 test-type-item">Tiền khám bệnh</div><div class="col-md-3 test-type-item"> </div><div class="col-md-3 test-type-item"> </div><div class="col-md-3 test-type-item">200,000Đ</div></div>')
         $(".export-test-area").append('<div class="row test-result-item text-center"><div class="col-md-12 test-type-item">&ensp;</div></div>')
         $(".export-test-area").append('<div class="row test-result-item text-center"><div class="col-md-3 test-type-item">Tổng tiền</div><div class="col-md-3 test-type-item"> </div><div class="col-md-3 test-type-item"> </div><div class="col-md-3 test-type-item">'+formatVnd(totalSellPrice + 200000)+'</div></div>')
+        
+        //Xuat ngoai phong kham
+        $(".export-test-area-outside").empty()
+        $(".export-test-area-outside").append('<div class="row test-result-item text-center"><div class="col-md-3 test-type-item">Tên hàng hóa</div><div class="col-md-3 test-type-item">Số lần</div><div class="col-md-3 test-type-item">Đơn giá</div><div class="col-md-3 test-type-item">Thành tiền</div></div>')
+        lstObjectTestOutside.forEach(item => {
+            let divTest = '<div class="row test-result-item text-center"><div class="col-md-3 test-type-item">Xét nghiệm '+item.testName+'</div><div class="col-md-3 test-type-item">1</div><div class="col-md-3 test-type-item">0Đ</div><div class="col-md-3 test-type-item">0Đ</div></div>'
+            $(".export-test-area-outside").append(divTest)
+        })
+        
+        $(".export-test-area-outside").append('<div class="row test-result-item text-center"><div class="col-md-12 test-type-item">&ensp;</div></div>')
+        $(".export-test-area-outside").append('<div class="row test-result-item text-center"><div class="col-md-3 test-type-item">Tổng tiền</div><div class="col-md-3 test-type-item"> </div><div class="col-md-3 test-type-item"> </div><div class="col-md-3 test-type-item">0Đ</div></div>')
     })
 
     function formatVnd(money) {
@@ -426,6 +485,21 @@
 
     $("#btnExportPdfFileInsideClinic").click(function () {
         html2canvas($('#exportPdfFileInsideClinic')[0], {
+            onrendered: function (canvas) {
+                var data = canvas.toDataURL();
+                var docDefinition = {
+                    content: [{
+                        image: data,
+                        width: 500,
+                    }]
+                };
+                pdfMake.createPdf(docDefinition).download("tests-inside-clinic.pdf");
+            }
+        });
+    })
+    
+    $("#btnExportPdfFileOutsideClinic").click(function () {
+        html2canvas($('#exportPdfFileOutsideClinic')[0], {
             onrendered: function (canvas) {
                 var data = canvas.toDataURL();
                 var docDefinition = {

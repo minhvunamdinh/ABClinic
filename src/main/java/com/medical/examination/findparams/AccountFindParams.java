@@ -14,6 +14,15 @@ public class AccountFindParams {
 	private Long role;
 	private Long isWorking;
 	private Long status;
+	private boolean isBossUsing;
+	private String email;
+	
+	public String getEmail() {
+		return email;
+	}
+	public void setEmail(String email) {
+		this.email = email;
+	}
 	public Long getId() {
 		return id;
 	}
@@ -79,6 +88,12 @@ public class AccountFindParams {
 	}
 	public void setStatus(Long status) {
 		this.status = status;
+	}
+	public boolean isBossUsing() {
+		return isBossUsing;
+	}
+	public void setBossUsing(boolean isBossUsing) {
+		this.isBossUsing = isBossUsing;
 	}
 	
 }

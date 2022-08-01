@@ -57,6 +57,17 @@ public class AccountServiceImpl implements AccountService {
 						predicates.add(criteriaBuilder.and(criteriaBuilder.like(criteriaBuilder.lower(root.get("username")),
 								"%" + findParams.getUsername().trim().toLowerCase() + "%")));
 					}
+					if (findParams.getFullname() != null) {
+						predicates.add(criteriaBuilder.and(criteriaBuilder.like(criteriaBuilder.lower(root.get("fullname")),
+								"%" + findParams.getFullname().trim().toLowerCase() + "%")));
+					}
+					if (findParams.getEmail() != null) {
+						predicates.add(criteriaBuilder.and(criteriaBuilder.like(criteriaBuilder.lower(root.get("email")),
+								"%" + findParams.getEmail().trim().toLowerCase() + "%")));
+					}
+					if (findParams.getGender() != null) {
+						predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("gender"), findParams.getGender())));
+					}
 					if (findParams.getIsWorking() != null) {
 						predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("isWorking"), findParams.getIsWorking())));
 					}
@@ -66,6 +77,9 @@ public class AccountServiceImpl implements AccountService {
 					if (findParams.getRole() != null) {
 						predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("role"), findParams.getRole())));
 					}
+					if (findParams.isBossUsing() == true) {
+						predicates.add(criteriaBuilder.and(criteriaBuilder.notEqual(root.get("role"), 1L)));
+					}
 				}
 				return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
 			}
@@ -74,6 +88,11 @@ public class AccountServiceImpl implements AccountService {
 	}
 	
 	public static void main(String[] args) {
+	}
+
+	@Override
+	public void updateAccountStatus(Long id, Long status) {
+		this.accountRepository.updateAccountStatus(id, status);
 	}
 
 }

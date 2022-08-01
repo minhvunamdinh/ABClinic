@@ -34,6 +34,7 @@
                     <li><a class="" th:href="@{/customer-list}">DS bệnh nhân</a></li>
                     <li th:if="${currentUser.role == 1}"><a class="" th:href="@{/test-type-list}">DS loại xét nghiệm</a></li>
                     <li th:if="${currentUser.role == 1}"><a class="" th:href="@{/test-list}">DS xét nghiệm</a></li>
+                    <li th:if="${currentUser.role == 1}"><a class="" tH:href="@{/list-account}">Danh sách người dùng</a></li>
                 </ul>
             </li>
             <!--<li>
@@ -59,6 +60,8 @@
                 </a>
                 <ul class="sub">
                     <li><a class="" tH:href="@{/list-invoice}">Doanh thu phòng khám</a></li>
+                    <li><a class="" tH:href="@{/list-discount}">Chiết khấu doanh thu</a></li>
+                    
                 </ul>
             </li>
 

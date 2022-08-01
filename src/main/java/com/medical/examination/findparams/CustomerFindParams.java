@@ -16,6 +16,7 @@ public class CustomerFindParams {
 	private String country;
 	private String email;
 	private String desc;
+	private boolean isFindNewCustomer;
 	public Long getId() {
 		return id;
 	}
@@ -75,5 +76,11 @@ public class CustomerFindParams {
 	}
 	public void setDesc(String desc) {
 		this.desc = desc;
+	}
+	public boolean isFindNewCustomer() {
+		return isFindNewCustomer;
+	}
+	public void setFindNewCustomer(boolean isFindNewCustomer) {
+		this.isFindNewCustomer = isFindNewCustomer;
 	}
 }

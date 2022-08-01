@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{index.html}">
+<head> </head>
+
+<body>
+    <div layout:fragment="content">
+    	<div class="wrapper">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h3 class="page-header"><i class="fa fa-laptop"></i>Danh sách người dùng</h3>
+                    <ol class="breadcrumb">
+                        <li><i class="fa fa-home"></i><a th:href="@{/home}">Home</a></li>
+                        <li><i class="fa fa-laptop"></i>Danh sách người dùng</li>
+                    </ol>
+                </div>
+            </div>
+            
+            <div class="row">
+                <form class="form-group col-md-12" th:action="@{/list-account}" th:object="${findParams}" method="GET">
+                    <div class="col-md-12">
+                    	<div class="col-md-3">
+                            <label>Tên tài khoản</label>
+                            <input style="font-size: 16px;" type="text" class="form-control" th:field="*{username}" id="username"  name="username">
+                        </div>
+                        <div class="col-md-3">
+                            <label>Họ tên</label>
+                            <input style="font-size: 16px;" type="text" class="form-control" th:field="*{fullname}" id="fullname"  name="fullname">
+                        </div>
+                        <div class="col-md-3">
+                            <label>Giới tính</label>
+                            <select style="font-size: 16px; height: 34px;" class="form-control" id="gender"  name="gender">
+                                <option style="font-size: 16px;" value="" selected>-- Chọn Giới tính --</option>
+                                <option style="font-size: 16px;" value=1>Nam</option>
+                                <option style="font-size: 16px;" value=0>Nữ</option>
+                                <option style="font-size: 16px;" value=-1>Khác</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label>Email</label>
+                            <input style="font-size: 16px;" type="text" class="form-control" th:field="*{email}" id="email"  name="email">
+                        </div>
+                        <div class="col-md-3">
+                            <label>Trạng thái hoạt động</label>
+                            <select class="form-control dropdown-toggle" th:field="*{isActive}" id="isActive"  name="isActive">
+                                <option style="font-size: 16px;" value="" selected>-- Chọn trạng thái hoạt động --</option>
+                                <option style="font-size: 16px;" value=0>Vô hiệu hóa</option>
+                                <option style="font-size: 16px;" value=1>Có hiệu lực</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label>Quyền</label>
+                            <select class="form-control dropdown-toggle" th:field="*{role}" id="role"  name="role">
+                                <option style="font-size: 16px;" value="" selected>-- Chọn quyền --</option>
+                                <option style="font-size: 16px;" value=2>Bác sĩ</option>
+                                <option style="font-size: 16px;" value=3>Lễ tân</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <br>
+                            <button style="font-size: 16px;" type="submit" class="btn btn-primary">Tìm kiếm</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            
+            <a th:href="@{/account/create}"><button style="margin-top: 20px; font-size: 16px;" class="btn btn-primary">Thêm mới</button></a>
+
+            <div class="row" style="margin-top: 20px;">
+                <table class="table">
+                    
+                    <thead class="thead-dark">
+                      <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Họ và tên</th>
+                        <th scope="col">Tên tài khoản</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Giới tính</th>
+                        <th scope="col">Quyền</th>
+                        <th scope="col">Trạng thái hoạt động</th>
+                        <th scope="col">Thao tác</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr th:each="item, state : ${lstAccount}">
+                        <th scope="row" th:text="${state.index+1}"></th>
+                        <td th:text="${item.fullname}"></td>
+                        <td th:text="${item.username}"></td>
+                        <td th:text="${item.email}"></td>
+                        <td>
+                        	<p th:if="${item.gender == 1}">Nam</p>
+                        	<p th:if="${item.gender == 0}">Nữ</p>
+                        	<p th:if="${item.gender == -1}">Khác</p>
+                        </td>
+                        <td>
+                        	<p th:if="${item.role == 2}">Bác sĩ</p>
+                        	<p th:if="${item.role == 3}">Lễ tân</p>
+                        </td>
+                        <td>
+                        	<p th:if="${item.isActive == 1}" style="background-color: #007bff; font-weight: bold; text-align: center; color: #fff;">Có hiệu lực</p>
+                        	<p th:if="${item.isActive == 0}" style="background-color: #dc3545; font-weight: bold; text-align: center; color: #fff;">Vô hiệu lực</p>
+                        </td> 
+                        <td>
+                        	<a style="font-size: 16px;" th:href="@{'/account/read/' + ${item.id}}" class="btn btn-success">Chi tiết</a>
+                        	<a style="font-size: 16px;" th:href="@{'/account/update/' + ${item.id}}" class="btn btn-primary">Sửa</a>
+                        	<!--<a th:href="@{'/account/delete/' + ${item.id}}" style="font-size: 16px; color: #fff;" class="btn btn-danger" th:data-confirm="|Bạn muốn xóa bản ghi này?|" onclick="if (!confirm(this.getAttribute('data-confirm'))) return false">Xóa</a>-->
+                        	<a th:if="${item.isActive == 0}" th:href="@{'/account-update-status/active/' + ${item.id}}" style="font-size: 16px; color: #fff;" class="btn btn-primary" th:data-confirm="|Bạn muốn kích hoạt tài khoản này?|" onclick="if (!confirm(this.getAttribute('data-confirm'))) return false">Kích hoạt</a>
+                        	<a th:if="${item.isActive == 1}" th:href="@{'/account-update-status/deactive/' + ${item.id}}" style="font-size: 16px; color: #fff;" class="btn btn-danger" th:data-confirm="|Bạn muốn vô hiệu hóa tài khoản này?|" onclick="if (!confirm(this.getAttribute('data-confirm'))) return false">Vô hiệu hóa</a>
+                        	<a th:href="@{'/account/change-password/' + ${item.id}}" style="font-size: 16px; color: #fff;" class="btn btn-primary" th:data-confirm="|Bạn muốn đổi mật khẩu tài khoản này?|" onclick="if (!confirm(this.getAttribute('data-confirm'))) return false">Đổi mật khẩu</a>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <th:block th:if="${totalElements > 0}">
+                    <nav aria-label="Page navigation" style="text-align: center; width: 100%;">
+                    <ul class="pagination justify-content-end">
+                            <li class="page-item" th:classappend="${pageIndex} <= 0 ? 'disabled' : ''">
+                            <a class="page-link" th:href="@{'/account-list?page='+ ${pageIndex-1}}"><</a>
+                            </li>
+
+                            <li  th:classappend="${pageIndex} != ${index-1} ? 'page-item' :'page-item active' "
+                                th:each="index : ${#numbers.sequence(1, totalPages)}">
+                            <a class="page-link" th:href="@{'/account-list?page='+ ${index-1}}" th:text="${index}">1</a>
+                            </li>
+
+                            <li class="page-item" th:classappend="${pageIndex} >= ${totalPages} - 1 ? 'disabled' : ''">
+                            <a class="page-link" th:href="@{'/account-list?page='+ ${pageIndex+1}}">></a>
+                            </li>
+                        </ul>
+                    </nav>
+                  </th:block>
+            </div>
+        </div>
+    </div>
+    
+</body>
+
+</html>
+
+<script src="//cdn.jsdelivr.net/gh/rainabba/jquery-table2excel@1.1.0/dist/jquery.table2excel.min.js"></script>
+<script>
+    
+</script>

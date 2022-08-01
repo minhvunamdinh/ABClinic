@@ -23,14 +23,20 @@ public class AccountDetailsServiceImpl implements UserDetailsService {
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+		ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
+		HttpServletRequest request = (HttpServletRequest) attr.getRequest();
+		HttpSession session = request.getSession();
 		
 		Account account = accountRepository.findByUsername(username);
 		if(account == null) {
 			throw new UsernameNotFoundException(username);
+		}else {
+			if(account.getIsActive() == 0) {
+				session.setAttribute("MESSAGE", "Tài khoản này đã bị vô hiệu hóa");
+				return null;
+			}
 		}
-		ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
-		HttpServletRequest request = (HttpServletRequest) attr.getRequest();
-		HttpSession session = request.getSession();
+
 		session.setAttribute("CURRENT_USER", AccountDetail.build(account));
 		return AccountDetail.build(account);
 	}
