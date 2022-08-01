@@ -32,6 +32,8 @@ public class Invoice {
 	@ManyToOne
 	@JoinColumn(name = "clinic_working_id")
 	private ClinicWorking clinicWorking;
+	@Column(name = "is_discounted")
+	private Long isDiscounted;
 	public Long getId() {
 		return id;
 	}
@@ -79,6 +81,12 @@ public class Invoice {
 	}
 	public void setClinicWorking(ClinicWorking clinicWorking) {
 		this.clinicWorking = clinicWorking;
+	}
+	public Long getIsDiscounted() {
+		return isDiscounted;
+	}
+	public void setIsDiscounted(Long isDiscounted) {
+		this.isDiscounted = isDiscounted;
 	}
 	
 }

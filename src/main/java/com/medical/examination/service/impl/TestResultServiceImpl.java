@@ -1,6 +1,7 @@
 package com.medical.examination.service.impl;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.criteria.CriteriaBuilder;
@@ -28,6 +29,7 @@ public class TestResultServiceImpl implements TestResultService {
 
 	@Override
 	public TestResult saveTestResult(TestResult testResult) {
+		testResult.setIsCalled(0L);
 		return testResultRepository.save(testResult);
 	}
 
@@ -57,11 +59,30 @@ public class TestResultServiceImpl implements TestResultService {
 						predicates.add(criteriaBuilder.and(criteriaBuilder.like(criteriaBuilder.lower(root.get("code")),
 								"%" + findParams.getCode().trim().toLowerCase() + "%")));
 					}
+					if(findParams.isFindCustomerReturning() == true) {
+						Date toDay = new Date();
+						toDay.setHours(0);
+						toDay.setMinutes(0);
+						toDay.setSeconds(0);
+						Date threeMoreDay = new Date();
+						threeMoreDay.setDate(toDay.getDate()+3);
+						threeMoreDay.setHours(23);
+						threeMoreDay.setMinutes(59);
+						threeMoreDay.setSeconds(59);
+						toDay.setDate(toDay.getDate()-1);
+						predicates.add(criteriaBuilder.and(criteriaBuilder.greaterThanOrEqualTo(root.get("timeReturn"), toDay)));
+						predicates.add(criteriaBuilder.and(criteriaBuilder.lessThanOrEqualTo(root.get("timeReturn"), threeMoreDay)));
+					}
 				}
 				return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
 			}
 		}, pageable);
 		return pageResult;
+	}
+
+	@Override
+	public void updateIsCalledCustomerReturn(Long id, Long isCalled) {
+		this.testResultRepository.updateIsCalledCustomerReturn(id, isCalled);
 	}
 
 }

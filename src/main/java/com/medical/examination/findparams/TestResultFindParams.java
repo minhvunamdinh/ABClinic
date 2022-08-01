@@ -4,6 +4,7 @@ public class TestResultFindParams {
 	private Long id;
 	private String code;
 	private Long status;
+	private boolean findCustomerReturning;
 	public Long getId() {
 		return id;
 	}
@@ -21,6 +22,12 @@ public class TestResultFindParams {
 	}
 	public void setStatus(Long status) {
 		this.status = status;
+	}
+	public boolean isFindCustomerReturning() {
+		return findCustomerReturning;
+	}
+	public void setFindCustomerReturning(boolean findCustomerReturning) {
+		this.findCustomerReturning = findCustomerReturning;
 	}
 	
 }

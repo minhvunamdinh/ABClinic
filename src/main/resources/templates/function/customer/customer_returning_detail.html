@@ -85,6 +85,7 @@
                 <div class="col-md-3"></div>
             </div>
             <div class="text-center" style="margin-top: 20px;">
+            	<a th:if="${testResult.isCalled == 0}" th:href="@{'/update-customer-returning/' + ${testResult.id}}"><button style="font-size: 16px;" class="btn btn-primary" th:data-confirm="|Xác nhận liên đã liên hệ với bệnh nhân hẹn khám?|" onclick="if (!confirm(this.getAttribute('data-confirm'))) return false">Xác nhận đã liên hệ với bệnh nhân</button></a>
                 <a th:href="@{/customer-returning-list}"><button style="font-size: 16px;" class="btn btn-danger">Trở về</button></a>
             </div>
         </div>

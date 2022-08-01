@@ -1,6 +1,7 @@
 package com.medical.examination.repository;
 
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
@@ -13,4 +14,8 @@ PagingAndSortingRepository<TestResult, Long>, JpaSpecificationExecutor<TestResul
 
 	@Query(value = "SELECT t FROM TestResult t WHERE t.id = :id")
 	public TestResult getTestResultById(@Param("id") Long id);
+	
+	@Query(value = "UPDATE TestResult t SET t.isCalled = :isCalled WHERE t.id = :id")
+	@Modifying
+	public void updateIsCalledCustomerReturn(@Param("id") Long id , @Param("isCalled") Long isCalled);
 }

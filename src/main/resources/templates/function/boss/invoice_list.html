@@ -103,6 +103,7 @@
                             <div class="text-center" style="margin-top: 20px;">
                                 <button type="button" id="btn-tinh-tien" class="btn btn-primary" style="font-size: 16px;">Tính tiền</button>
                                 <button hidden type="button" id="btn-export-pdf" class="btn btn-success" style="font-size: 16px;">Xuất PDF</button>
+                                <button hidden type="button" id="btn-confirm" class="btn btn-primary" style="font-size: 16px;">Xác nhận</button>
                             </div>
                             <div class="modal-footer">
                                 <button style="font-size: 16px;" type="button" class="btn btn-danger" data-dismiss="modal">Đóng</button>
@@ -124,6 +125,7 @@
                         <th scope="col">Tổng đơn giá</th>
                         <th scope="col">Tổng thành tiền</th>
                         <th scope="col">Tiền lãi</th>
+                        <th class="noExl" scope="col">Chiết khấu</th>
                         <th class="noExl" scope="col">Thao tác</th>
                       </tr>
                     </thead>
@@ -136,6 +138,10 @@
                         <td th:text="${#numbers.formatDecimal(item.totalCostPrice, 0, 'COMMA', 0, 'POINT')} + 'Đ'"></td>
                         <td th:text="${#numbers.formatDecimal(item.totalSellPrice, 0, 'COMMA', 0, 'POINT')} + 'Đ'"></td>
                         <td th:text="${#numbers.formatDecimal((item.totalSellPrice - item.totalCostPrice), 0, 'COMMA', 0, 'POINT')} + 'Đ'"></td>
+                        <td class="noExl" >
+                        	<p th:if="${item.isDiscounted == 0}">Chưa chiết khấu</p>
+                        	<p th:if="${item.isDiscounted == 1}">Đã chiết khấu</p>
+                        </td>
                         <td class="noExl">
                         	<a th:href="@{'/view-invoice-detail/' + ${item.id}}"><button style="font-size: 16px;" class="btn btn-success">Chi tiết hóa đơn</button></a>
                         </td>
@@ -223,6 +229,7 @@
         }
         
         $("#btn-export-pdf").removeAttr("hidden")
+        $("#btn-confirm").removeAttr("hidden")
     });
     
     $("#btn-export-pdf").click(function () {

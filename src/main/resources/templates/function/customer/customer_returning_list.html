@@ -14,10 +14,9 @@
                     </ol>
                 </div>
             </div>
-
+			<div><p style="color: red;">Có: [[${totalElements}]] bệnh nhân sắp đến lịch hẹn khám (Trong 3 ngày tới)</p></div>
             <div class="row" style="margin-top: 20px;">
                 <table class="table">
-                    
                     <thead class="thead-dark">
                       <tr>
                         <th scope="col">#</th>
@@ -26,6 +25,7 @@
                         <th scope="col">Số điện thoại</th>
                         <th scope="col">Bác sĩ khám</th>
                         <th scope="col">Ngày khám</th>
+                        <th scope="col">Ngày hẹn tái khám</th>
                         <th scope="col">Trạng thái</th>
                         <th scope="col">Thao tác</th>
                       </tr>
@@ -38,6 +38,7 @@
                         <td th:text="${item.clinicWorking.customer.phone}"></td>
                         <td th:text="${item.clinicWorking.account.fullname}"></td>
                         <td th:text="${#dates.format(item.createdDate, 'dd-MM-yyyy')}"></td>
+                        <td th:text="${#dates.format(item.timeReturn, 'dd-MM-yyyy')}"></td>
                         <td th:if="${item.isCalled==0}">Chưa liên hệ</td>
                         <td th:if="${item.isCalled==1}">Đã liên hệ</td>
                         <td style="color: #fff;">
@@ -46,7 +47,7 @@
                       </tr>
                     </tbody>
                   </table>
-                  <th:block class="text-center">
+                  <th:block class="text-center" th:if="${totalElements > 0}">
                     <nav aria-label="Page navigation" style="text-align: center; width: 100%;">
                     <ul class="pagination justify-content-end">
                             <li class="page-item" th:classappend="${pageIndex} <= 0 ? 'disabled' : ''">

@@ -32,6 +32,7 @@ public class InvoiceServiceImpl implements InvoiceService {
 
 	@Override
 	public Invoice saveInvoice(Invoice invoice) {
+		invoice.setIsDiscounted(0L);
 		return this.invoiceRepository.save(invoice);
 	}
 

@@ -388,6 +388,7 @@ public class RoutingController extends BaseController {
 		try {
 			model.addAttribute("title", "Danh sách bệnh nhân hẹn khám");
 			Pageable pageAble = PageRequest.of(page, 10, Sort.by(Sort.Order.desc("id")));
+			findParams.setFindCustomerReturning(true); //Tìm bệnh nhân hẹn khám trong 3 ngày
 			Page<TestResult> testResultData = this.testResultService.findTestResult(pageAble, findParams);
 			if(testResultData != null) {
 				model.addAttribute("pageSize", testResultData.getSize());
@@ -421,12 +422,25 @@ public class RoutingController extends BaseController {
 		}
 	}
 	
+	@GetMapping("/update-customer-returning/{id}")
+	public String viewUpdateCustomerReturningDetailPage(@PathVariable("id") Long id, Model model, RedirectAttributes redirAttrs) {
+		try {
+			this.testResultService.updateIsCalledCustomerReturn(id, 1L); //Xác nhận đã liên lạc với bệnh nhân hẹn khám
+			redirAttrs.addFlashAttribute("success", "Xác nhận thành công!");
+			return "redirect:/customer-returning-list";
+		} catch (Exception e) {
+			e.printStackTrace();
+			redirAttrs.addFlashAttribute("error", "Xác nhận thất bại!");
+			return null;
+		}
+	}
+	
 	@GetMapping("/invoice")
 	public String viewInvoicePage(Model model) {
 		try {
 			model.addAttribute("title", "Hóa đơn");
 			InvoiceFindParams findParams = new InvoiceFindParams();
-			List<Invoice> lstInvoice = this.invoiceService.findInvoice(PageRequest.of(0, 1000), findParams).getContent();
+			List<Invoice> lstInvoice = this.invoiceService.findInvoice(PageRequest.of(0, 1000, Sort.by(Sort.Order.desc("id"))), findParams).getContent();
 			model.addAttribute("lstInvoice", lstInvoice);
 			return createView(model, "function/invoice/invoice_list.html");
 		} catch (Exception e) {
