@@ -11,6 +11,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 @Entity
 @Table(name = "invoice")
 public class Invoice {
@@ -34,6 +36,17 @@ public class Invoice {
 	private ClinicWorking clinicWorking;
 	@Column(name = "is_discounted")
 	private Long isDiscounted;
+	@Column(name = "test_result")
+	private String testResult;
+	@Column(name = "diagnostic_result")
+	private String diagnosticResult;
+	@Column(name = "lst_cost_price")
+	private String lstCostPrice;
+	@Column(name = "lst_sell_price")
+	private String lstSellPrice;
+	@Column(name = "time_return")
+	@DateTimeFormat (pattern="yyyy-MM-dd")
+	private Date timeReturn;
 	public Long getId() {
 		return id;
 	}
@@ -87,6 +100,36 @@ public class Invoice {
 	}
 	public void setIsDiscounted(Long isDiscounted) {
 		this.isDiscounted = isDiscounted;
+	}
+	public String getTestResult() {
+		return testResult;
+	}
+	public void setTestResult(String testResult) {
+		this.testResult = testResult;
+	}
+	public String getDiagnosticResult() {
+		return diagnosticResult;
+	}
+	public void setDiagnosticResult(String diagnosticResult) {
+		this.diagnosticResult = diagnosticResult;
+	}
+	public String getLstCostPrice() {
+		return lstCostPrice;
+	}
+	public void setLstCostPrice(String lstCostPrice) {
+		this.lstCostPrice = lstCostPrice;
+	}
+	public String getLstSellPrice() {
+		return lstSellPrice;
+	}
+	public void setLstSellPrice(String lstSellPrice) {
+		this.lstSellPrice = lstSellPrice;
+	}
+	public Date getTimeReturn() {
+		return timeReturn;
+	}
+	public void setTimeReturn(Date timeReturn) {
+		this.timeReturn = timeReturn;
 	}
 	
 }
