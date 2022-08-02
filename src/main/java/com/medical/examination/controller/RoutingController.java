@@ -39,6 +39,7 @@ import com.medical.examination.entity.ClinicWorking;
 import com.medical.examination.entity.Customer;
 import com.medical.examination.entity.Invoice;
 import com.medical.examination.entity.Test;
+import com.medical.examination.entity.TestDTO;
 import com.medical.examination.entity.TestResult;
 import com.medical.examination.entity.TestType;
 import com.medical.examination.findparams.AccountFindParams;
@@ -377,8 +378,21 @@ public class RoutingController extends BaseController {
 				testResult.setTotalSellPrice(resultTestInvoiceRequest.getTotalSellPrice());
 				testResult.setStatus(0L);
 			}else {
-				clinicWorking.setStatus(3L); // trang thai 3 da kham xong
 				testResult = clinicWorking.getLstTestResult().get(0);
+				String[] lstTest = testResult.getLstTest().split(",");
+				String lstCostPrice = "";
+				String lstSellPrice = "";
+				if(lstTest.length > 0) {
+					for(String item: lstTest) {
+						Test test = this.testService.findByTestName(item);
+						lstCostPrice += test.getCostPrice()!=null ? test.getCostPrice().toString() + "," : 0 + ",";
+						lstSellPrice += test.getSellPrice()!=null ? test.getSellPrice().toString() + "," : 0 + ",";
+					}
+					lstCostPrice = lstCostPrice.substring(0, lstCostPrice.length()-1); //Xóa dấu "," ở cuối
+					lstSellPrice = lstSellPrice.substring(0, lstSellPrice.length()-1);
+				}
+				clinicWorking.setStatus(3L); // trang thai 3 da kham xong
+				
 				//tao hoa don
 				invoice.setClinicWorking(clinicWorking);
 				invoice.setCreatedDate(new Date());
@@ -386,7 +400,11 @@ public class RoutingController extends BaseController {
 				invoice.setLstTest(testResult.getLstTest());
 				invoice.setTotalCostPrice(testResult.getTotalCostPrice() + 200000);
 				invoice.setTotalSellPrice(testResult.getTotalSellPrice() + 200000);
-				
+				invoice.setTestResult(resultTestInvoiceRequest.getTestResult());
+				invoice.setDiagnosticResult(testResult.getDiagnosticResult());
+				invoice.setLstCostPrice(lstCostPrice);
+				invoice.setLstSellPrice(lstSellPrice);
+				invoice.setTimeReturn(resultTestInvoiceRequest.getTimeReturn());
 				
 				testResult.setTimeReturn(resultTestInvoiceRequest.getTimeReturn());
 				testResult.setTestResult(resultTestInvoiceRequest.getTestResult());
@@ -798,10 +816,16 @@ public class RoutingController extends BaseController {
 			model.addAttribute("title", "Chi tiết Hóa đơn");
 			Invoice invoice = this.invoiceService.getInvoiceById(id);
 			String[] lstTest = invoice.getLstTest().split(",");
-			List<Test> lstTestComplete = new ArrayList<Test>();
-			for(String item : lstTest) {
-				Test test = this.testService.findByTestName(item.trim());
-				lstTestComplete.add(test);
+			String[] lstCostPrice = invoice.getLstCostPrice().split(",");
+			String[] lstSellPrice = invoice.getLstSellPrice().split(",");
+			List<TestDTO> lstTestComplete = new ArrayList<TestDTO>();
+
+			for(int i = 0; i < lstTest.length; i++) {
+				TestDTO item = new TestDTO();
+				item.setTestName(lstTest[i]);
+				item.setCostPrice(Double.valueOf(lstCostPrice[i]));
+				item.setSellPrice(Double.valueOf(lstSellPrice[i]));
+				lstTestComplete.add(item);
 			}
 			model.addAttribute("invoice", invoice);
 			model.addAttribute("lstTestComplete", lstTestComplete);
