@@ -17,6 +17,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -44,9 +48,13 @@ import com.medical.examination.findparams.InvoiceFindParams;
 import com.medical.examination.findparams.TestFindParams;
 import com.medical.examination.findparams.TestResultFindParams;
 import com.medical.examination.findparams.TestTypeFindParams;
+import com.medical.examination.repository.AccountRepository;
 import com.medical.examination.repository.ClinicWorkingRepository;
+import com.medical.examination.request.AccountRequest;
+import com.medical.examination.request.ChangePasswordRequest;
 import com.medical.examination.request.MedicalExaminationRequest;
 import com.medical.examination.request.ResultTestInvoiceRequest;
+import com.medical.examination.request.UpdateAccountRequest;
 import com.medical.examination.service.AccountService;
 import com.medical.examination.service.ClinicWorkingService;
 import com.medical.examination.service.CustomerService;
@@ -55,6 +63,7 @@ import com.medical.examination.service.TestResultService;
 import com.medical.examination.service.TestService;
 import com.medical.examination.service.TestTypeService;
 import com.medical.examination.utils.AccountDetail;
+import com.medical.examination.utils.MessageResponse;
 
 @Controller
 public class RoutingController extends BaseController {
@@ -80,19 +89,78 @@ public class RoutingController extends BaseController {
 	@Autowired
 	InvoiceService invoiceService;
 	
+	@Autowired
+	AccountRepository accountRepository;
 	
+	@Autowired
+	PasswordEncoder encoder;
 	
 	@GetMapping({ "", "/home" })
 	public String viewHomePage(Model model) {
 		model.addAttribute("title", "home");
+		ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
+		HttpServletRequest request = (HttpServletRequest) attr.getRequest();
+		HttpSession session = request.getSession();
+		session.removeAttribute("MESSAGE");
 		
+		AccountFindParams accountFindParams = new AccountFindParams();
+		accountFindParams.setIsActive(1L);//tk kich hoat
+		accountFindParams.setRole(2L);//quyen basi
+		List<Account> lstBacSi = this.accountService.findAccount(PageRequest.of(0, 1000), accountFindParams).getContent();
+		List<String> bacSiArr = new ArrayList<String>();
+		if(lstBacSi != null) {
+			lstBacSi.forEach(item -> {
+				bacSiArr.add(item.getFullname());
+			});
+		}
 		
+		Pageable pageAble = PageRequest.of(0, 1000, Sort.by(Sort.Order.desc("createdDate")));
+		InvoiceFindParams invoiceFindParams = new InvoiceFindParams();
+		int currentMonth = new Date().getMonth() + 1;
+		model.addAttribute("currentMonth", currentMonth);
+		if(invoiceFindParams.getMonth() == null) {
+			invoiceFindParams.setMonth((long) currentMonth);
+		}
+		Page<Invoice> invoiceData = this.invoiceService.findInvoice(pageAble, invoiceFindParams);
+		List<Double> lstDoctorIncome = new ArrayList<Double>();
+		List<Double> lstDoctorInterest = new ArrayList<Double>();
+		List<Double> lstDoctorCountInvoice = new ArrayList<Double>();
+		bacSiArr.forEach(item -> {
+			invoiceFindParams.setAccountName(item);
+			List<Invoice> lstInv = this.invoiceService.findInvoice(pageAble, invoiceFindParams).getContent();
+			if(lstInv != null) {
+				Double totalIncome = 0D;
+				Double totalInterest = 0D;
+				for(Invoice i: lstInv) {
+					totalIncome += i.getTotalSellPrice();
+					totalInterest += (i.getTotalSellPrice() - i.getTotalCostPrice());
+				}
+				lstDoctorIncome.add(totalIncome);
+				lstDoctorInterest.add(totalInterest);
+				lstDoctorCountInvoice.add((double) lstInv.size());
+			}
+		});
+		
+		CustomerFindParams cusFindParams = new CustomerFindParams();
+		cusFindParams.setFindNewCustomer(true);
+		Page<Customer> cusData = this.customerService.findCustomer(pageAble, cusFindParams);
+		model.addAttribute("totalInvoice", invoiceData.getTotalElements());
+		model.addAttribute("countNewCustomer", cusData.getTotalElements());
+		model.addAttribute("bacSiArr", bacSiArr);
+		model.addAttribute("lstDoctorIncome", lstDoctorIncome);
+		model.addAttribute("lstDoctorInterest", lstDoctorInterest);
+		model.addAttribute("lstDoctorCountInvoice", lstDoctorCountInvoice);
 		return createView(model, "index");
 	}
 	
 	@GetMapping("/login")
 	public String viewLoginPage(Model model) {
 		model.addAttribute("title", "login");
+		ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
+		HttpServletRequest request = (HttpServletRequest) attr.getRequest();
+		HttpSession session = request.getSession();
+		String message = (String) session.getAttribute("MESSAGE");
+		model.addAttribute("message", message);
 		return createView(model, "account/login");
 	}
 	
@@ -638,7 +706,7 @@ public class RoutingController extends BaseController {
 			AccountFindParams accountFindParams = new AccountFindParams();
 			accountFindParams.setRole(2L); //Tim bac si
 			accountFindParams.setIsActive(1L); //Tai khoan active
-			List<Account> lstBacSi = this.accountService.findAccount(PageRequest.of(0, 1000), accountFindParams).getContent();
+			List<Account> lstBacSi = this.accountService.findAccount(PageRequest.of(0, 1000, Sort.by(Sort.Order.desc("id"))), accountFindParams).getContent();
 			if(lstBacSi != null) {
 				model.addAttribute("lstBacSi", lstBacSi);
 			}
@@ -646,6 +714,80 @@ public class RoutingController extends BaseController {
 			return createView(model, "function/boss/invoice_list.html");
 		} catch (Exception e) {
 			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	@GetMapping("/list-discount")
+	public String viewBossDiscountPage(@RequestParam(name = "page", defaultValue = "0") int page, Model model, @ModelAttribute("findParams") InvoiceFindParams findParams) {
+		try {
+			model.addAttribute("title", "Hóa đơn");
+			Pageable pageAble = PageRequest.of(page, 1000, Sort.by(Sort.Order.desc("createdDate")));
+			if(findParams.getMonth() == null) {
+				int currentMonth = new Date().getMonth() + 1;
+				findParams.setMonth((long) currentMonth);
+			}
+			findParams.setIsDiscount(0L);//Tìm hóa đơn chưa chiết khấu
+			Page<Invoice> invoiceData = this.invoiceService.findInvoice(pageAble, findParams);
+			
+			if(invoiceData != null) {
+				model.addAttribute("pageSize", invoiceData.getSize());
+				model.addAttribute("pageIndex", invoiceData.getNumber());
+				model.addAttribute("totalPages", invoiceData.getTotalPages());
+				model.addAttribute("totalElements", invoiceData.getTotalElements());
+				List<Invoice> lstInvoice = invoiceData.getContent();
+				model.addAttribute("lstInvoice", lstInvoice);
+				
+				//Tinh tong don gia, tong thanh tien, tong tien lai 
+				double countTotalCostPrice = 0;
+				double countTotalSellPrice = 0;
+				double countTotalInterest = 0;
+				
+				for(Invoice i : lstInvoice) {
+					countTotalCostPrice += i.getTotalCostPrice();
+					countTotalSellPrice += i.getTotalSellPrice();
+					countTotalInterest += (i.getTotalSellPrice() - i.getTotalCostPrice());
+				}
+				
+				if(countTotalCostPrice > 0 && countTotalSellPrice > 0 && countTotalInterest > 0) {
+					model.addAttribute("countTotalCostPrice", countTotalCostPrice);
+					model.addAttribute("countTotalSellPrice", countTotalSellPrice);
+					model.addAttribute("countTotalInterest", countTotalInterest);
+				}
+			}
+			
+			AccountFindParams accountFindParams = new AccountFindParams();
+			accountFindParams.setRole(2L); //Tim bac si
+			accountFindParams.setIsActive(1L); //Tai khoan active
+			List<Account> lstBacSi = this.accountService.findAccount(PageRequest.of(0, 1000, Sort.by(Sort.Order.desc("id"))), accountFindParams).getContent();
+			if(lstBacSi != null) {
+				model.addAttribute("lstBacSi", lstBacSi);
+			}
+			
+			return createView(model, "function/boss/discount_list.html");
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	@GetMapping("/discount-list-invoice")
+	public String discountListInvoice(Model model, RedirectAttributes redirAttrs) {
+		try {
+			InvoiceFindParams findParams = new InvoiceFindParams();
+			int currentMonth = new Date().getMonth() + 1;
+			findParams.setMonth((long) currentMonth);
+			List<Invoice> lstInvoice = this.invoiceService.findInvoice(PageRequest.of(0, 1000), findParams).getContent();
+			if(lstInvoice != null) {
+				lstInvoice.forEach(item -> {
+					this.invoiceService.updateIsDiscounted(item.getId(), 1L);
+				});
+			}
+			model.addAttribute("success", "Chiết khấu thành công!");
+			return "redirect:/list-invoice";
+		} catch (Exception e) {
+			e.printStackTrace();
+			redirAttrs.addFlashAttribute("error", "Chiết khấu thất bại!");
 			return null;
 		}
 	}
@@ -924,6 +1066,201 @@ public class RoutingController extends BaseController {
 			}
 			
 			return "redirect:/test-list";
+		} catch (Exception e) {
+			e.printStackTrace();
+			redirAttrs.addFlashAttribute("error", "Thao tác thất bại!");
+			return null;
+		}
+	}
+	
+	@GetMapping("/list-account")
+	public String viewAccountPage(@RequestParam(name = "page", defaultValue = "0") int page, Model model, @ModelAttribute("findParams") AccountFindParams findParams) {
+		try {
+			model.addAttribute("title", "Danh sách tài khoản");
+			Pageable pageAble = PageRequest.of(page, 10, Sort.by(Sort.Order.desc("id")));
+			findParams.setBossUsing(true);
+			Page<Account> accountData = this.accountService.findAccount(pageAble, findParams);
+			
+			if(accountData != null) {
+				model.addAttribute("pageSize", accountData.getSize());
+				model.addAttribute("pageIndex", accountData.getNumber());
+				model.addAttribute("totalPages", accountData.getTotalPages());
+				model.addAttribute("totalElements", accountData.getTotalElements());
+				List<Account> lstAccount = accountData.getContent();
+				model.addAttribute("lstAccount", lstAccount);
+			}
+			
+			return createView(model, "function/boss/account/account_list.html");
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	@GetMapping("/account/create")
+	public String viewAccountCreatePage(AccountRequest accountRequest, Model model) {
+		try {
+			model.addAttribute("title", "Thêm mới");
+			model.addAttribute("type", "create");
+
+			return createView(model, "function/boss/account/account_create.html");
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+		
+	}
+	
+	@PostMapping("/account/create")
+	public String createAccount(@Valid @ModelAttribute(value="accountRequest") AccountRequest accountRequest, BindingResult result, Model model, RedirectAttributes redirAttrs) {
+		try {
+			if (result.hasErrors()) {
+				model.addAttribute("title", "Thêm mới");
+				model.addAttribute("error", "Thêm mới thất bại!");
+	            return createView(model, "function/boss/account/account_create.html");
+	        }
+			
+			if (accountRepository.existsByUsername(accountRequest.getUsername())) {
+				model.addAttribute("error", "Tên đăng nhập đã tồn tại!");
+			}
+			if (accountRepository.existsByEmail(accountRequest.getEmail())) {
+				model.addAttribute("error", "Email đã tồn tại!");
+			}
+			BCryptPasswordEncoder encode = new BCryptPasswordEncoder();
+			// Create new user's account
+			Account accountVerified = new Account(accountRequest.getUsername(), encode.encode(accountRequest.getPassword()),
+					accountRequest.getIsActive(), accountRequest.getFullname(), accountRequest.getAddress(),
+					accountRequest.getDob(), accountRequest.getGender(), accountRequest.getRole(),
+					accountRequest.getIsWorking(), accountRequest.getStatus(), accountRequest.getEmail());
+	        
+	        this.accountService.saveAccount(accountVerified);
+	        redirAttrs.addFlashAttribute("success", "Thêm mới thành công!");
+	        return "redirect:/list-account";
+		} catch (Exception e) {
+			e.printStackTrace();
+			redirAttrs.addFlashAttribute("error", "Thêm mới thất bại!");
+			return null;
+		}
+	}
+	
+	@GetMapping("/account/{type}/{id}")
+	public String viewAccountDetailPage(@PathVariable("id") Long id, UpdateAccountRequest updateAccountRequest, Model model, @PathVariable("type") String type) {
+		try {
+			Account account = this.accountService.getAccountById(id);
+			updateAccountRequest = updateAccountRequest.build(account);
+			model.addAttribute("updateAccountRequest", updateAccountRequest);
+			if(type.contains("update")) {
+				model.addAttribute("title", "Cập nhật");
+			}else if(type.contains("read")) {
+				model.addAttribute("title", "Xem chi tiết");
+			}
+			
+			model.addAttribute("type", type);
+			return createView(model, "function/boss/account/account_detail.html");
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+		
+	}
+	
+	@PostMapping("/account/update/{id}")
+	public String updateAccount(@PathVariable("id") Long id, @Valid @ModelAttribute(value="updateAccountRequest") UpdateAccountRequest updateAccountRequest, BindingResult result, Model model, RedirectAttributes redirAttrs) {
+		try {
+			if (result.hasErrors()) {
+				model.addAttribute("title", "Cập nhật");
+				model.addAttribute("error", "Cập nhật thất bại!");
+				model.addAttribute("type", "update");
+	            return createView(model, "function/boss/account/account_detail.html");
+	        }
+			Account account = this.accountService.getAccountById(id);
+			account.setAddress(updateAccountRequest.getAddress());
+			account.setDob(updateAccountRequest.getDob());
+			account.setEmail(updateAccountRequest.getEmail());
+			account.setFullname(updateAccountRequest.getFullname());
+			account.setGender(updateAccountRequest.getGender());
+			account.setIsActive(updateAccountRequest.getIsActive());
+			account.setIsWorking(updateAccountRequest.getIsWorking());
+			account.setRole(updateAccountRequest.getRole());
+			account.setStatus(updateAccountRequest.getStatus());
+			account.setUsername(updateAccountRequest.getUsername());
+	        this.accountService.saveAccount(account);
+	        redirAttrs.addFlashAttribute("success", "Cập nhật thành công!");
+	        return "redirect:/list-account";
+		} catch (Exception e) {
+			e.printStackTrace();
+			redirAttrs.addFlashAttribute("error", "Cập nhật thất bại!");
+			return null;
+		}
+	}
+	
+	@GetMapping("/account/change-password/{idAcc}")
+	public String viewAccountChangePasswordPage(@PathVariable("idAcc") Long id, ChangePasswordRequest changePasswordRequest, Model model) {
+		try {
+			model.addAttribute("idAcc", id);
+			model.addAttribute("title", "Đổi mật khẩu");
+			return createView(model, "function/boss/account/account_change_password.html");
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+		
+	}
+	
+	@PostMapping("/account/change-password/{idAcc}")
+	public String changePasswordAccount(@PathVariable("idAcc") Long id, @Valid @ModelAttribute(value="changePasswordRequest") ChangePasswordRequest changePasswordRequest, BindingResult result, Model model, RedirectAttributes redirAttrs) {
+		try {
+			BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+
+			if (result.hasErrors()) {
+				model.addAttribute("error", "Đổi mật khẩu thất bại!");
+	            return createView(model, "function/boss/account/account_change_password.html");
+	        }
+			
+			Account account = this.accountService.getAccountById(id);
+			if (!encoder.matches(changePasswordRequest.getOldPassword(), account.getPassword())) {
+				model.addAttribute("error", "Mật khẩu cũ không chính xác!");
+	            return createView(model, "function/boss/account/account_change_password.html");
+			}else {
+				account.setPassword(encoder.encode(changePasswordRequest.getNewPassword()));
+			}
+			this.accountService.saveAccount(account);
+	        redirAttrs.addFlashAttribute("success", "Đổi mật khẩu thành công!");
+	        return "redirect:/list-account";
+		} catch (Exception e) {
+			e.printStackTrace();
+			redirAttrs.addFlashAttribute("error", "Đổi mật khẩu thất bại!");
+			return null;
+		}
+	}
+	
+	@GetMapping("/account/delete/{id}")
+	public String deleteAccount(@PathVariable("id") Long id, Model model, RedirectAttributes redirAttrs) {
+		try {
+			this.accountService.deleteAccount(id);
+			model.addAttribute("success", "Xóa thành công!");
+			return "redirect:/list-account";
+		} catch (Exception e) {
+			e.printStackTrace();
+			redirAttrs.addFlashAttribute("error", "Xóa thất bại!");
+			return null;
+		}
+	}
+	
+	@GetMapping("/account-update-status/{type}/{id}")
+	public String updateAccountActivatedStatus(@PathVariable("id") Long id, @PathVariable("type") String type, Model model, RedirectAttributes redirAttrs) {
+		try {
+			if(type.equals("active")) {
+				this.accountService.updateAccountStatus(id, 1L);
+				model.addAttribute("success", "Thao tác thành công!");
+			}else if(type.equals("deactive")){
+				this.accountService.updateAccountStatus(id, 0L);
+				model.addAttribute("success", "Thao tác thành công!");
+			}else {
+				model.addAttribute("error", "Thao tác thất bại!");
+			}
+			
+			return "redirect:/list-account";
 		} catch (Exception e) {
 			e.printStackTrace();
 			redirAttrs.addFlashAttribute("error", "Thao tác thất bại!");
