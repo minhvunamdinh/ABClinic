@@ -63,8 +63,10 @@
 						<div class="row test-result-item text-center" th:each="item, state : ${lstTestComplete}">
 						    <div class="col-md-3 test-type-item">Xét nghiệm [[${item.testName}]]</div>
 						    <div class="col-md-3 test-type-item">1</div>
-						    <div class="col-md-3 test-type-item">[[${#numbers.formatDecimal(item.costPrice, 0, 'COMMA', 0, 'POINT')} + 'Đ']]</div>
-						    <div class="col-md-3 test-type-item">[[${#numbers.formatDecimal(item.SellPrice, 0, 'COMMA', 0, 'POINT')} + 'Đ']]</div>
+						    <div th:if="${item.costPrice}" class="col-md-3 test-type-item">[[${#numbers.formatDecimal(item.costPrice, 0, 'COMMA', 0, 'POINT')} + 'Đ']]</div>
+						    <div th:unless="${item.costPrice}" class="col-md-3 test-type-item">0Đ</div>
+						    <div th:if="${item.SellPrice}" class="col-md-3 test-type-item">[[${#numbers.formatDecimal(item.SellPrice, 0, 'COMMA', 0, 'POINT')} + 'Đ']]</div>
+						    <div th:unless="${item.SellPrice}" class="col-md-3 test-type-item">0Đ</div>
 						</div>
 						<div class="row test-result-item text-center">
 						    <div class="col-md-3 test-type-item">&nbsp;</div>
@@ -106,6 +108,31 @@
                     </div>
                     
                 </div>
+                <div class="row" style="margin-bottom: 20px;margin-top: 20px; padding-left: 50px; padding-right: 50px;">
+                	<div class="col-md-6 text-right">
+                		<h2>Kết quả chuẩn đoán:</h2>
+                	</div>
+                	<div class="col-md-6 text-left">
+                		<h2>[[${invoice.diagnosticResult}]]</h2>
+                	</div>
+                </div>
+                <div class="row" style="margin-bottom: 20px;margin-top: 20px; padding-left: 50px; padding-right: 50px;">
+                	<div class="col-md-6 text-right">
+                		<h2>Kết quả xét nghiệm:</h2>
+                	</div>
+                	<div class="col-md-6 text-left">
+                		<h2>[[${invoice.testResult}]]</h2>
+                	</div>
+                </div>
+                <div class="row" style="margin-bottom: 20px;margin-top: 20px; padding-left: 50px; padding-right: 50px;">
+                	<div class="col-md-6 text-right">
+                		<h2>Hẹn tái khám:</h2>
+                	</div>
+                	<div class="col-md-6 text-left">
+                		<h2>[[${#dates.format(invoice.timeReturn, 'dd-MM-yyyy')}]]</h2>
+                	</div>
+                </div>
+            </div>
             </div>
             <div class="row text-center" style="margin-top: 20px;">
 				<div class="col-md-12">

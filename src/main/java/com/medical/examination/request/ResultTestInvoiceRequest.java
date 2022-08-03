@@ -2,8 +2,13 @@ package com.medical.examination.request;
 
 import java.util.Date;
 
+import javax.validation.constraints.AssertTrue;
+
 import org.springframework.format.annotation.DateTimeFormat;
 
+import lombok.Data;
+
+@Data
 public class ResultTestInvoiceRequest {
 	private String code;
 	private String testResult;

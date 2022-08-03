@@ -126,8 +126,11 @@ public class RoutingController extends BaseController {
 		List<Double> lstDoctorIncome = new ArrayList<Double>();
 		List<Double> lstDoctorInterest = new ArrayList<Double>();
 		List<Double> lstDoctorCountInvoice = new ArrayList<Double>();
-		bacSiArr.forEach(item -> {
-			invoiceFindParams.setAccountName(item);
+		Double totalSellPrice = 0D;
+		Double totalInterests = 0D;
+		
+		for(String bacSi: bacSiArr) {
+			invoiceFindParams.setAccountName(bacSi);
 			List<Invoice> lstInv = this.invoiceService.findInvoice(pageAble, invoiceFindParams).getContent();
 			if(lstInv != null) {
 				Double totalIncome = 0D;
@@ -136,15 +139,19 @@ public class RoutingController extends BaseController {
 					totalIncome += i.getTotalSellPrice();
 					totalInterest += (i.getTotalSellPrice() - i.getTotalCostPrice());
 				}
+				totalSellPrice += totalIncome;
+				totalInterests += totalInterest;
 				lstDoctorIncome.add(totalIncome);
 				lstDoctorInterest.add(totalInterest);
 				lstDoctorCountInvoice.add((double) lstInv.size());
 			}
-		});
+		}
 		
 		CustomerFindParams cusFindParams = new CustomerFindParams();
 		cusFindParams.setFindNewCustomer(true);
 		Page<Customer> cusData = this.customerService.findCustomer(pageAble, cusFindParams);
+		model.addAttribute("totalSellPrice", totalSellPrice);
+		model.addAttribute("totalInterests", totalInterests);
 		model.addAttribute("totalInvoice", invoiceData.getTotalElements());
 		model.addAttribute("countNewCustomer", cusData.getTotalElements());
 		model.addAttribute("bacSiArr", bacSiArr);
@@ -178,7 +185,7 @@ public class RoutingController extends BaseController {
 			clinicWorkingFindParams.setAccountId(account.getId()); //Neu la bac si dang nhap thi chi hien thi cac benh nhan cua minh
 		}
 		
-		Pageable pageAble = PageRequest.of(page, 10, Sort.by(Sort.Order.asc("no")));
+		Pageable pageAble = PageRequest.of(page, 10, Sort.by(Sort.Order.desc("id")));
 		AccountFindParams accountFindParams = new AccountFindParams();
 		accountFindParams.setRole(2L); //Tim role = 2 bac si
 		Page<Account> accData = accountService.findAccount(PageRequest.of(0, 100), accountFindParams);
@@ -319,7 +326,7 @@ public class RoutingController extends BaseController {
 	}
 	
 	@GetMapping("/medical-examination-working/{clinicWorkingId}/{type}")
-	public String viewMedicalExaminationWorkingPage(@PathVariable("clinicWorkingId") Long clinicWorkingId, Model model, @PathVariable("type") String type) {
+	public String viewMedicalExaminationWorkingPage(@PathVariable("clinicWorkingId") Long clinicWorkingId, Model model, @PathVariable("type") String type, ResultTestInvoiceRequest resultTestInvoiceRequest) {
 		try {
 			model.addAttribute("title", "Khám bệnh");
 			model.addAttribute("clinicWorkingId", clinicWorkingId);
@@ -356,10 +363,13 @@ public class RoutingController extends BaseController {
 	}
 	
 	@PostMapping("/medical-examination-working/{clinicWorkingId}/{type}")
-	public String postMedicalExaminationWorkingPage(@PathVariable("clinicWorkingId") Long clinicWorkingId, @PathVariable("type") String type,Model model, @ModelAttribute("resultTestInvoiceRequest") ResultTestInvoiceRequest resultTestInvoiceRequest) {
+	public String postMedicalExaminationWorkingPage(@PathVariable("clinicWorkingId") Long clinicWorkingId, @PathVariable("type") String type,Model model, @Valid @ModelAttribute("resultTestInvoiceRequest") ResultTestInvoiceRequest resultTestInvoiceRequest, BindingResult result, RedirectAttributes redirAttrs) {
 		try {
 			model.addAttribute("title", "Khám bệnh");
-			
+//			if (result.hasErrors()) {
+//				model.addAttribute("error", "Thêm mới thất bại!");
+//	            return createView(model, "function/medical_examination/medical_examination_working.html");
+//	        }
 			TestResult testResult = new TestResult();
 			Invoice invoice = new Invoice();
 
@@ -378,6 +388,15 @@ public class RoutingController extends BaseController {
 				testResult.setTotalSellPrice(resultTestInvoiceRequest.getTotalSellPrice());
 				testResult.setStatus(0L);
 			}else {
+				if(resultTestInvoiceRequest.getTimeReturn() != null) {
+					if((resultTestInvoiceRequest.getTimeReturn()).compareTo(new Date()) < 0) {
+						redirAttrs.addFlashAttribute("error", "Ngày hẹn tái khám phải lớn hơn ngày hiện tại");
+						return "redirect:/medical-examination-working/"+clinicWorkingId+"/edit";
+					}
+				}else {
+					redirAttrs.addFlashAttribute("error", "Bạn chưa nhập ngày hẹn tái khám");
+					return "redirect:/medical-examination-working/"+clinicWorkingId+"/edit";
+				}
 				testResult = clinicWorking.getLstTestResult().get(0);
 				String[] lstTest = testResult.getLstTest().split(",");
 				String lstCostPrice = "";
@@ -541,11 +560,23 @@ public class RoutingController extends BaseController {
 			model.addAttribute("title", "Chi tiết Hóa đơn");
 			Invoice invoice = this.invoiceService.getInvoiceById(id);
 			String[] lstTest = invoice.getLstTest().split(",");
-			List<Test> lstTestComplete = new ArrayList<Test>();
-			for(String item : lstTest) {
-				Test test = this.testService.findByTestName(item.trim());
-				lstTestComplete.add(test);
+			String[] lstCostPrice = invoice.getLstCostPrice().split(",");
+			String[] lstSellPrice = invoice.getLstSellPrice().split(",");
+			List<TestDTO> lstTestComplete = new ArrayList<TestDTO>();
+
+			for(int i = 0; i < lstTest.length; i++) {
+				TestDTO item = new TestDTO();
+				item.setTestName(lstTest[i]);
+				item.setCostPrice(Double.valueOf(lstCostPrice[i]));
+				item.setSellPrice(Double.valueOf(lstSellPrice[i]));
+				lstTestComplete.add(item);
 			}
+//			String[] lstTest = invoice.getLstTest().split(",");
+//			List<Test> lstTestComplete = new ArrayList<Test>();
+//			for(String item : lstTest) {
+//				Test test = this.testService.findByTestName(item.trim());
+//				lstTestComplete.add(test);
+//			}
 			model.addAttribute("invoice", invoice);
 			model.addAttribute("lstTestComplete", lstTestComplete);
 			return createView(model, "function/invoice/invoice_detail.html");

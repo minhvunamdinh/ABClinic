@@ -4,15 +4,24 @@ import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.ui.Model;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import com.medical.examination.entity.TestResult;
+import com.medical.examination.findparams.TestResultFindParams;
+import com.medical.examination.service.TestResultService;
 import com.medical.examination.utils.AccountDetail;
 
 public class BaseController {
 	
 	public AccountDetail account;
+	
+	@Autowired
+	TestResultService testResultService;
 	
 	//@PostConstruct
 	public void init() {
@@ -36,6 +45,14 @@ public class BaseController {
         	model.addAttribute("currentUser", account);
         	model.addAttribute("fullname", account.getFullname());
         }
+		
+		TestResultFindParams testResultFindParams = new TestResultFindParams();
+		testResultFindParams.setFindCustomerReturning(true); //Tìm bệnh nhân hẹn khám trong 3 ngày
+		Page<TestResult> testResultData = this.testResultService.findTestResult(PageRequest.of(0, 1000), testResultFindParams);
+		if(testResultData != null) {
+			model.addAttribute("countCustomerReturn", testResultData.getTotalElements());
+		}
+		
 		return viewName;
 	}
 }

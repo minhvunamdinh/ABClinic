@@ -65,13 +65,25 @@
                         <div th:if="${type=='add'}" class="row">
                             <div class="col-md-4 text-center clinic-working-item-left">Kết quả chuẩn đoán</div>
                             <div class="col-md-8 text-center clinic-working-item-right">
-                                <textarea field="*{diagnosticResult}" name="diagnosticResult" style="height: 100px; font-size: 18px;" class="form-control"></textarea>
+                                <textarea field="*{diagnosticResult}" name="diagnosticResult" style="height: 100px; font-size: 18px; background-color: #fff;" class="form-control"></textarea>
                             </div>
                         </div>
                         <div th:if="${type=='edit'}" class="row">
                             <div class="col-md-4 text-center clinic-working-item-left">Kết quả chuẩn đoán</div>
                             <div class="col-md-8 text-center clinic-working-item-right">
-                                <textarea disabled field="*{diagnosticResult}" th:text="${clinicWorking.lstTestResult[0].diagnosticResult}" name="diagnosticResult" style="height: 100px; font-size: 18px;" class="form-control"></textarea>
+                                <textarea disabled field="*{diagnosticResult}" th:text="${clinicWorking.lstTestResult[0].diagnosticResult}" name="diagnosticResult" style="height: 100px; font-size: 18px; background-color: #fff;" class="form-control"></textarea>
+                            </div>
+                        </div>
+                        <div class="row" th:if="${type=='add'}">
+                            <div class="col-md-4 text-center clinic-working-item-left">Các xét nghiệm đã chỉ định</div>
+                            <div class="col-md-8 text-center clinic-working-item-right">
+                                <textarea field="*{lstTest}" readonly name="lstTest" id="xn-chi-dinh" style="height: 100px; font-size: 18px; background-color: #fff" class="form-control"></textarea>
+                            </div>
+                        </div>
+                        <div class="row" th:if="${type=='edit'}">
+                            <div class="col-md-4 text-center clinic-working-item-left">Các xét nghiệm đã chỉ định</div>
+                            <div class="col-md-8 text-center clinic-working-item-right">
+                                <textarea readonly field="*{lstTest}" th:text="${clinicWorking.lstTestResult[0].lstTest}" name="lstTest" id="xn-chi-dinh" style="height: 100px; font-size: 18px; background-color: #fff;" class="form-control"></textarea>
                             </div>
                         </div>
                         <div th:if="${type == 'edit'}" class="row">
@@ -84,18 +96,6 @@
                             <div class="col-md-4 text-center clinic-working-item-left">Hẹn tái khám</div>
                             <div class="col-md-8 text-center clinic-working-item-right">
                                 <input style="font-size: 18px;" field="*{timeReturn}" name="timeReturn" type="date" class="form-control">
-                            </div>
-                        </div>
-                        <div class="row" th:if="${type=='add'}">
-                            <div class="col-md-4 text-center clinic-working-item-left">Các xét nghiệm đã chỉ định</div>
-                            <div class="col-md-8 text-center clinic-working-item-right">
-                                <textarea field="*{lstTest}" readonly name="lstTest" id="xn-chi-dinh" style="height: 100px; font-size: 18px; background-color: #fff" class="form-control"></textarea>
-                            </div>
-                        </div>
-                        <div class="row" th:if="${type=='edit'}">
-                            <div class="col-md-4 text-center clinic-working-item-left">Các xét nghiệm đã chỉ định</div>
-                            <div class="col-md-8 text-center clinic-working-item-right">
-                                <textarea readonly field="*{lstTest}" th:text="${clinicWorking.lstTestResult[0].lstTest}" name="lstTest" id="xn-chi-dinh" style="height: 100px; font-size: 18px" class="form-control"></textarea>
                             </div>
                         </div>
                         <div class="row" hidden>

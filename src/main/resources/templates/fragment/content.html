@@ -23,21 +23,67 @@
                 </ol>
             </div>
         </div>
+        
+        <div class="row">
+          <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
+            <div class="info-box blue-bg">
+              <i class="fa fa-user">&nbsp;+</i>
+              <div class="count">[[${countNewCustomer}]]</div>
+              <div class="title">Bệnh nhân mới</div>
+            </div>
+            <!--/.info-box-->
+          </div>
+          <!--/.col-->
+
+          <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
+            <div class="info-box brown-bg">
+              <i class="fa fa-file">&nbsp;+</i>
+              <div class="count">[[${totalInvoice}]]</div>
+              <div class="title">Số hóa đơn</div>
+            </div>
+            <!--/.info-box-->
+          </div>
+          <!--/.col-->
+
+          <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
+            <div class="info-box red-bg">
+              <i class="fa fa-money"></i>
+              <div class="count">[[${#numbers.formatDecimal(totalSellPrice, 0, 'COMMA', 0, 'POINT')} + 'Đ']]</div>
+              <div class="title">Tổng doanh thu</div>
+            </div>
+            <!--/.info-box-->
+          </div>
+          <!--/.col-->
+
+          <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
+            <div class="info-box green-bg">
+              <i class="fa fa-dollar">&nbsp;+</i>
+              <div class="count">[[${#numbers.formatDecimal(totalInterests, 0, 'COMMA', 0, 'POINT')} + 'Đ']]</div>
+              <div class="title">Tổng tiền lãi</div>
+            </div>
+            <!--/.info-box-->
+          </div>
+          <!--/.col-->
+
+        </div>
+        <!--/.row-->
 
         <div class="row">
-        <div class="col-md-6 text-center">
+        <div class="col-md-5 text-center">
         	<h1>Số hóa đơn/Bệnh nhân mới tháng [[${currentMonth}]]</h1>
         	<canvas id="hoaDonBenhNhanChart" width="400" height="400"></canvas>	
         </div>
-        <div class="col-md-6 text-center">
+        <div class="col-md-1"></div>
+        <div class="col-md-5 text-center">
         	<h1>Doanh thu bác sĩ tháng [[${currentMonth}]]</h1>
         	<canvas id="doanhThuChart" width="400" height="400"></canvas>	
         </div>
-        <div class="col-md-6 text-center">
+        <div class="col-md-5 text-center">
         	<h1>Tiền lãi bác sĩ tháng [[${currentMonth}]]</h1>
         	<canvas id="tienLaiChart" width="400" height="400"></canvas>
         </div>
-        <div class="col-md-6 text-center">
+        <div class="col-md-1"></div>
+        <div class="col-md-5 text-center">
         	<h1>Doanh thu x Tiền lãi bác sĩ tháng [[${currentMonth}]]</h1>
         	<canvas id="doanhThuTienLaiChart" width="400" height="400"></canvas>
         </div>

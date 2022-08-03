@@ -23,6 +23,6 @@ PagingAndSortingRepository<Customer, Long>, JpaSpecificationExecutor<Customer> {
 	 * @param id
 	 * @return
 	 */
-	@Query(value = "SELECT COUNT(1) FROM customer a LEFT JOIN clinic_working b ON a.id = b.customer_id WHERE b.created_date >= curdate() AND b.created_date <= (curdate() + INTERVAL 1 DAY) AND a.id = :id", nativeQuery = true)
+	@Query(value = "SELECT COUNT(1) FROM customer a LEFT JOIN clinic_working b ON a.id = b.customer_id WHERE b.created_date >= curdate() AND b.created_date <= (curdate() + INTERVAL 1 DAY) AND b.status <> 3 AND a.id = :id", nativeQuery = true)
 	public Long checkCustomerExaminating(@Param("id") Long id);
 }

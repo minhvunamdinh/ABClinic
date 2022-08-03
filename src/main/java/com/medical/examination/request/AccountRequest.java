@@ -117,7 +117,7 @@ public class AccountRequest {
 		this.email = email;
 	}
 	
-	@AssertTrue(message = "PasswisPasswordsEqualords should match")
+	@AssertTrue(message = "Mật khẩu không khớp!")
     public boolean isPasswordsEqual() {
         return (password == null) ? false : password.equals(passwordRepeat);
     }
