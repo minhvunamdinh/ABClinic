@@ -31,7 +31,7 @@ public class Customer {
 	private Long id;
 	@Column(name = "fullname")
 	@NotEmpty(message = "Thông tin bắt buộc!")
-	@Size(min = 6, max = 255, message = "Độ dài phải từ 6 đến 255 ký tự")
+	@Size(min = 6, max = 50, message = "Độ dài phải từ 6 đến 50 ký tự")
 	private String fullname;
 	@Column(name = "phone")
 	@NotEmpty(message = "Thông tin bắt buộc!")

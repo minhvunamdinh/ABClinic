@@ -11,33 +11,13 @@
                     <ol class="breadcrumb">
                         <li><i class="fa fa-home"></i><a th:href="@{/home}">Home</a></li>
                         <li><i class="fa fa-laptop"></i>Phiếu khám bệnh</li>
-                        <li><i class="fa fa-laptop"></i>Tạo phiếu khám</li>
+                        <li><i class="fa fa-laptop"></i>Cập nhật phiếu khám</li>
                     </ol>
                 </div>
             </div>
 
-            <div class="row">
-                
-                    <div class="col-md-12">
-                    	<form th:action="@{/medical-examination-add}" th:object="${findParams}" method="GET">
-                        <div class="col-md-3">
-                            <label>Bệnh nhân</label>
-                            <select class="selectpicker form-control dropdown-toggle" data-live-search="true" th:field="*{id}">
-                                <option style="font-size:16px;" value="" selected>-- Chọn bệnh nhân --</option>
-                                <option style="font-size:16px;" th:each="item : ${lstCustomer}" th:value="${item.id}" th:text="@{ ${item.fullname} + ' - ' + ${item.phone}}"></option>
-                              </select>
-                        </div>
-                        <div class="col-md-2">
-                            <br>
-                            <button style="font-size:16px;" type="submit" class="btn btn-primary">Xác nhận</button>
-                        </div>
-                        </form>
-                    </div>
-                
-            </div>            
-
             <div class="row" style="margin-top: 20px;">
-                <form class="col-md-12" id="addform" action="#" th:action="@{/medical-examination-add}" th:object="${medicalExaminationRequest}" method="POST">
+                <form class="col-md-12" id="addform" action="#" th:action="@{'/medical-examination-edit/' + ${clinicWorkingId}}" th:object="${medicalExaminationRequest}" method="POST">
                 	<div class="row">
                 		<div class="col-md-3" style="display: none">
 	                        <div class="form-group" >
@@ -129,7 +109,7 @@
                     </div>
                     <div class="row">
                         <div class="col-md-12 text-center">
-                        	<button style="margin-top: 20px; font-size:16px;" class="btn btn-primary" type="submit">Tạo phiếu khám</button>
+                        	<button style="margin-top: 20px; font-size:16px;" class="btn btn-primary" type="submit">Cập nhật phiếu khám</button>
                         	<a th:href="@{/medical-examination}"><button style="margin-top: 20px; font-size:16px;" class="btn btn-danger" type="button">Trở về</button></a>
                         </div>
                     </div>

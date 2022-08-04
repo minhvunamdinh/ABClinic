@@ -9,7 +9,7 @@
                     <span>Dashboard</span>
                 </a>
             </li>
-             <li class="sub-menu">
+             <li th:if="${currentUser.role == 2 || currentUser.role == 3}" class="sub-menu">
                 <a href="javascript:;" class="">
                     <i class="icon_document_alt"></i>
                     <span>Chức năng</span>

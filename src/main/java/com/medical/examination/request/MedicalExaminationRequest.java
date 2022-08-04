@@ -3,8 +3,10 @@ package com.medical.examination.request;
 import java.util.Date;
 
 import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -18,13 +20,13 @@ public class MedicalExaminationRequest {
 	private String fullname;
 	@NotNull(message = "Thông tin bắt buộc!")
 	@NotEmpty(message = "Thông tin bắt buộc!")
+	@Size(min = 10, max = 10, message = "Số điện thoại phải có 10 chữ số")
 	private String phone;
 	@DateTimeFormat (pattern="yyyy-MM-dd")
 	@NotNull(message = "Thông tin bắt buộc!")
 	private Date dob;
-	@NotNull(message = "Thông tin bắt buộc!")
-	@NotEmpty(message = "Thông tin bắt buộc!")
-	@Email
+	@NotBlank(message = "Thông tin bắt buộc!")
+	@Email(message = "Sai định dạng email!")
 	private String email;
 	@NotNull(message = "Thông tin bắt buộc")
 	@NotEmpty(message = "Thông tin bắt buộc!")

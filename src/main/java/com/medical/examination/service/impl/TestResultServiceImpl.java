@@ -59,6 +59,15 @@ public class TestResultServiceImpl implements TestResultService {
 						predicates.add(criteriaBuilder.and(criteriaBuilder.like(criteriaBuilder.lower(root.get("code")),
 								"%" + findParams.getCode().trim().toLowerCase() + "%")));
 					}
+					if(findParams.getAccountId() != null) {
+						predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("clinicWorking").get("account").get("id"),findParams.getAccountId())));
+					}
+					if(findParams.getCustomerId() != null) {
+						predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("clinicWorking").get("customer").get("id"),findParams.getCustomerId())));
+					}
+					if(findParams.getIsCalled() != null) {
+						predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("isCalled"),findParams.getIsCalled())));
+					}
 					if(findParams.isFindCustomerReturning() == true) {
 						Date toDay = new Date();
 						toDay.setHours(0);

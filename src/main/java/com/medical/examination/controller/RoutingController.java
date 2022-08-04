@@ -188,6 +188,7 @@ public class RoutingController extends BaseController {
 		Pageable pageAble = PageRequest.of(page, 10, Sort.by(Sort.Order.desc("id")));
 		AccountFindParams accountFindParams = new AccountFindParams();
 		accountFindParams.setRole(2L); //Tim role = 2 bac si
+		accountFindParams.setIsActive(1L); //account can kich hoat
 		Page<Account> accData = accountService.findAccount(PageRequest.of(0, 100), accountFindParams);
 		Page<Customer> cusData = customerService.findCustomer(PageRequest.of(0, 100), null);
 		Page<ClinicWorking> data = clinicWorkingService.findClinicWorking(pageAble, clinicWorkingFindParams);
@@ -208,7 +209,7 @@ public class RoutingController extends BaseController {
 	
 	@GetMapping("/medical-examination-add")
 	public String viewMedicalExaminationAddPage(Model model, @ModelAttribute("findParams") CustomerFindParams customerFindParams, MedicalExaminationRequest medicalExaminationRequest) {
-		model.addAttribute("title", "Tạo khám bệnh");
+		model.addAttribute("title", "Tạo phiếu khám bệnh");
 		model.addAttribute("findParams", customerFindParams);
 		Page<Customer> cusData = customerService.findCustomer(PageRequest.of(0, 100), null);
 		model.addAttribute("lstCustomer", cusData.getContent());
@@ -235,6 +236,65 @@ public class RoutingController extends BaseController {
 		}
 
 		return createView(model, "function/medical_examination/medical_examination_add.html");
+	}
+	
+	@GetMapping("/medical-examination-edit/{id}")
+	public String viewMedicalExaminationEditPage(@PathVariable("id") Long id,Model model, MedicalExaminationRequest medicalExaminationRequest) {
+		model.addAttribute("title", "Cập nhật phiếu khám bệnh");
+		model.addAttribute("clinicWorkingId", id);
+		AccountFindParams accountFindParams = new AccountFindParams();
+		accountFindParams.setRole(2L); //Tim role = 2 bac si
+		Page<Account> accData = accountService.findAccount(PageRequest.of(0, 100), accountFindParams);
+		model.addAttribute("lstDoctor", accData.getContent());
+		
+		ClinicWorking clinicWorking = this.clinicWorkingService.getClinicWorkingById(id);
+		if(clinicWorking != null) {
+			medicalExaminationRequest.setAccountId(clinicWorking.getAccount().getId());
+			medicalExaminationRequest.setAddress(clinicWorking.getCustomer().getAddress());
+			medicalExaminationRequest.setCountry(clinicWorking.getCustomer().getCountry());
+			medicalExaminationRequest.setCustomerId(clinicWorking.getCustomer().getId());
+			medicalExaminationRequest.setDesc(clinicWorking.getCustomer().getDesc());
+			medicalExaminationRequest.setDob(clinicWorking.getCustomer().getDob());
+			medicalExaminationRequest.setEmail(clinicWorking.getCustomer().getEmail());
+			medicalExaminationRequest.setFullname(clinicWorking.getCustomer().getFullname());
+			medicalExaminationRequest.setGender(clinicWorking.getCustomer().getGender());
+			medicalExaminationRequest.setJob(clinicWorking.getCustomer().getJob());
+			medicalExaminationRequest.setPhone(clinicWorking.getCustomer().getPhone());
+		}
+
+		return createView(model, "function/medical_examination/medical_examination_edit.html");
+	}
+	
+	@PostMapping("/medical-examination-edit/{id}")
+	public String addMedicalExaminationAddPage(@PathVariable("id") Long id, @Valid @ModelAttribute(value="medicalExaminationRequest") MedicalExaminationRequest medicalExaminationRequest, BindingResult result, Model model, RedirectAttributes redirAttrs) {
+		model.addAttribute("title", "Cập nhật phiếu khám bệnh");
+		if (result.hasErrors()) {
+			model.addAttribute("error", "Cập nhật thất bại!");
+			model.addAttribute("clinicWorkingId", id);
+			AccountFindParams accountFindParams = new AccountFindParams();
+			accountFindParams.setRole(2L); //Tim role = 2 bac si
+			Page<Account> accData = accountService.findAccount(PageRequest.of(0, 100), accountFindParams);
+			model.addAttribute("lstDoctor", accData.getContent());
+			return createView(model, "function/medical_examination/medical_examination_edit.html");
+        }
+		
+		Customer customer = this.customerService.getCustomerById(medicalExaminationRequest.getCustomerId());
+		
+		customer.setAddress(medicalExaminationRequest.getAddress());
+		customer.setCountry(medicalExaminationRequest.getCountry());
+		customer.setDesc(medicalExaminationRequest.getDesc());
+		customer.setDob(medicalExaminationRequest.getDob());
+		customer.setEmail(medicalExaminationRequest.getEmail());
+		customer.setFullname(medicalExaminationRequest.getFullname());
+		customer.setGender(medicalExaminationRequest.getGender());
+		customer.setJob(medicalExaminationRequest.getJob());
+		customer.setPhone(medicalExaminationRequest.getPhone());
+		this.customerService.saveCustomer(customer);
+		//insert clinic_woring
+		this.clinicWorkingService.updateAccountIdClinicWorking(medicalExaminationRequest.getAccountId(), id);
+		redirAttrs.addFlashAttribute("success", "Cập nhật phiếu khám thành công!");
+		return "redirect:/medical-examination";
+		
 	}
 	
 	@PostMapping("/medical-examination-add")
@@ -492,9 +552,24 @@ public class RoutingController extends BaseController {
 	public String viewCustomerReturningPage(@RequestParam(name = "page", defaultValue = "0") int page, Model model, @ModelAttribute("findParams") TestResultFindParams findParams) {
 		try {
 			model.addAttribute("title", "Danh sách bệnh nhân hẹn khám");
-			Pageable pageAble = PageRequest.of(page, 10, Sort.by(Sort.Order.desc("id")));
-			findParams.setFindCustomerReturning(true); //Tìm bệnh nhân hẹn khám trong 3 ngày
+			model.addAttribute("findCustomerReturning", findParams.isFindCustomerReturning());
+			
+			AccountFindParams accountFindParams = new AccountFindParams();
+			accountFindParams.setRole(2L); //Tim role = 2 bac si
+			accountFindParams.setIsActive(1L); //account can kich hoat
+			Page<Account> accData = accountService.findAccount(PageRequest.of(0, 100), accountFindParams);
+			Page<Customer> cusData = customerService.findCustomer(PageRequest.of(0, 100), null);
+			if(accData != null) model.addAttribute("lstDoctor", accData.getContent());
+			if(cusData != null) model.addAttribute("lstCustomer", cusData.getContent());
+			
+			Pageable pageAble = PageRequest.of(page, 10, Sort.by(Sort.Order.desc("timeReturn")));
+			//findParams.setFindCustomerReturning(true); //Tìm bệnh nhân hẹn khám trong 3 ngày
+			
 			Page<TestResult> testResultData = this.testResultService.findTestResult(pageAble, findParams);
+			
+			//TestResultFindParams countFindParam = new TestResultFindParams();
+			
+			//Page<TestResult> countTestResultData = this.testResultService.findTestResult(pageAble, countFindParam);
 			if(testResultData != null) {
 				model.addAttribute("pageSize", testResultData.getSize());
 				model.addAttribute("pageIndex", testResultData.getNumber());
@@ -502,6 +577,7 @@ public class RoutingController extends BaseController {
 				model.addAttribute("totalElements", testResultData.getTotalElements());
 				List<TestResult> lstTestResult = testResultData.getContent();
 				model.addAttribute("lstTestResult", lstTestResult);
+				//model.addAttribute("countCustomerReturning", countTestResultData.getTotalElements());
 			}
 			
 			return createView(model, "function/customer/customer_returning_list.html");

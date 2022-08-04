@@ -4,7 +4,10 @@ public class TestResultFindParams {
 	private Long id;
 	private String code;
 	private Long status;
-	private boolean findCustomerReturning;
+	private Long accountId;
+	private Long customerId;
+	private Long isCalled;
+	private boolean findCustomerReturning = true;
 	public Long getId() {
 		return id;
 	}
@@ -28,6 +31,24 @@ public class TestResultFindParams {
 	}
 	public void setFindCustomerReturning(boolean findCustomerReturning) {
 		this.findCustomerReturning = findCustomerReturning;
+	}
+	public Long getAccountId() {
+		return accountId;
+	}
+	public void setAccountId(Long accountId) {
+		this.accountId = accountId;
+	}
+	public Long getCustomerId() {
+		return customerId;
+	}
+	public void setCustomerId(Long customerId) {
+		this.customerId = customerId;
+	}
+	public Long getIsCalled() {
+		return isCalled;
+	}
+	public void setIsCalled(Long isCalled) {
+		this.isCalled = isCalled;
 	}
 	
 }

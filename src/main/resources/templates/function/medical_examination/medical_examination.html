@@ -80,8 +80,9 @@
                         <td th:if="${item.status == 2}">Chờ kết quả xét nghiệm</td>
                         <td th:if="${item.status == 3}">Đã khám</td>
                         <td>
-                        	<a th:href="@{'/medical-examination/' + ${item.id}}"><button style="font-size: 16px;" class="btn btn-success">Chi tiết</button></a>
                         	<a th:if="${currentUser.role == 2 && (item.status == 0 || item.status == 1)}" th:href="@{'/medical-examination-working/' + ${item.id} + '/add'}"><button style="font-size: 16px;" class="btn btn-primary" th:data-confirm="|Bạn muốn thêm bệnh nhân ${item.customer.fullname} vào khám?|" onclick="if (!confirm(this.getAttribute('data-confirm'))) return false">Thêm vào khám</button></a>
+                        	<a th:if="${item.status == 0}" th:href="@{'/medical-examination-edit/' + ${item.id}}"><button style="font-size: 16px;" class="btn btn-success">Chỉnh sửa phiếu khám</button></a>
+                        	<a th:href="@{'/medical-examination/' + ${item.id}}"><button style="font-size: 16px;" class="btn btn-success">Chi tiết</button></a>
                         	<a th:if="${currentUser.role == 2 && item.status == 2 && item.lstTestResult.size() > 0 && item.lstTestResult.get(0).getStatus == 1}" th:href="@{'/medical-examination-working/' + ${item.id} + '/edit'}"><button style="font-size: 16px;" class="btn btn-primary">Cập nhật kết quả xét nghiệm</button></a>
                         	<a th:href="@{'/medical-examination/delete/' + ${item.id}}" th:if="${item.status == 0}" style="font-size: 16px; color: #fff;" class="btn btn-danger" th:data-confirm="|Bạn muốn xóa bản ghi này?|" onclick="if (!confirm(this.getAttribute('data-confirm'))) return false">Xóa</a>
                         </td>

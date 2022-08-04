@@ -18,4 +18,8 @@ public interface ClinicWorkingRepository extends CrudRepository<ClinicWorking, L
 	@Query(value = "SELECT c FROM ClinicWorking c WHERE c.id = :id")
 	public ClinicWorking getClinickWorkingById(@Param("id") Long id);
 	
+	@Modifying
+	@Query(value = "UPDATE clinic_working c SET c.account_id = :accountId WHERE c.id = :id", nativeQuery = true)
+	void updateAccountIdClinicWorking(@Param("accountId") Long accountId, @Param("id") Long id);
+	
 }

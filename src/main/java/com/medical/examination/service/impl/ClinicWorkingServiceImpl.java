@@ -90,4 +90,9 @@ public class ClinicWorkingServiceImpl implements ClinicWorkingService {
 		return this.clinicWorkingRepository.save(clinicWorking);
 	}
 
+	@Override
+	public void updateAccountIdClinicWorking(Long accountId, Long id) {
+		this.clinicWorkingRepository.updateAccountIdClinicWorking(accountId, id);
+	}
+
 }

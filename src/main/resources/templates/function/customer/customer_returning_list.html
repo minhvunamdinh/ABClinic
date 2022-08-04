@@ -10,11 +10,52 @@
                     <h3 class="page-header"><i class="fa fa-laptop"></i>Danh mục</h3>
                     <ol class="breadcrumb">
                         <li><i class="fa fa-home"></i><a th:href="@{/home}">Home</a></li>
-                        <li><i class="fa fa-laptop"></i>Danh sách Bệnh nhân</li>
+                        <li><i class="fa fa-laptop"></i>Danh sách Bệnh nhân hẹn khám</li>
                     </ol>
                 </div>
             </div>
-			<div><p style="color: red;">Có: [[${totalElements}]] bệnh nhân sắp đến lịch hẹn khám (Trong 3 ngày tới)</p></div>
+            
+            <div class="row">
+                <form class="form-group col-md-12" th:action="@{/customer-returning-list}" th:object="${findParams}" method="GET">
+                    <div class="col-md-12">
+                        <div class="col-md-3">
+                            <label>Bác sĩ</label>
+                            <select class="selectpicker form-control" th:field="*{accountId}" id="accountId"  name="accountId" data-live-search="true">
+                            	<option style="font-size: 16px;" value="" selected>-- Chọn bác sĩ --</option>
+                                <option style="font-size: 16px;" th:each="item : ${lstDoctor}" th:value="${item.id}" th:text="${item.fullname}"></option>
+                              </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label>Bệnh nhân</label>
+                            <select class="selectpicker form-control" th:field="*{customerId}" id="customerId"  name="customerId" data-live-search="true">
+                            	<option style="font-size: 16px;" value="" selected>-- Chọn bệnh nhân --</option>
+                                <option style="font-size: 16px;" th:each="item : ${lstCustomer}" th:value="${item.id}" th:text="@{${item.fullname} + ' - ' + ${item.phone}}"></option>
+                              </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label>Trạng thái</label>
+                            <select class="form-control dropdown-toggle" th:field="*{isCalled}" id="status"  name="status">
+                                <option style="font-size: 16px;" value="" selected>-- Chọn trạng thái --</option>
+                                <option style="font-size: 16px;" value=0>Chưa liên hệ</option>
+                                <option style="font-size: 16px;" value=1>Đã liên hệ</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label>Khoảng thời gian</label>
+                            <select class="form-control dropdown-toggle" th:field="*{findCustomerReturning}" id="findCustomerReturning"  name="findCustomerReturning">
+                            	<option style="font-size: 16px;" value=true>Trong 3 ngày tới</option>
+                                <option style="font-size: 16px;" value=false>Tất cả</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <br>
+                            <button style="font-size: 16px;" type="submit" class="btn btn-primary">Tìm kiếm</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            
+			<div th:if="${findCustomerReturning}"><p style="color: red;">Có: [[${totalElements}]] bệnh nhân sắp đến lịch hẹn khám (Trong 3 ngày tới)</p></div>
             <div class="row" style="margin-top: 20px;">
                 <table class="table">
                     <thead class="thead-dark">
