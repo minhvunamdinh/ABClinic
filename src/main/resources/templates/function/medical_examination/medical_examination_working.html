@@ -420,7 +420,7 @@
         let totalSellPrice = 0;
         let totalCostPrice = 0;
         lstObjectTestInside.forEach(item => {
-            let divTest = '<div class="row test-result-item text-center"><div class="col-md-3 test-type-item">Xét nghiệm '+item.testName+'</div><div class="col-md-3 test-type-item">1</div><div class="col-md-3 test-type-item">'+formatVnd(item.costPrice)+'</div><div class="col-md-3 test-type-item">'+formatVnd(item.sellPrice)+'</div></div>'
+            let divTest = '<div class="row test-result-item text-center"><div class="col-md-3 test-type-item">Xét nghiệm '+item.testName+'</div><div class="col-md-3 test-type-item">1</div><div class="col-md-3 test-type-item">'+formatVnd(item.sellPrice)+'</div><div class="col-md-3 test-type-item">'+formatVnd(item.sellPrice)+'</div></div>'
             $(".export-test-area").append(divTest)
             totalSellPrice += parseFloat(item.sellPrice);
             totalCostPrice += parseFloat(item.costPrice);

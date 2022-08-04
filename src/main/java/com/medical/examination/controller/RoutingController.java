@@ -505,6 +505,7 @@ public class RoutingController extends BaseController {
 		try {
 			model.addAttribute("title", "Thu tiền khám");
 			TestResultFindParams findParams = new TestResultFindParams();
+			findParams.setFindCustomerReturning(false);
 			Pageable pageAble = PageRequest.of(0, 1000, Sort.by(Sort.Order.desc("id")));
 			List<TestResult> lstTestResult = this.testResultService.findTestResult(pageAble, findParams).getContent();
 			model.addAttribute("lstTestResult", lstTestResult);
@@ -562,7 +563,7 @@ public class RoutingController extends BaseController {
 			if(accData != null) model.addAttribute("lstDoctor", accData.getContent());
 			if(cusData != null) model.addAttribute("lstCustomer", cusData.getContent());
 			
-			Pageable pageAble = PageRequest.of(page, 10, Sort.by(Sort.Order.desc("timeReturn")));
+			Pageable pageAble = PageRequest.of(page, 10, Sort.by(Sort.Order.asc("timeReturn")));
 			//findParams.setFindCustomerReturning(true); //Tìm bệnh nhân hẹn khám trong 3 ngày
 			
 			Page<TestResult> testResultData = this.testResultService.findTestResult(pageAble, findParams);
