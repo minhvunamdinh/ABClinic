@@ -20,7 +20,7 @@
 
 <body>
     <div layout:fragment="content">
-    	<div class="wrapper">
+    	<div class="wrapper" th:if="${currentUser.role == 1}">
             <div class="row">
                 <div class="col-lg-12">
                     <h3 class="page-header"><i class="fa fa-laptop"></i>Danh sách xét nghiệm</h3>
@@ -44,7 +44,7 @@
                                 	<input style="font-size: 16px;" type="text" class="form-control" th:field="*{testName}" id="testName" name="testName">
                                 	<span style="color: red;" th:if="${#fields.hasErrors('testName')}" th:errors="*{testName}"></span>
                                 </div>
-                                <div style="margin-top: 20px;" class="col-md-6">Đơn giá<span style="color: red;"> *</span></div>
+                                <div style="margin-top: 20px;" class="col-md-6">Đơn giá</div>
                                 <div style="margin-top: 20px;" class="col-md-6">
                                 	<input style="font-size: 16px;" type="number" class="form-control" th:field="*{costPrice}" id="costPrice" name="costPrice">
                                 	<span style="color: red;" th:if="${#fields.hasErrors('costPrice')}" th:errors="*{costPrice}"></span>
@@ -52,7 +52,7 @@
                             </div>
                             
                             <div class="row row-size">
-                                <div style="margin-top: 20px;" class="col-md-6">Giá bán<span style="color: red;"> *</span></div>
+                                <div style="margin-top: 20px;" class="col-md-6">Giá bán</div>
                                 <div style="margin-top: 20px;" class="col-md-6">
                                 	<input style="font-size: 16px;" type="number" class="form-control" th:field="*{sellPrice}" id="sellPrice" name="sellPrice">
                                 	<span style="color: red;" th:if="${#fields.hasErrors('sellPrice')}" th:errors="*{sellPrice}"></span>
@@ -72,11 +72,12 @@
 	                            <button style="font-size: 18px;" class="btn btn-primary" type="submit">Thêm mới</button>
 	                        </div>
                     </form>
-                    
 				</div>
             </div>
-            
         </div>
+        <div class="wrapper" th:unless="${currentUser.role == 1}">
+			<h1 style="color: red;">Bạn không có quyền truy cập màn hình này</h1>
+		</div>
     </div>
 
 </body>

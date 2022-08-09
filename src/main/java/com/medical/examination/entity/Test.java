@@ -23,13 +23,13 @@ public class Test {
 	@Column(name="test_name")
 	@NotNull(message = "Thông tin bắt buộc!")
 	@NotEmpty(message = "Thông tin bắt buộc!")
-	@Size(min = 6, max = 255, message = "Độ dài phải từ 6 đến 255 ký tự")
+	@Size(min = 1, max = 255, message = "Độ dài phải từ 6 đến 255 ký tự")
 	private String testName;
 	@Column(name="cost_price")
-	@NotNull(message = "Thông tin bắt buộc!")
+	//@NotNull(message = "Thông tin bắt buộc!")
 	private Double costPrice;
 	@Column(name="sell_price")
-	@NotNull(message = "Thông tin bắt buộc!")
+	//@NotNull(message = "Thông tin bắt buộc!")
 	private Double sellPrice;
 	@ManyToOne
 	@JoinColumn(name = "test_type_id")
