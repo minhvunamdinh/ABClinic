@@ -20,12 +20,12 @@ import lombok.Data;
 public class UpdateAccountRequest {
 	private Long id;
 	@NotNull(message = "Thông tin bắt buộc")
-    @Size(min = 6, max = 255, message = "Độ dài phải từ 6 đến 255 ký tự")
+    @Size(min = 6, max = 50, message = "Độ dài phải từ 6 đến 50 ký tự")
 	private String username;
 	@NotNull(message = "Thông tin bắt buộc")
 	private Long isActive;
 	@NotNull(message = "Thông tin bắt buộc")
-    @Size(min = 6, max = 255, message = "Độ dài phải từ 6 đến 255 ký tự")
+    @Size(min = 6, max = 50, message = "Độ dài phải từ 6 đến 50 ký tự")
 	private String fullname;
 	@NotNull(message = "Thông tin bắt buộc")
     @Size(min = 6, max = 255, message = "Độ dài phải từ 6 đến 255 ký tự")
@@ -44,7 +44,7 @@ public class UpdateAccountRequest {
 	private String email;
 	@Column(name = "phone")
 	@NotEmpty(message = "Thông tin bắt buộc!")
-	@Size(min = 10, max = 10, message = "Số điện thoại phải có 10 chữ số")
+	@Pattern(regexp = "^[0][0-9]{9}$",message = "Số điện thoại phải bắt đầu với 0 và có 10 chữ số")
 	private String phone;
 	public String getUsername() {
 		return username;
