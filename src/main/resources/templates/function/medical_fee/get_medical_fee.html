@@ -48,16 +48,16 @@
                     <nav aria-label="Page navigation" style="text-align: center;">
                     <ul class="pagination justify-content-end">
                             <li class="page-item" th:classappend="${pageIndex} <= 0 ? 'disabled' : ''">
-                            <a class="page-link" th:href="@{'/medical-examination?page='+ ${pageIndex-1}}"><</a>
+                            <a class="page-link" th:href="@{'/get-medical-fee?page='+ ${pageIndex-1}}"><</a>
                             </li>
 
                             <li  th:classappend="${pageIndex} != ${index-1} ? 'page-item' :'page-item active' "
                                 th:each="index : ${#numbers.sequence(1, totalPages)}">
-                            <a class="page-link" th:href="@{'/medical-examination?page='+ ${index-1}}" th:text="${index}">1</a>
+                            <a class="page-link" th:href="@{'/get-medical-fee?page='+ ${index-1}}" th:text="${index}">1</a>
                             </li>
 
                             <li class="page-item" th:classappend="${pageIndex} >= ${totalPages} - 1 ? 'disabled' : ''">
-                            <a class="page-link" th:href="@{'/medical-examination?page='+ ${pageIndex+1}}">></a>
+                            <a class="page-link" th:href="@{'/get-medical-fee?page='+ ${pageIndex+1}}">></a>
                             </li>
                         </ul>
                     </nav>

@@ -18,7 +18,7 @@ import lombok.Data;
 @Data
 public class AccountRequest {
 	@NotNull(message = "Thông tin bắt buộc")
-    @Size(min = 6, max = 50, message = "Độ dài phải từ 6 đến 50 ký tự")
+    @Size(min = 1, max = 50, message = "Độ dài phải từ 6 đến 255 ký tự")
 	private String username;
 	@NotNull(message = "Thông tin bắt buộc")
     //@Size(min = 6, max = 20, message = "Độ dài phải từ 6 đến 20 ký tự")
@@ -29,7 +29,7 @@ public class AccountRequest {
 	@NotNull(message = "Thông tin bắt buộc")
 	private Long isActive;
 	@NotNull(message = "Thông tin bắt buộc")
-    @Size(min = 6, max = 50, message = "Độ dài phải từ 6 đến 50 ký tự")
+    @Size(min = 6, max = 50, message = "Độ dài phải từ 6 đến 255 ký tự")
 	private String fullname;
 	@NotNull(message = "Thông tin bắt buộc")
     @Size(min = 6, max = 255, message = "Độ dài phải từ 6 đến 255 ký tự")

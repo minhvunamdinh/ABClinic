@@ -23,17 +23,6 @@ public class BaseController {
 	@Autowired
 	TestResultService testResultService;
 	
-	//@PostConstruct
-	public void init() {
-		try {
-			ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
-			HttpServletRequest request = (HttpServletRequest) attr.getRequest();
-			HttpSession session = request.getSession();
-		} catch (Exception e) {
-			// TODO: handle exception
-		}
-	}
-	
 	public String createView(Model model, String viewName) {
 		//Check user login
 		ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
