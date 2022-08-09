@@ -13,4 +13,5 @@ public interface TestTypeService {
 	void deleteTestType(Long id);
 	TestType getTestTypeById(Long id);
 	Page<TestType> findTestType(Pageable pageable, TestTypeFindParams findParams);
+	Boolean changeStatusTestType(Long id, String type);
 }
