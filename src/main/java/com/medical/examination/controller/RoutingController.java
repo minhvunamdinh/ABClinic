@@ -8,6 +8,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
+import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
@@ -544,12 +545,12 @@ public class RoutingController extends BaseController {
 	}
 	
 	@GetMapping("/get-medical-fee")
-	public String getMedicalFee(Model model) {
+	public String getMedicalFee(@RequestParam(name = "page", defaultValue = "0") int page, Model model) {
 		try {
 			model.addAttribute("title", "Thu tiền khám");
 			TestResultFindParams findParams = new TestResultFindParams();
 			findParams.setFindCustomerReturning(false);
-			Pageable pageAble = PageRequest.of(0, 1000, Sort.by(Sort.Order.desc("id")));
+			Pageable pageAble = PageRequest.of(page, 10, Sort.by(Sort.Order.desc("id")));
 			List<TestResult> lstTestResult = this.testResultService.findTestResult(pageAble, findParams).getContent();
 			model.addAttribute("lstTestResult", lstTestResult);
 			return createView(model, "function/medical_fee/get_medical_fee.html");
@@ -1094,6 +1095,20 @@ public class RoutingController extends BaseController {
 		} catch (Exception e) {
 			e.printStackTrace();
 			redirAttrs.addFlashAttribute("error", "Xóa thất bại!");
+			return "error.html";
+		}
+	}
+	
+	@GetMapping("/change-status-test-type/{type}/{id}")
+	public String changeStatusTestType(@PathVariable("id") Long id, @PathVariable("type") String type, Model model, RedirectAttributes redirAttrs) {
+		try {
+			if(this.testTypeService.changeStatusTestType(id, type)) {
+				model.addAttribute("success", "Xóa thành công!");
+			}
+			return "redirect:/test-type-list";
+		} catch (Exception e) {
+			e.printStackTrace();
+			redirAttrs.addFlashAttribute("error", "Thao tác thất bại!");
 			return "error.html";
 		}
 	}

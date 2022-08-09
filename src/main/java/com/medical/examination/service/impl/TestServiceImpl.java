@@ -85,4 +85,9 @@ public class TestServiceImpl implements TestService {
 		this.testRepository.updateTestStatus(id, status);
 	}
 
+	@Override
+	public List<Test> saveAllTest(List<Test> lstTest) {
+		return (List<Test>) this.testRepository.saveAll(lstTest);
+	}
+
 }
