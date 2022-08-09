@@ -64,6 +64,7 @@ import com.medical.examination.service.TestResultService;
 import com.medical.examination.service.TestService;
 import com.medical.examination.service.TestTypeService;
 import com.medical.examination.utils.AccountDetail;
+import com.medical.examination.utils.Constants;
 import com.medical.examination.utils.MessageResponse;
 
 @Controller
@@ -98,67 +99,79 @@ public class RoutingController extends BaseController {
 	
 	@GetMapping({ "", "/home" })
 	public String viewHomePage(Model model) {
-		model.addAttribute("title", "home");
 		ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
 		HttpServletRequest request = (HttpServletRequest) attr.getRequest();
 		HttpSession session = request.getSession();
-		session.removeAttribute("MESSAGE");
-		
-		AccountFindParams accountFindParams = new AccountFindParams();
-		accountFindParams.setIsActive(1L);//tk kich hoat
-		accountFindParams.setRole(2L);//quyen basi
-		List<Account> lstBacSi = this.accountService.findAccount(PageRequest.of(0, 1000), accountFindParams).getContent();
-		List<String> bacSiArr = new ArrayList<String>();
-		if(lstBacSi != null) {
-			lstBacSi.forEach(item -> {
-				bacSiArr.add(item.getFullname());
-			});
-		}
-		
-		Pageable pageAble = PageRequest.of(0, 1000, Sort.by(Sort.Order.desc("createdDate")));
-		InvoiceFindParams invoiceFindParams = new InvoiceFindParams();
-		int currentMonth = new Date().getMonth() + 1;
-		model.addAttribute("currentMonth", currentMonth);
-		if(invoiceFindParams.getMonth() == null) {
-			invoiceFindParams.setMonth((long) currentMonth);
-		}
-		Page<Invoice> invoiceData = this.invoiceService.findInvoice(pageAble, invoiceFindParams);
-		List<Double> lstDoctorIncome = new ArrayList<Double>();
-		List<Double> lstDoctorInterest = new ArrayList<Double>();
-		List<Double> lstDoctorCountInvoice = new ArrayList<Double>();
-		Double totalSellPrice = 0D;
-		Double totalInterests = 0D;
-		
-		for(String bacSi: bacSiArr) {
-			invoiceFindParams.setAccountName(bacSi);
-			List<Invoice> lstInv = this.invoiceService.findInvoice(pageAble, invoiceFindParams).getContent();
-			if(lstInv != null) {
-				Double totalIncome = 0D;
-				Double totalInterest = 0D;
-				for(Invoice i: lstInv) {
-					totalIncome += i.getTotalSellPrice();
-					totalInterest += (i.getTotalSellPrice() - i.getTotalCostPrice());
+		account = (AccountDetail) session.getAttribute("CURRENT_USER");
+		if(account.getRole() == 1) {
+			try {
+				model.addAttribute("title", "home");
+				
+				session.removeAttribute("MESSAGE");
+				
+				AccountFindParams accountFindParams = new AccountFindParams();
+				accountFindParams.setIsActive(1L);//tk kich hoat
+				accountFindParams.setRole(2L);//quyen basi
+				List<Account> lstBacSi = this.accountService.findAccount(PageRequest.of(0, 1000), accountFindParams).getContent();
+				List<String> bacSiArr = new ArrayList<String>();
+				if(lstBacSi != null) {
+					lstBacSi.forEach(item -> {
+						bacSiArr.add(item.getFullname());
+					});
 				}
-				totalSellPrice += totalIncome;
-				totalInterests += totalInterest;
-				lstDoctorIncome.add(totalIncome);
-				lstDoctorInterest.add(totalInterest);
-				lstDoctorCountInvoice.add((double) lstInv.size());
+				
+				Pageable pageAble = PageRequest.of(0, 1000, Sort.by(Sort.Order.desc("createdDate")));
+				InvoiceFindParams invoiceFindParams = new InvoiceFindParams();
+				int currentMonth = new Date().getMonth() + 1;
+				model.addAttribute("currentMonth", currentMonth);
+				if(invoiceFindParams.getMonth() == null) {
+					invoiceFindParams.setMonth((long) currentMonth);
+				}
+				Page<Invoice> invoiceData = this.invoiceService.findInvoice(pageAble, invoiceFindParams);
+				List<Double> lstDoctorIncome = new ArrayList<Double>();
+				List<Double> lstDoctorInterest = new ArrayList<Double>();
+				List<Double> lstDoctorCountInvoice = new ArrayList<Double>();
+				Double totalSellPrice = 0D;
+				Double totalInterests = 0D;
+				
+				for(String bacSi: bacSiArr) {
+					invoiceFindParams.setAccountName(bacSi);
+					List<Invoice> lstInv = this.invoiceService.findInvoice(pageAble, invoiceFindParams).getContent();
+					if(lstInv != null) {
+						Double totalIncome = 0D;
+						Double totalInterest = 0D;
+						for(Invoice i: lstInv) {
+							totalIncome += i.getTotalSellPrice();
+							totalInterest += (i.getTotalSellPrice() - i.getTotalCostPrice());
+						}
+						totalSellPrice += totalIncome;
+						totalInterests += totalInterest;
+						lstDoctorIncome.add(totalIncome);
+						lstDoctorInterest.add(totalInterest);
+						lstDoctorCountInvoice.add((double) lstInv.size());
+					}
+				}
+				
+				CustomerFindParams cusFindParams = new CustomerFindParams();
+				cusFindParams.setFindNewCustomer(true);
+				Page<Customer> cusData = this.customerService.findCustomer(pageAble, cusFindParams);
+				model.addAttribute("totalSellPrice", totalSellPrice);
+				model.addAttribute("totalInterests", totalInterests);
+				model.addAttribute("totalInvoice", invoiceData.getTotalElements());
+				model.addAttribute("countNewCustomer", cusData.getTotalElements());
+				model.addAttribute("bacSiArr", bacSiArr);
+				model.addAttribute("lstDoctorIncome", lstDoctorIncome);
+				model.addAttribute("lstDoctorInterest", lstDoctorInterest);
+				model.addAttribute("lstDoctorCountInvoice", lstDoctorCountInvoice);
+				return createView(model, "index");
+			} catch (Exception e) {
+				e.printStackTrace();
+				return "error.html";
 			}
 		}
-		
-		CustomerFindParams cusFindParams = new CustomerFindParams();
-		cusFindParams.setFindNewCustomer(true);
-		Page<Customer> cusData = this.customerService.findCustomer(pageAble, cusFindParams);
-		model.addAttribute("totalSellPrice", totalSellPrice);
-		model.addAttribute("totalInterests", totalInterests);
-		model.addAttribute("totalInvoice", invoiceData.getTotalElements());
-		model.addAttribute("countNewCustomer", cusData.getTotalElements());
-		model.addAttribute("bacSiArr", bacSiArr);
-		model.addAttribute("lstDoctorIncome", lstDoctorIncome);
-		model.addAttribute("lstDoctorInterest", lstDoctorInterest);
-		model.addAttribute("lstDoctorCountInvoice", lstDoctorCountInvoice);
+			
 		return createView(model, "index");
+		
 	}
 	
 	@GetMapping("/login")
@@ -174,134 +187,49 @@ public class RoutingController extends BaseController {
 	
 	@GetMapping("/medical-examination")
 	public String viewMedicalExaminationPage(@RequestParam(name = "page", defaultValue = "0") int page, Model model, @ModelAttribute("findParams") ClinicWorkingFindParams clinicWorkingFindParams) {
-		model.addAttribute("title", "Phiếu khám bệnh");
-		
-		//Lay thong tin user trong phien lam viec
-		ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
-		HttpServletRequest request = (HttpServletRequest) attr.getRequest();
-		HttpSession session = request.getSession();
-		account = (AccountDetail) session.getAttribute("CURRENT_USER");
-		if(account.getRole() == 2) {
-			clinicWorkingFindParams.setAccountId(account.getId()); //Neu la bac si dang nhap thi chi hien thi cac benh nhan cua minh
-		}
-		
-		Pageable pageAble = PageRequest.of(page, 10, Sort.by(Sort.Order.desc("id")));
-		AccountFindParams accountFindParams = new AccountFindParams();
-		accountFindParams.setRole(2L); //Tim role = 2 bac si
-		accountFindParams.setIsActive(1L); //account can kich hoat
-		Page<Account> accData = accountService.findAccount(PageRequest.of(0, 100), accountFindParams);
-		Page<Customer> cusData = customerService.findCustomer(PageRequest.of(0, 100), null);
-		Page<ClinicWorking> data = clinicWorkingService.findClinicWorking(pageAble, clinicWorkingFindParams);
-		if(data != null && accData != null) {
-			model.addAttribute("pageSize", data.getSize());
-			model.addAttribute("pageIndex", data.getNumber());
-			model.addAttribute("totalPages", data.getTotalPages());
-			model.addAttribute("totalElements", data.getTotalElements());
-			List<ClinicWorking> lstClinicWorking = data.getContent();
-			model.addAttribute("lstClinicWorking", lstClinicWorking);
+		try {
+			model.addAttribute("title", "Phiếu khám bệnh");
 			
-			model.addAttribute("lstDoctor", accData.getContent());
-			model.addAttribute("lstCustomer", cusData.getContent());
+			//Lay thong tin user trong phien lam viec
+			ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
+			HttpServletRequest request = (HttpServletRequest) attr.getRequest();
+			HttpSession session = request.getSession();
+			account = (AccountDetail) session.getAttribute("CURRENT_USER");
+			if(account.getRole() == 2) {
+				clinicWorkingFindParams.setAccountId(account.getId()); //Neu la bac si dang nhap thi chi hien thi cac benh nhan cua minh
+			}
+			
+			Pageable pageAble = PageRequest.of(page, 10, Sort.by(Sort.Order.desc("id")));
+			AccountFindParams accountFindParams = new AccountFindParams();
+			accountFindParams.setRole(2L); //Tim role = 2 bac si
+			accountFindParams.setIsActive(1L); //account can kich hoat
+			Page<Account> accData = accountService.findAccount(PageRequest.of(0, 100), accountFindParams);
+			Page<Customer> cusData = customerService.findCustomer(PageRequest.of(0, 100), null);
+			Page<ClinicWorking> data = clinicWorkingService.findClinicWorking(pageAble, clinicWorkingFindParams);
+			if(data != null && accData != null) {
+				model.addAttribute("pageSize", data.getSize());
+				model.addAttribute("pageIndex", data.getNumber());
+				model.addAttribute("totalPages", data.getTotalPages());
+				model.addAttribute("totalElements", data.getTotalElements());
+				List<ClinicWorking> lstClinicWorking = data.getContent();
+				model.addAttribute("lstClinicWorking", lstClinicWorking);
+				
+				model.addAttribute("lstDoctor", accData.getContent());
+				model.addAttribute("lstCustomer", cusData.getContent());
+			}
+			
+			return createView(model, "function/medical_examination/medical_examination.html");
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "error.html";
 		}
-		
-		return createView(model, "function/medical_examination/medical_examination.html");
 	}
 	
 	@GetMapping("/medical-examination-add")
 	public String viewMedicalExaminationAddPage(Model model, @ModelAttribute("findParams") CustomerFindParams customerFindParams, MedicalExaminationRequest medicalExaminationRequest) {
-		model.addAttribute("title", "Tạo phiếu khám bệnh");
-		model.addAttribute("findParams", customerFindParams);
-		Page<Customer> cusData = customerService.findCustomer(PageRequest.of(0, 100), null);
-		model.addAttribute("lstCustomer", cusData.getContent());
-		AccountFindParams accountFindParams = new AccountFindParams();
-		accountFindParams.setRole(2L); //Tim role = 2 bac si
-		Page<Account> accData = accountService.findAccount(PageRequest.of(0, 100), accountFindParams);
-		model.addAttribute("lstDoctor", accData.getContent());
-		
-		if(customerFindParams!=null && customerFindParams.getId()!=null) {
-			Customer customer = this.customerService.getCustomerById(customerFindParams.getId());
-			if(customer!=null) {
-				medicalExaminationRequest.setCustomerId(customer.getId());
-				medicalExaminationRequest.setFullname(customer.getFullname());
-				medicalExaminationRequest.setPhone(customer.getPhone());
-				medicalExaminationRequest.setDob(customer.getDob());
-				medicalExaminationRequest.setEmail(customer.getEmail());
-				medicalExaminationRequest.setCountry(customer.getCountry());
-				medicalExaminationRequest.setAddress(customer.getAddress());
-				medicalExaminationRequest.setJob(customer.getJob());
-				medicalExaminationRequest.setGender(customer.getGender());
-				medicalExaminationRequest.setDesc(customer.getDesc());
-				model.addAttribute("medicalExaminationRequest", medicalExaminationRequest);
-			}
-		}
-
-		return createView(model, "function/medical_examination/medical_examination_add.html");
-	}
-	
-	@GetMapping("/medical-examination-edit/{id}")
-	public String viewMedicalExaminationEditPage(@PathVariable("id") Long id,Model model, MedicalExaminationRequest medicalExaminationRequest) {
-		model.addAttribute("title", "Cập nhật phiếu khám bệnh");
-		model.addAttribute("clinicWorkingId", id);
-		AccountFindParams accountFindParams = new AccountFindParams();
-		accountFindParams.setRole(2L); //Tim role = 2 bac si
-		Page<Account> accData = accountService.findAccount(PageRequest.of(0, 100), accountFindParams);
-		model.addAttribute("lstDoctor", accData.getContent());
-		
-		ClinicWorking clinicWorking = this.clinicWorkingService.getClinicWorkingById(id);
-		if(clinicWorking != null) {
-			medicalExaminationRequest.setAccountId(clinicWorking.getAccount().getId());
-			medicalExaminationRequest.setAddress(clinicWorking.getCustomer().getAddress());
-			medicalExaminationRequest.setCountry(clinicWorking.getCustomer().getCountry());
-			medicalExaminationRequest.setCustomerId(clinicWorking.getCustomer().getId());
-			medicalExaminationRequest.setDesc(clinicWorking.getCustomer().getDesc());
-			medicalExaminationRequest.setDob(clinicWorking.getCustomer().getDob());
-			medicalExaminationRequest.setEmail(clinicWorking.getCustomer().getEmail());
-			medicalExaminationRequest.setFullname(clinicWorking.getCustomer().getFullname());
-			medicalExaminationRequest.setGender(clinicWorking.getCustomer().getGender());
-			medicalExaminationRequest.setJob(clinicWorking.getCustomer().getJob());
-			medicalExaminationRequest.setPhone(clinicWorking.getCustomer().getPhone());
-		}
-
-		return createView(model, "function/medical_examination/medical_examination_edit.html");
-	}
-	
-	@PostMapping("/medical-examination-edit/{id}")
-	public String addMedicalExaminationAddPage(@PathVariable("id") Long id, @Valid @ModelAttribute(value="medicalExaminationRequest") MedicalExaminationRequest medicalExaminationRequest, BindingResult result, Model model, RedirectAttributes redirAttrs) {
-		model.addAttribute("title", "Cập nhật phiếu khám bệnh");
-		if (result.hasErrors()) {
-			model.addAttribute("error", "Cập nhật thất bại!");
-			model.addAttribute("clinicWorkingId", id);
-			AccountFindParams accountFindParams = new AccountFindParams();
-			accountFindParams.setRole(2L); //Tim role = 2 bac si
-			Page<Account> accData = accountService.findAccount(PageRequest.of(0, 100), accountFindParams);
-			model.addAttribute("lstDoctor", accData.getContent());
-			return createView(model, "function/medical_examination/medical_examination_edit.html");
-        }
-		
-		Customer customer = this.customerService.getCustomerById(medicalExaminationRequest.getCustomerId());
-		
-		customer.setAddress(medicalExaminationRequest.getAddress());
-		customer.setCountry(medicalExaminationRequest.getCountry());
-		customer.setDesc(medicalExaminationRequest.getDesc());
-		customer.setDob(medicalExaminationRequest.getDob());
-		customer.setEmail(medicalExaminationRequest.getEmail());
-		customer.setFullname(medicalExaminationRequest.getFullname());
-		customer.setGender(medicalExaminationRequest.getGender());
-		customer.setJob(medicalExaminationRequest.getJob());
-		customer.setPhone(medicalExaminationRequest.getPhone());
-		this.customerService.saveCustomer(customer);
-		//insert clinic_woring
-		this.clinicWorkingService.updateAccountIdClinicWorking(medicalExaminationRequest.getAccountId(), id);
-		redirAttrs.addFlashAttribute("success", "Cập nhật phiếu khám thành công!");
-		return "redirect:/medical-examination";
-		
-	}
-	
-	@PostMapping("/medical-examination-add")
-	public String addMedicalExaminationAddPage(@Valid @ModelAttribute(value="medicalExaminationRequest") MedicalExaminationRequest medicalExaminationRequest, BindingResult result, Model model, RedirectAttributes redirAttrs,@ModelAttribute("findParams") CustomerFindParams customerFindParams) {
-		model.addAttribute("title", "Tạo khám bệnh");
-		if (result.hasErrors()) {
-			model.addAttribute("error", "Thêm mới thất bại!");
+		try {
+			model.addAttribute("title", "Tạo phiếu khám bệnh");
+			model.addAttribute("findParams", customerFindParams);
 			Page<Customer> cusData = customerService.findCustomer(PageRequest.of(0, 100), null);
 			model.addAttribute("lstCustomer", cusData.getContent());
 			AccountFindParams accountFindParams = new AccountFindParams();
@@ -309,56 +237,166 @@ public class RoutingController extends BaseController {
 			Page<Account> accData = accountService.findAccount(PageRequest.of(0, 100), accountFindParams);
 			model.addAttribute("lstDoctor", accData.getContent());
 			
+			if(customerFindParams!=null && customerFindParams.getId()!=null) {
+				Customer customer = this.customerService.getCustomerById(customerFindParams.getId());
+				if(customer!=null) {
+					medicalExaminationRequest.setCustomerId(customer.getId());
+					medicalExaminationRequest.setFullname(customer.getFullname());
+					medicalExaminationRequest.setPhone(customer.getPhone());
+					medicalExaminationRequest.setDob(customer.getDob());
+					medicalExaminationRequest.setEmail(customer.getEmail());
+					medicalExaminationRequest.setCountry(customer.getCountry());
+					medicalExaminationRequest.setAddress(customer.getAddress());
+					medicalExaminationRequest.setJob(customer.getJob());
+					medicalExaminationRequest.setGender(customer.getGender());
+					medicalExaminationRequest.setDesc(customer.getDesc());
+					model.addAttribute("medicalExaminationRequest", medicalExaminationRequest);
+				}
+			}
+
 			return createView(model, "function/medical_examination/medical_examination_add.html");
-        }else {
-        	Customer customer = new Customer();
-    		Customer newCustomerCreated = new Customer();
-    		ClinicWorking clinicWorking = new ClinicWorking();
-    		//Check benh nhan ton` tai hay chua neu co thi lay tu db ra, khong thi tao moi
-    		if(medicalExaminationRequest.getCustomerId() != null) {
-    			Long checkCustomerExist = this.customerService.getCountCustomerById(medicalExaminationRequest.getCustomerId());
-    			if(checkCustomerExist != null && checkCustomerExist > 0) {
-    				//Check bệnh nhân đã khám trong ngày hôm nay chưa?
-    				Long checkCustomerIsExaminating = this.customerService.checkCustomerExaminating(medicalExaminationRequest.getCustomerId());
-    				if(checkCustomerIsExaminating > 0) {
-    					model.addAttribute("error", "Bệnh nhân đã được tạo phiếu khám!");
-    					
-    					Page<Customer> cusData = customerService.findCustomer(PageRequest.of(0, 100), null);
-    					model.addAttribute("lstCustomer", cusData.getContent());
-    					AccountFindParams accountFindParams = new AccountFindParams();
-    					accountFindParams.setRole(2L); //Tim role = 2 bac si
-    					Page<Account> accData = accountService.findAccount(PageRequest.of(0, 100), accountFindParams);
-    					model.addAttribute("lstDoctor", accData.getContent());
-    					return createView(model, "function/medical_examination/medical_examination_add.html");
-    				}else {
-    					customer = this.customerService.getCustomerById(medicalExaminationRequest.getCustomerId());
-        				clinicWorking.setCustomer(customer);
-    				}
-    				
-    			}
-    		}else {
-    			//Tao customer truoc de lay id insert vao clinic_working
-    			customer.setFullname(medicalExaminationRequest.getFullname());
-    			customer.setPhone(medicalExaminationRequest.getPhone());
-    			customer.setDob(medicalExaminationRequest.getDob());
-    			customer.setEmail(medicalExaminationRequest.getEmail());
-    			customer.setCountry(medicalExaminationRequest.getCountry());
-    			customer.setAddress(medicalExaminationRequest.getAddress());
-    			customer.setJob(medicalExaminationRequest.getJob());
-    			customer.setGender(medicalExaminationRequest.getGender());
-    			customer.setDesc(medicalExaminationRequest.getDesc());
-    			newCustomerCreated = this.customerService.saveCustomer(customer);
-    			clinicWorking.setCustomer(newCustomerCreated);
-    		}
-    		
-    		//Lay accountId tu request de them vao clinic_woring
-    		Account account = this.accountService.getAccountById(medicalExaminationRequest.getAccountId());
-    		//insert clinic_woring
-    		clinicWorking.setAccount(account);
-    		this.clinicWorkingService.saveClinicWorking(clinicWorking);
-    		redirAttrs.addFlashAttribute("success", "Tạo phiếu khám thành công!");
-    		return "redirect:/medical-examination";
-        }
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "error.html";
+		}
+	}
+	
+	@GetMapping("/medical-examination-edit/{id}")
+	public String viewMedicalExaminationEditPage(@PathVariable("id") Long id,Model model, MedicalExaminationRequest medicalExaminationRequest) {
+		try {
+			model.addAttribute("title", "Cập nhật phiếu khám bệnh");
+			model.addAttribute("clinicWorkingId", id);
+			AccountFindParams accountFindParams = new AccountFindParams();
+			accountFindParams.setRole(2L); //Tim role = 2 bac si
+			Page<Account> accData = accountService.findAccount(PageRequest.of(0, 100), accountFindParams);
+			model.addAttribute("lstDoctor", accData.getContent());
+			
+			ClinicWorking clinicWorking = this.clinicWorkingService.getClinicWorkingById(id);
+			if(clinicWorking != null) {
+				medicalExaminationRequest.setAccountId(clinicWorking.getAccount().getId());
+				medicalExaminationRequest.setAddress(clinicWorking.getCustomer().getAddress());
+				medicalExaminationRequest.setCountry(clinicWorking.getCustomer().getCountry());
+				medicalExaminationRequest.setCustomerId(clinicWorking.getCustomer().getId());
+				medicalExaminationRequest.setDesc(clinicWorking.getCustomer().getDesc());
+				medicalExaminationRequest.setDob(clinicWorking.getCustomer().getDob());
+				medicalExaminationRequest.setEmail(clinicWorking.getCustomer().getEmail());
+				medicalExaminationRequest.setFullname(clinicWorking.getCustomer().getFullname());
+				medicalExaminationRequest.setGender(clinicWorking.getCustomer().getGender());
+				medicalExaminationRequest.setJob(clinicWorking.getCustomer().getJob());
+				medicalExaminationRequest.setPhone(clinicWorking.getCustomer().getPhone());
+			}
+
+			return createView(model, "function/medical_examination/medical_examination_edit.html");
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "error.html";
+		}
+	}
+	
+	@PostMapping("/medical-examination-edit/{id}")
+	public String addMedicalExaminationAddPage(@PathVariable("id") Long id, @Valid @ModelAttribute(value="medicalExaminationRequest") MedicalExaminationRequest medicalExaminationRequest, BindingResult result, Model model, RedirectAttributes redirAttrs) {
+		try {
+			model.addAttribute("title", "Cập nhật phiếu khám bệnh");
+			if (result.hasErrors()) {
+				model.addAttribute("error", "Cập nhật thất bại!");
+				model.addAttribute("clinicWorkingId", id);
+				AccountFindParams accountFindParams = new AccountFindParams();
+				accountFindParams.setRole(2L); //Tim role = 2 bac si
+				Page<Account> accData = accountService.findAccount(PageRequest.of(0, 100), accountFindParams);
+				model.addAttribute("lstDoctor", accData.getContent());
+				return createView(model, "function/medical_examination/medical_examination_edit.html");
+	        }
+			
+			Customer customer = this.customerService.getCustomerById(medicalExaminationRequest.getCustomerId());
+			
+			customer.setAddress(medicalExaminationRequest.getAddress());
+			customer.setCountry(medicalExaminationRequest.getCountry());
+			customer.setDesc(medicalExaminationRequest.getDesc());
+			customer.setDob(medicalExaminationRequest.getDob());
+			customer.setEmail(medicalExaminationRequest.getEmail());
+			customer.setFullname(medicalExaminationRequest.getFullname());
+			customer.setGender(medicalExaminationRequest.getGender());
+			customer.setJob(medicalExaminationRequest.getJob());
+			customer.setPhone(medicalExaminationRequest.getPhone());
+			this.customerService.saveCustomer(customer);
+			//insert clinic_woring
+			this.clinicWorkingService.updateAccountIdClinicWorking(medicalExaminationRequest.getAccountId(), id);
+			redirAttrs.addFlashAttribute("success", "Cập nhật phiếu khám thành công!");
+			return "redirect:/medical-examination";
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "error.html";
+		}
+		
+	}
+	
+	@PostMapping("/medical-examination-add")
+	public String addMedicalExaminationAddPage(@Valid @ModelAttribute(value="medicalExaminationRequest") MedicalExaminationRequest medicalExaminationRequest, BindingResult result, Model model, RedirectAttributes redirAttrs,@ModelAttribute("findParams") CustomerFindParams customerFindParams) {
+		try {
+			model.addAttribute("title", "Tạo khám bệnh");
+			if (result.hasErrors()) {
+				model.addAttribute("error", "Thêm mới thất bại!");
+				Page<Customer> cusData = customerService.findCustomer(PageRequest.of(0, 100), null);
+				model.addAttribute("lstCustomer", cusData.getContent());
+				AccountFindParams accountFindParams = new AccountFindParams();
+				accountFindParams.setRole(2L); //Tim role = 2 bac si
+				Page<Account> accData = accountService.findAccount(PageRequest.of(0, 100), accountFindParams);
+				model.addAttribute("lstDoctor", accData.getContent());
+				
+				return createView(model, "function/medical_examination/medical_examination_add.html");
+	        }else {
+	        	Customer customer = new Customer();
+	    		Customer newCustomerCreated = new Customer();
+	    		ClinicWorking clinicWorking = new ClinicWorking();
+	    		//Check benh nhan ton` tai hay chua neu co thi lay tu db ra, khong thi tao moi
+	    		if(medicalExaminationRequest.getCustomerId() != null) {
+	    			Long checkCustomerExist = this.customerService.getCountCustomerById(medicalExaminationRequest.getCustomerId());
+	    			if(checkCustomerExist != null && checkCustomerExist > 0) {
+	    				//Check bệnh nhân đã khám trong ngày hôm nay chưa?
+	    				Long checkCustomerIsExaminating = this.customerService.checkCustomerExaminating(medicalExaminationRequest.getCustomerId());
+	    				if(checkCustomerIsExaminating > 0) {
+	    					model.addAttribute("error", "Bệnh nhân đã được tạo phiếu khám!");
+	    					
+	    					Page<Customer> cusData = customerService.findCustomer(PageRequest.of(0, 100), null);
+	    					model.addAttribute("lstCustomer", cusData.getContent());
+	    					AccountFindParams accountFindParams = new AccountFindParams();
+	    					accountFindParams.setRole(2L); //Tim role = 2 bac si
+	    					Page<Account> accData = accountService.findAccount(PageRequest.of(0, 100), accountFindParams);
+	    					model.addAttribute("lstDoctor", accData.getContent());
+	    					return createView(model, "function/medical_examination/medical_examination_add.html");
+	    				}else {
+	    					customer = this.customerService.getCustomerById(medicalExaminationRequest.getCustomerId());
+	        				clinicWorking.setCustomer(customer);
+	    				}
+	    				
+	    			}
+	    		}else {
+	    			//Tao customer truoc de lay id insert vao clinic_working
+	    			customer.setFullname(medicalExaminationRequest.getFullname());
+	    			customer.setPhone(medicalExaminationRequest.getPhone());
+	    			customer.setDob(medicalExaminationRequest.getDob());
+	    			customer.setEmail(medicalExaminationRequest.getEmail());
+	    			customer.setCountry(medicalExaminationRequest.getCountry());
+	    			customer.setAddress(medicalExaminationRequest.getAddress());
+	    			customer.setJob(medicalExaminationRequest.getJob());
+	    			customer.setGender(medicalExaminationRequest.getGender());
+	    			customer.setDesc(medicalExaminationRequest.getDesc());
+	    			newCustomerCreated = this.customerService.saveCustomer(customer);
+	    			clinicWorking.setCustomer(newCustomerCreated);
+	    		}
+	    		
+	    		//Lay accountId tu request de them vao clinic_woring
+	    		Account account = this.accountService.getAccountById(medicalExaminationRequest.getAccountId());
+	    		//insert clinic_woring
+	    		clinicWorking.setAccount(account);
+	    		this.clinicWorkingService.saveClinicWorking(clinicWorking);
+	    		redirAttrs.addFlashAttribute("success", "Tạo phiếu khám thành công!");
+	    		return "redirect:/medical-examination";
+	        }
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "error.html";
+		}
 		
 	}
 	
@@ -371,18 +409,23 @@ public class RoutingController extends BaseController {
 		} catch (Exception e) {
 			e.printStackTrace();
 			redirAttrs.addFlashAttribute("error", "Xóa thất bại!");
-			return null;
+			return "error.html";
 		}
 	}
 	
 	@GetMapping("/medical-examination/{id}")
 	public String viewMedicalExaminationDetailPage(@PathVariable("id") Long id,Model model) {
-		model.addAttribute("title", "Chi tiết phiếu khám bệnh");
-		ClinicWorking clinicWorking = this.clinicWorkingService.getClinicWorkingById(id);
-		if(clinicWorking!=null && clinicWorking.getId() != null) {
-			model.addAttribute("clinicWorking", clinicWorking);
+		try {
+			model.addAttribute("title", "Chi tiết phiếu khám bệnh");
+			ClinicWorking clinicWorking = this.clinicWorkingService.getClinicWorkingById(id);
+			if(clinicWorking!=null && clinicWorking.getId() != null) {
+				model.addAttribute("clinicWorking", clinicWorking);
+			}
+			return createView(model, "function/medical_examination/medical_examination_detail.html");
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "error.html";
 		}
-		return createView(model, "function/medical_examination/medical_examination_detail.html");
 	}
 	
 	@GetMapping("/medical-examination-working/{clinicWorkingId}/{type}")
@@ -418,7 +461,7 @@ public class RoutingController extends BaseController {
 			return createView(model, "function/medical_examination/medical_examination_working.html");
 		} catch (Exception e) {
 			e.printStackTrace();
-			return null;
+			return "error.html";
 		}
 	}
 	
@@ -496,7 +539,7 @@ public class RoutingController extends BaseController {
 			return "redirect:/medical-examination";
 		} catch (Exception e) {
 			e.printStackTrace();
-			return null;
+			return "error.html";
 		}
 	}
 	
@@ -512,7 +555,7 @@ public class RoutingController extends BaseController {
 			return createView(model, "function/medical_fee/get_medical_fee.html");
 		} catch (Exception e) {
 			e.printStackTrace();
-			return null;
+			return "error.html";
 		}
 	}
 	
@@ -532,7 +575,7 @@ public class RoutingController extends BaseController {
 			return createView(model, "function/medical_fee/get_medical_fee_detail.html");
 		} catch (Exception e) {
 			e.printStackTrace();
-			return null;
+			return "error.html";
 		}
 	}
 	
@@ -545,7 +588,7 @@ public class RoutingController extends BaseController {
 			return "redirect:/get-medical-fee";
 		} catch (Exception e) {
 			e.printStackTrace();
-			return null;
+			return "error.html";
 		}
 	}
 	
@@ -584,7 +627,7 @@ public class RoutingController extends BaseController {
 			return createView(model, "function/customer/customer_returning_list.html");
 		} catch (Exception e) {
 			e.printStackTrace();
-			return null;
+			return "error.html";
 		}
 	}
 	
@@ -600,7 +643,7 @@ public class RoutingController extends BaseController {
 			return createView(model, "function/customer/customer_returning_detail.html");
 		} catch (Exception e) {
 			e.printStackTrace();
-			return null;
+			return "error.html";
 		}
 	}
 	
@@ -613,7 +656,7 @@ public class RoutingController extends BaseController {
 		} catch (Exception e) {
 			e.printStackTrace();
 			redirAttrs.addFlashAttribute("error", "Xác nhận thất bại!");
-			return null;
+			return "error.html";
 		}
 	}
 	
@@ -627,7 +670,7 @@ public class RoutingController extends BaseController {
 			return createView(model, "function/invoice/invoice_list.html");
 		} catch (Exception e) {
 			e.printStackTrace();
-			return null;
+			return "error.html";
 		}
 	}
 	
@@ -659,7 +702,7 @@ public class RoutingController extends BaseController {
 			return createView(model, "function/invoice/invoice_detail.html");
 		} catch (Exception e) {
 			e.printStackTrace();
-			return null;
+			return "error.html";
 		}
 	}
 	
@@ -682,7 +725,7 @@ public class RoutingController extends BaseController {
 			return createView(model, "function/customer/customer_list.html");
 		} catch (Exception e) {
 			e.printStackTrace();
-			return null;
+			return "error.html";
 		}
 	}
 	
@@ -696,7 +739,7 @@ public class RoutingController extends BaseController {
 			return createView(model, "function/customer/customer_create.html");
 		} catch (Exception e) {
 			e.printStackTrace();
-			return null;
+			return "error.html";
 		}
 		
 	}
@@ -723,7 +766,7 @@ public class RoutingController extends BaseController {
 		} catch (Exception e) {
 			e.printStackTrace();
 			redirAttrs.addFlashAttribute("error", "Thêm mới thất bại!");
-			return null;
+			return "error.html";
 		}
 	}
 	
@@ -743,7 +786,7 @@ public class RoutingController extends BaseController {
 			return createView(model, "function/customer/customer_detail.html");
 		} catch (Exception e) {
 			e.printStackTrace();
-			return null;
+			return "error.html";
 		}
 		
 	}
@@ -772,7 +815,7 @@ public class RoutingController extends BaseController {
 		} catch (Exception e) {
 			e.printStackTrace();
 			redirAttrs.addFlashAttribute("error", "Cập nhật thất bại!");
-			return null;
+			return "error.html";
 		}
 	}
 	
@@ -785,7 +828,7 @@ public class RoutingController extends BaseController {
 		} catch (Exception e) {
 			e.printStackTrace();
 			redirAttrs.addFlashAttribute("error", "Xóa thất bại!");
-			return null;
+			return "error.html";
 		}
 	}
 	
@@ -840,7 +883,7 @@ public class RoutingController extends BaseController {
 			return createView(model, "function/boss/invoice_list.html");
 		} catch (Exception e) {
 			e.printStackTrace();
-			return null;
+			return "error.html";
 		}
 	}
 	
@@ -893,7 +936,7 @@ public class RoutingController extends BaseController {
 			return createView(model, "function/boss/discount_list.html");
 		} catch (Exception e) {
 			e.printStackTrace();
-			return null;
+			return "error.html";
 		}
 	}
 	
@@ -914,7 +957,7 @@ public class RoutingController extends BaseController {
 		} catch (Exception e) {
 			e.printStackTrace();
 			redirAttrs.addFlashAttribute("error", "Chiết khấu thất bại!");
-			return null;
+			return "error.html";
 		}
 	}
 	
@@ -940,7 +983,7 @@ public class RoutingController extends BaseController {
 			return createView(model, "function/boss/invoice_detail.html");
 		} catch (Exception e) {
 			e.printStackTrace();
-			return null;
+			return "error.html";
 		}
 	}
 	
@@ -964,7 +1007,7 @@ public class RoutingController extends BaseController {
 			return createView(model, "function/boss/test/test_type_list.html");
 		} catch (Exception e) {
 			e.printStackTrace();
-			return null;
+			return "error.html";
 		}
 	}
 	
@@ -978,7 +1021,7 @@ public class RoutingController extends BaseController {
 			return createView(model, "function/boss/test/test_type_create.html");
 		} catch (Exception e) {
 			e.printStackTrace();
-			return null;
+			return "error.html";
 		}
 		
 	}
@@ -998,7 +1041,7 @@ public class RoutingController extends BaseController {
 		} catch (Exception e) {
 			e.printStackTrace();
 			redirAttrs.addFlashAttribute("error", "Thêm mới thất bại!");
-			return null;
+			return "error.html";
 		}
 	}
 	
@@ -1018,7 +1061,7 @@ public class RoutingController extends BaseController {
 			return createView(model, "function/boss/test/test_type_detail.html");
 		} catch (Exception e) {
 			e.printStackTrace();
-			return null;
+			return "error.html";
 		}
 		
 	}
@@ -1038,7 +1081,7 @@ public class RoutingController extends BaseController {
 		} catch (Exception e) {
 			e.printStackTrace();
 			redirAttrs.addFlashAttribute("error", "Cập nhật thất bại!");
-			return null;
+			return "error.html";
 		}
 	}
 	
@@ -1051,7 +1094,7 @@ public class RoutingController extends BaseController {
 		} catch (Exception e) {
 			e.printStackTrace();
 			redirAttrs.addFlashAttribute("error", "Xóa thất bại!");
-			return null;
+			return "error.html";
 		}
 	}
 	
@@ -1079,7 +1122,7 @@ public class RoutingController extends BaseController {
 			return createView(model, "function/boss/test/test_list.html");
 		} catch (Exception e) {
 			e.printStackTrace();
-			return null;
+			return "error.html";
 		}
 	}
 	
@@ -1095,7 +1138,7 @@ public class RoutingController extends BaseController {
 			return createView(model, "function/boss/test/test_create.html");
 		} catch (Exception e) {
 			e.printStackTrace();
-			return null;
+			return "error.html";
 		}
 		
 	}
@@ -1119,7 +1162,7 @@ public class RoutingController extends BaseController {
 		} catch (Exception e) {
 			e.printStackTrace();
 			redirAttrs.addFlashAttribute("error", "Thêm mới thất bại!");
-			return null;
+			return "error.html";
 		}
 	}
 	
@@ -1143,7 +1186,7 @@ public class RoutingController extends BaseController {
 			return createView(model, "function/boss/test/test_detail.html");
 		} catch (Exception e) {
 			e.printStackTrace();
-			return null;
+			return "error.html";
 		}
 		
 	}
@@ -1167,7 +1210,7 @@ public class RoutingController extends BaseController {
 		} catch (Exception e) {
 			e.printStackTrace();
 			redirAttrs.addFlashAttribute("error", "Cập nhật thất bại!");
-			return null;
+			return "error.html";
 		}
 	}
 	
@@ -1180,7 +1223,7 @@ public class RoutingController extends BaseController {
 		} catch (Exception e) {
 			e.printStackTrace();
 			redirAttrs.addFlashAttribute("error", "Xóa thất bại!");
-			return null;
+			return "error.html";
 		}
 	}
 	
@@ -1201,7 +1244,7 @@ public class RoutingController extends BaseController {
 		} catch (Exception e) {
 			e.printStackTrace();
 			redirAttrs.addFlashAttribute("error", "Thao tác thất bại!");
-			return null;
+			return "error.html";
 		}
 	}
 	
@@ -1225,7 +1268,7 @@ public class RoutingController extends BaseController {
 			return createView(model, "function/boss/account/account_list.html");
 		} catch (Exception e) {
 			e.printStackTrace();
-			return null;
+			return "error.html";
 		}
 	}
 	
@@ -1238,7 +1281,7 @@ public class RoutingController extends BaseController {
 			return createView(model, "function/boss/account/account_create.html");
 		} catch (Exception e) {
 			e.printStackTrace();
-			return null;
+			return "error.html";
 		}
 		
 	}
@@ -1271,7 +1314,7 @@ public class RoutingController extends BaseController {
 		} catch (Exception e) {
 			e.printStackTrace();
 			redirAttrs.addFlashAttribute("error", "Thêm mới thất bại!");
-			return null;
+			return "error.html";
 		}
 	}
 	
@@ -1291,7 +1334,7 @@ public class RoutingController extends BaseController {
 			return createView(model, "function/boss/account/account_detail.html");
 		} catch (Exception e) {
 			e.printStackTrace();
-			return null;
+			return "error.html";
 		}
 		
 	}
@@ -1316,13 +1359,14 @@ public class RoutingController extends BaseController {
 			account.setRole(updateAccountRequest.getRole());
 			account.setStatus(updateAccountRequest.getStatus());
 			account.setUsername(updateAccountRequest.getUsername());
+			account.setPhone(updateAccountRequest.getPhone());
 	        this.accountService.saveAccount(account);
 	        redirAttrs.addFlashAttribute("success", "Cập nhật thành công!");
 	        return "redirect:/list-account";
 		} catch (Exception e) {
 			e.printStackTrace();
 			redirAttrs.addFlashAttribute("error", "Cập nhật thất bại!");
-			return null;
+			return "error.html";
 		}
 	}
 	
@@ -1334,7 +1378,7 @@ public class RoutingController extends BaseController {
 			return createView(model, "function/boss/account/account_change_password.html");
 		} catch (Exception e) {
 			e.printStackTrace();
-			return null;
+			return "error.html";
 		}
 		
 	}
@@ -1362,7 +1406,7 @@ public class RoutingController extends BaseController {
 		} catch (Exception e) {
 			e.printStackTrace();
 			redirAttrs.addFlashAttribute("error", "Đổi mật khẩu thất bại!");
-			return null;
+			return "error.html";
 		}
 	}
 	
@@ -1375,7 +1419,7 @@ public class RoutingController extends BaseController {
 		} catch (Exception e) {
 			e.printStackTrace();
 			redirAttrs.addFlashAttribute("error", "Xóa thất bại!");
-			return null;
+			return "error.html";
 		}
 	}
 	
@@ -1396,7 +1440,23 @@ public class RoutingController extends BaseController {
 		} catch (Exception e) {
 			e.printStackTrace();
 			redirAttrs.addFlashAttribute("error", "Thao tác thất bại!");
-			return null;
+			return "error.html";
+		}
+	}
+	
+	@GetMapping("/account-reset-password/{id}")
+	public String resetPasswordAccount(@PathVariable("id") Long id, Model model, RedirectAttributes redirAttrs) {
+		try {
+			BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+			Account account = this.accountService.getAccountById(id);
+			String newPassword = encoder.encode(Constants.DEFAULT_PASSWORD);
+			account.setPassword(newPassword);
+			this.accountService.saveAccount(account);
+			redirAttrs.addFlashAttribute("success", "Đặt lại mật khẩu thành công!");
+			return "redirect:/list-account";
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "error.html";
 		}
 	}
 	//END BOSS area

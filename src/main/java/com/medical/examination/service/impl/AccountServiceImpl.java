@@ -86,9 +86,6 @@ public class AccountServiceImpl implements AccountService {
 		}, pageable);
 		return pageResult;
 	}
-	
-	public static void main(String[] args) {
-	}
 
 	@Override
 	public void updateAccountStatus(Long id, Long status) {

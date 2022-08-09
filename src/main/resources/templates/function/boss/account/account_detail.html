@@ -58,6 +58,12 @@
                                 	<input th:if="${type == 'update'}" style="font-size: 16px;" type="text" class="form-control" th:field="*{email}" id="email" name="email">
                                 	<span style="color: red;" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
                                 </div>
+                                <div style="margin-top: 20px;" class="col-md-6">Số điện thoại<span style="color: red;"> *</span></div>
+                                <div style="margin-top: 20px;" class="col-md-6">
+                                	<input th:if="${type == 'read'}" readOnly style="font-size: 16px;" type="text" class="form-control" th:field="*{phone}" id="phone" name="phone">
+                                	<input th:if="${type == 'update'}" style="font-size: 16px;" type="text" class="form-control" th:field="*{phone}" id="phone" name="phone">
+                                	<span style="color: red;" th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}"></span>
+                                </div>
                             </div>
                             
                             <div class="row row-size">

@@ -104,30 +104,6 @@ public class InvoiceServiceImpl implements InvoiceService {
 		}, pageable);
 		return pageResult;
 	}
-	
-	public static void main(String[] args) {
-		Date firstDayOfMonth = new Date();
-		firstDayOfMonth.setDate(1);
-		firstDayOfMonth.setMonth((int) (7 - 1));
-		firstDayOfMonth.setHours(0);
-		firstDayOfMonth.setMinutes(0);
-		firstDayOfMonth.setMinutes(0);
-
-		Date newDateLastDayOfMonth = new Date();
-		newDateLastDayOfMonth.setHours(23);
-		newDateLastDayOfMonth.setMinutes(59);
-		newDateLastDayOfMonth.setSeconds(59);
-        Calendar calendar = Calendar.getInstance();  
-        calendar.setTime(newDateLastDayOfMonth);  
-
-        calendar.add(Calendar.MONTH, 1);  
-        calendar.set(Calendar.DAY_OF_MONTH, 1);  
-        calendar.add(Calendar.DATE, -1);  
-
-        Date lastDayOfMonth = calendar.getTime();
-        System.out.println("First Day of Month: " + firstDayOfMonth);  
-        System.out.println("Last Day of Month: " + lastDayOfMonth);
-	}
 
 	@Override
 	public void updateIsDiscounted(Long id, Long isDiscounted) {

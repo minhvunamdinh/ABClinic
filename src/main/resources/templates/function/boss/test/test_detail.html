@@ -49,6 +49,7 @@
                                 <div style="margin-top: 20px;" class="col-md-6">
                                 	<input th:if="${type == 'read'}" readOnly style="font-size: 16px;" type="number" class="form-control" th:field="*{costPrice}" id="costPrice" name="costPrice">
                                 	<input th:if="${type == 'update'}" style="font-size: 16px;" type="number" class="form-control" th:field="*{costPrice}" id="costPrice" name="costPrice">
+                                	<input hidden style="font-size: 16px;" type="text" class="form-control" th:field="*{status}" id="status" name="status">
                                 	<span style="color: red;" th:if="${#fields.hasErrors('costPrice')}" th:errors="*{costPrice}"></span>
                                 </div>
                             </div>
@@ -71,22 +72,6 @@
 			                            <option style="font-size: 16px;" th:each="item : ${lstTestType}" th:value="${item.id}" th:text="${item.typeName}"></option>
 		                          </select>
 		                          <span style="color: red;" th:if="${#fields.hasErrors('testType')}" th:errors="*{testType}"></span>
-                                </div>
-                            </div>
-                            <div class="row row-size">
-                                <div style="margin-top: 10px;" class="col-md-6">Trạng thái hoạt động<span style="color: red;"> *</span></div>
-                                <div style="margin-top: 10px;" class="col-md-6">
-                                    <select th:if="${type == 'read'}" disabled style="font-size: 16px; height: 34px;" class="form-control" th:field="*{status}" id="status" name="status">
-                                        <option value="" selected>-- Chọn trạng thái hoạt động --</option>
-                                        <option value=1>Có hiệu lực</option>
-                                        <option value=0>Vô hiệu lực</option>
-                                    </select>
-                                    <select th:if="${type == 'update'}" style="font-size: 16px; height: 34px;" class="form-control" th:field="*{status}" id="status" name="status">
-                                        <option value="" selected>-- Chọn trạng thái hoạt động --</option>
-                                        <option value=1>Có hiệu lực</option>
-                                        <option value=0>Vô hiệu lực</option>
-                                    </select>
-                                    <span style="color: red;" th:if="${#fields.hasErrors('status')}" th:errors="*{status}"></span>
                                 </div>
                             </div>
                             

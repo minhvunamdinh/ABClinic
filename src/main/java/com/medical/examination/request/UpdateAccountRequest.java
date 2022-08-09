@@ -2,8 +2,10 @@ package com.medical.examination.request;
 
 import java.util.Date;
 
+import javax.persistence.Column;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
@@ -40,6 +42,10 @@ public class UpdateAccountRequest {
 	@Email(message = "Không đúng định dạng Email" )
 	@NotBlank(message = "Thông tin bắt buộc")
 	private String email;
+	@Column(name = "phone")
+	@NotEmpty(message = "Thông tin bắt buộc!")
+	@Size(min = 10, max = 10, message = "Số điện thoại phải có 10 chữ số")
+	private String phone;
 	public String getUsername() {
 		return username;
 	}
@@ -107,6 +113,12 @@ public class UpdateAccountRequest {
 	public void setId(Long id) {
 		this.id = id;
 	}
+	public String getPhone() {
+		return phone;
+	}
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
 	public UpdateAccountRequest build(Account account) {
 		UpdateAccountRequest acc = new UpdateAccountRequest();
 		acc.setId(account.getId());
@@ -120,6 +132,7 @@ public class UpdateAccountRequest {
 		acc.setRole(account.getRole());
 		acc.setStatus(account.getStatus());
 		acc.setUsername(account.getUsername());
+		acc.setPhone(account.getPhone());
 		return acc;
 	}
 }

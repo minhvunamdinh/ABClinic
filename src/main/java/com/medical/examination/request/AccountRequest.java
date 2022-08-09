@@ -2,9 +2,11 @@ package com.medical.examination.request;
 
 import java.util.Date;
 
+import javax.persistence.Column;
 import javax.validation.constraints.AssertTrue;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
@@ -44,6 +46,10 @@ public class AccountRequest {
 	@Email(message = "Không đúng định dạng Email" )
 	@NotBlank(message = "Thông tin bắt buộc")
 	private String email;
+	@Column(name = "phone")
+	@NotEmpty(message = "Thông tin bắt buộc!")
+	@Size(min = 10, max = 10, message = "Số điện thoại phải có 10 chữ số")
+	private String phone;
 	public String getUsername() {
 		return username;
 	}
@@ -116,7 +122,12 @@ public class AccountRequest {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	
+	public String getPhone() {
+		return phone;
+	}
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
 	@AssertTrue(message = "Mật khẩu không khớp!")
     public boolean isPasswordsEqual() {
         return (password == null) ? false : password.equals(passwordRepeat);

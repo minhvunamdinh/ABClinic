@@ -52,6 +52,8 @@ public class Account {
 	private Long status;
 	@Column(name = "email")
 	private String email;
+	@Column(name = "phone")
+	private String phone;
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "account", cascade = CascadeType.REMOVE)
 	@JsonIgnore
 	private List<ClinicWorking> lstClinicWorking = new ArrayList<ClinicWorking>();
@@ -133,6 +135,12 @@ public class Account {
 	}
 	public void setEmail(String email) {
 		this.email = email;
+	}
+	public String getPhone() {
+		return phone;
+	}
+	public void setPhone(String phone) {
+		this.phone = phone;
 	}
 	public Account(String username, String password, Long isActive, String fullname, String address, Date dob,
 			Long gender, Long role, Long isWorking, Long status, String email) {

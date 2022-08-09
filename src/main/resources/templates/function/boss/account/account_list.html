@@ -77,7 +77,11 @@
                         <th scope="col">Giới tính</th>
                         <th scope="col">Quyền</th>
                         <th scope="col">Trạng thái hoạt động</th>
+                        <th scope="col"></th>
+                        <th scope="col"></th>
                         <th scope="col">Thao tác</th>
+                        <th scope="col"></th>
+                        <th scope="col"></th>
                       </tr>
                     </thead>
                     <tbody>
@@ -101,12 +105,14 @@
                         </td> 
                         <td>
                         	<a style="font-size: 16px;" th:href="@{'/account/read/' + ${item.id}}" class="btn btn-success">Chi tiết</a>
-                        	<a style="font-size: 16px;" th:href="@{'/account/update/' + ${item.id}}" class="btn btn-primary">Sửa</a>
-                        	<!--<a th:href="@{'/account/delete/' + ${item.id}}" style="font-size: 16px; color: #fff;" class="btn btn-danger" th:data-confirm="|Bạn muốn xóa bản ghi này?|" onclick="if (!confirm(this.getAttribute('data-confirm'))) return false">Xóa</a>-->
+                        </td>
+                        <td><a style="font-size: 16px;" th:href="@{'/account/update/' + ${item.id}}" class="btn btn-primary">Sửa</a></td>
+                        <td>
                         	<a th:if="${item.isActive == 0}" th:href="@{'/account-update-status/active/' + ${item.id}}" style="font-size: 16px; color: #fff;" class="btn btn-primary" th:data-confirm="|Bạn muốn kích hoạt tài khoản này?|" onclick="if (!confirm(this.getAttribute('data-confirm'))) return false">Kích hoạt</a>
                         	<a th:if="${item.isActive == 1}" th:href="@{'/account-update-status/deactive/' + ${item.id}}" style="font-size: 16px; color: #fff;" class="btn btn-danger" th:data-confirm="|Bạn muốn vô hiệu hóa tài khoản này?|" onclick="if (!confirm(this.getAttribute('data-confirm'))) return false">Vô hiệu hóa</a>
-                        	<a th:href="@{'/account/change-password/' + ${item.id}}" style="font-size: 16px; color: #fff;" class="btn btn-primary" th:data-confirm="|Bạn muốn đổi mật khẩu tài khoản này?|" onclick="if (!confirm(this.getAttribute('data-confirm'))) return false">Đổi mật khẩu</a>
                         </td>
+                        <td><a th:href="@{'/account/change-password/' + ${item.id}}" style="font-size: 16px; color: #fff;" class="btn btn-primary" th:data-confirm="|Bạn muốn đổi mật khẩu tài khoản này?|" onclick="if (!confirm(this.getAttribute('data-confirm'))) return false">Đổi mật khẩu</a></td>
+                        <td><a th:href="@{'/account-reset-password/' + ${item.id}}" style="font-size: 16px; color: #fff;" class="btn btn-primary" th:data-confirm="|Bạn muốn đặt lại mật khẩu tài khoản này về 123456?|" onclick="if (!confirm(this.getAttribute('data-confirm'))) return false">Đặt lại mật khẩu</a></td>
                       </tr>
                     </tbody>
                   </table>
