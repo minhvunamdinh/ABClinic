@@ -2,6 +2,7 @@ package com.medical.examination.request;
 
 import java.util.Date;
 
+import javax.persistence.Column;
 import javax.validation.constraints.AssertTrue;
 
 import org.springframework.format.annotation.DateTimeFormat;
@@ -19,6 +20,8 @@ public class ResultTestInvoiceRequest {
 	private Date timeReturn;
 	private Double totalCostPrice;
 	private Double totalSellPrice;
+	private String conclusion;
+	private String prescription;
 	public String getCode() {
 		return code;
 	}
@@ -66,6 +69,18 @@ public class ResultTestInvoiceRequest {
 	}
 	public void setDiagnosticResult(String diagnosticResult) {
 		this.diagnosticResult = diagnosticResult;
+	}
+	public String getConclusion() {
+		return conclusion;
+	}
+	public void setConclusion(String conclusion) {
+		this.conclusion = conclusion;
+	}
+	public String getPrescription() {
+		return prescription;
+	}
+	public void setPrescription(String prescription) {
+		this.prescription = prescription;
 	}
 	
 }

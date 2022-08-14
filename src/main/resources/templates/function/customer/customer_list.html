@@ -60,6 +60,7 @@
                         <th scope="col">Giới tính</th>
                         <th scope="col">Số điện thoại</th>
                         <th scope="col">Email</th>
+                        <th scope="col">Ngày tạo</th>
                         <th scope="col">Thao tác</th>
                       </tr>
                     </thead>
@@ -71,6 +72,7 @@
                         <td th:if="${item.gender == 1}">Nam</td><td th:if="${item.gender == 0}">Nữ</td><td th:if="${item.gender == -1}">Khác</td>
                         <td th:text="${item.phone}"></td>
                         <td th:text="${item.email}"></td>
+                        <td th:text="${#dates.format(item.createdDate, 'dd-MM-yyyy')}"></td>
                         <td style="color: #fff;">
                         	<a style="font-size: 16px;" th:href="@{'/customer/read/' + ${item.id}}" class="btn btn-success">Chi tiết</a>
                         	<a style="font-size: 16px;" th:href="@{'/customer/update/' + ${item.id}}" class="btn btn-primary">Sửa</a>
@@ -79,20 +81,20 @@
                       </tr>
                     </tbody>
                   </table>
-                  <th:block class="text-center">
+                  <th:block class="text-center" th:if="${totalElements > 0}">
                     <nav aria-label="Page navigation" style="text-align: center; width: 100%;">
                     <ul class="pagination justify-content-end">
                             <li class="page-item" th:classappend="${pageIndex} <= 0 ? 'disabled' : ''">
-                            	<a class="page-link" th:href="@{'/customer-list?page='+ ${pageIndex-1}}"><</a>
+                            	<a class="page-link" th:href="@{'/customer-list?page='+ ${pageIndex-1} + ${queryParams}}"><</a>
                             </li>
 
                             <li  th:classappend="${pageIndex} != ${index-1} ? 'page-item' :'page-item active' "
                                 th:each="index : ${#numbers.sequence(1, totalPages)}">
-                            <a class="page-link" th:href="@{'/customer-list?page='+ ${index-1}}" th:text="${index}">1</a>
+                            <a class="page-link" th:href="@{'/customer-list?page='+ ${index-1} + ${queryParams}}" th:text="${index}">1</a>
                             </li>
 
                             <li class="page-item" th:classappend="${pageIndex} >= ${totalPages} - 1 ? 'disabled' : ''">
-                            <a class="page-link" th:href="@{'/customer-list?page='+ ${pageIndex+1}}">></a>
+                            <a class="page-link" th:href="@{'/customer-list?page='+ ${pageIndex+1} + ${queryParams}}">></a>
                             </li>
                         </ul>
                     </nav>

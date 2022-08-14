@@ -3,6 +3,7 @@ package com.medical.examination.request;
 import java.util.Date;
 
 import javax.persistence.Column;
+import javax.validation.constraints.AssertTrue;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
@@ -20,15 +21,15 @@ import lombok.Data;
 public class UpdateAccountRequest {
 	private Long id;
 	@NotNull(message = "Thông tin bắt buộc")
-    @Size(min = 6, max = 255, message = "Độ dài phải từ 6 đến 255 ký tự")
+    @Size(min = 1, max = 50, message = "Độ dài phải từ 1 đến 50 ký tự")
 	private String username;
 	@NotNull(message = "Thông tin bắt buộc")
 	private Long isActive;
 	@NotNull(message = "Thông tin bắt buộc")
-    @Size(min = 6, max = 255, message = "Độ dài phải từ 6 đến 255 ký tự")
+	@Size(min = 1, max = 50, message = "Độ dài phải từ 1 đến 50 ký tự")
 	private String fullname;
 	@NotNull(message = "Thông tin bắt buộc")
-    @Size(min = 6, max = 255, message = "Độ dài phải từ 6 đến 255 ký tự")
+	@Size(min = 1, max = 50, message = "Độ dài phải từ 1 đến 50 ký tự")
 	private String address;
 	@NotNull(message = "Thông tin bắt buộc")
 	@DateTimeFormat (pattern="yyyy-MM-dd")
@@ -44,7 +45,7 @@ public class UpdateAccountRequest {
 	private String email;
 	@Column(name = "phone")
 	@NotEmpty(message = "Thông tin bắt buộc!")
-	@Size(min = 10, max = 10, message = "Số điện thoại phải có 10 chữ số")
+	@Pattern(regexp = "^[0][0-9]{9}$",message = "Số điện thoại phải bắt đầu với 0 và có 10 chữ số")
 	private String phone;
 	public String getUsername() {
 		return username;
@@ -135,4 +136,11 @@ public class UpdateAccountRequest {
 		acc.setPhone(account.getPhone());
 		return acc;
 	}
+	@AssertTrue(message = "Ngày sinh phải nhỏ hơn ngày hiện tại!")
+    public boolean isDobGreater() {
+        if(this.dob != null && this.dob.compareTo(new Date()) > 0) {
+        	return false;
+        }
+        return true;
+    }
 }

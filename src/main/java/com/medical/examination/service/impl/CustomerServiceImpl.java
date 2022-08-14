@@ -82,7 +82,7 @@ public class CustomerServiceImpl implements CustomerService {
 						firstDayOfMonth.setSeconds(0);
 
 						Date newDateLastDayOfMonth = new Date();
-						newDateLastDayOfMonth.setMonth((int) (firstDayOfMonth.getMonth() - 1));
+						newDateLastDayOfMonth.setMonth((int) (firstDayOfMonth.getMonth()));
 						newDateLastDayOfMonth.setHours(23);
 						newDateLastDayOfMonth.setMinutes(59);
 						newDateLastDayOfMonth.setSeconds(59);

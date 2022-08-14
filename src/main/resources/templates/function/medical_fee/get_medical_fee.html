@@ -14,6 +14,31 @@
                     </ol>
                 </div>
             </div>
+            
+            <div class="row">
+                <form class="form-group col-md-12" th:action="@{/get-medical-fee}" th:object="${findParams}" method="GET">
+                    <div class="col-md-12">
+                        <div class="col-md-3">
+                            <label>Bác sĩ</label>
+                            <select class="selectpicker form-control" th:field="*{accountId}" id="accountId"  name="accountId" data-live-search="true">
+                            	<option style="font-size: 16px;" value="" selected>-- Chọn bác sĩ --</option>
+                                <option style="font-size: 16px;" th:each="item : ${lstDoctor}" th:value="${item.id}" th:text="${item.fullname}"></option>
+                              </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label>Bệnh nhân</label>
+                            <select class="selectpicker form-control" th:field="*{customerId}" id="customerId"  name="customerId" data-live-search="true">
+                            	<option style="font-size: 16px;" value="" selected>-- Chọn bệnh nhân --</option>
+                                <option style="font-size: 16px;" th:each="item : ${lstCustomer}" th:value="${item.id}" th:text="@{${item.fullname} + ' - ' + ${item.phone}}"></option>
+                              </select>
+                        </div>
+                        <div class="col-md-2">
+                            <br>
+                            <button style="font-size: 16px;" type="submit" class="btn btn-primary">Tìm kiếm</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
 
             <div class="row" style="margin-top: 20px;">
                 <table class="table">
@@ -44,20 +69,20 @@
                       </tr>
                     </tbody>
                   </table>
-                  <th:block th:if="${pageIndex > 0}">
-                    <nav aria-label="Page navigation" style="text-align: center;">
+                  <th:block th:if="${totalElements > 0}">
+                    <nav aria-label="Page navigation" style="text-align: center; width: 100%;">
                     <ul class="pagination justify-content-end">
                             <li class="page-item" th:classappend="${pageIndex} <= 0 ? 'disabled' : ''">
-                            <a class="page-link" th:href="@{'/get-medical-fee?page='+ ${pageIndex-1}}"><</a>
+                            <a class="page-link" th:href="@{'/get-medical-fee?page='+ ${pageIndex-1} + ${queryParams}}"><</a>
                             </li>
 
                             <li  th:classappend="${pageIndex} != ${index-1} ? 'page-item' :'page-item active' "
                                 th:each="index : ${#numbers.sequence(1, totalPages)}">
-                            <a class="page-link" th:href="@{'/get-medical-fee?page='+ ${index-1}}" th:text="${index}">1</a>
+                            <a class="page-link" th:href="@{'/get-medical-fee?page='+ ${index-1} + ${queryParams}}" th:text="${index}">1</a>
                             </li>
 
                             <li class="page-item" th:classappend="${pageIndex} >= ${totalPages} - 1 ? 'disabled' : ''">
-                            <a class="page-link" th:href="@{'/get-medical-fee?page='+ ${pageIndex+1}}">></a>
+                            <a class="page-link" th:href="@{'/get-medical-fee?page='+ ${pageIndex+1} + ${queryParams}}">></a>
                             </li>
                         </ul>
                     </nav>

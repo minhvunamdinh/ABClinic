@@ -28,6 +28,9 @@ public class TestServiceImpl implements TestService {
 
 	@Override
 	public Test saveTest(Test test) {
+		if(test.getId() == null) {
+			test.setStatus(0L);
+		}
 		return this.testRepository.save(test);
 	}
 

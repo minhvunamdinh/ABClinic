@@ -30,14 +30,18 @@
                     <div class="col-md-3">[[${testResult.clinicWorking.customer.phone}]]</div>
                     <div class="col-md-3 text-right">Địa chỉ</div>
                     <div class="col-md-9">[[${testResult.clinicWorking.customer.address}]]</div>
+                    <div class="col-md-3 text-right">Ngày khám</div>
+                    <div class="col-md-3">[[${#dates.format(testResult.createdDate, 'dd-MM-yyyy')}]]</div>
+                    <div class="col-md-3 text-right">Bác sĩ khám</div>
+                    <div class="col-md-3">[[${testResult.clinicWorking.account.fullname}]]</div>
                 </div>
                 <div class="row" style="margin-bottom: 20px;margin-top: 20px;">
                     <div class="container export-test-area" style="background-color: #91fffa;">
                         <div class="row test-result-item text-center">
-						    <div class="col-md-3 test-type-item">Tên hàng hóa</div>
-						    <div class="col-md-3 test-type-item">Số lần</div>
-						    <div class="col-md-3 test-type-item">Đơn giá</div>
-						    <div class="col-md-3 test-type-item">Thành tiền</div>
+						    <div class="col-md-3 test-type-item"><b>Tên hàng hóa</b></div>
+						    <div class="col-md-3 test-type-item"><b>Số lần</b></div>
+						    <div class="col-md-3 test-type-item"><b>Đơn giá</b></div>
+						    <div class="col-md-3 test-type-item"><b>Thành tiền</b></div>
 						</div>
 						<div class="row test-result-item text-center" th:each="item, state : ${lstTestComplete}">
 						    <div class="col-md-3 test-type-item">Xét nghiệm [[${item.testName}]]</div>

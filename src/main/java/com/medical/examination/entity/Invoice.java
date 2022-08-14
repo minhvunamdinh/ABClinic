@@ -47,6 +47,10 @@ public class Invoice {
 	@Column(name = "time_return")
 	@DateTimeFormat (pattern="yyyy-MM-dd")
 	private Date timeReturn;
+	@Column(name = "conclusion")
+	private String conclusion;
+	@Column(name = "prescription")
+	private String prescription;
 	public Long getId() {
 		return id;
 	}
@@ -130,6 +134,18 @@ public class Invoice {
 	}
 	public void setTimeReturn(Date timeReturn) {
 		this.timeReturn = timeReturn;
+	}
+	public String getConclusion() {
+		return conclusion;
+	}
+	public void setConclusion(String conclusion) {
+		this.conclusion = conclusion;
+	}
+	public String getPrescription() {
+		return prescription;
+	}
+	public void setPrescription(String prescription) {
+		this.prescription = prescription;
 	}
 	
 }

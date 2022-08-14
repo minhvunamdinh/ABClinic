@@ -18,4 +18,7 @@ PagingAndSortingRepository<TestResult, Long>, JpaSpecificationExecutor<TestResul
 	@Query(value = "UPDATE TestResult t SET t.isCalled = :isCalled WHERE t.id = :id")
 	@Modifying
 	public void updateIsCalledCustomerReturn(@Param("id") Long id , @Param("isCalled") Long isCalled);
+	
+	@Query(value = "SELECT COUNT(1) FROM test_result t LEFT JOIN clinic_working c ON t.clinic_working_id = c.id WHERE c.customer_id = :customerId", nativeQuery = true)
+	public Integer countHistoryTestResultCustomer(@Param("customerId") Long customerId);
 }

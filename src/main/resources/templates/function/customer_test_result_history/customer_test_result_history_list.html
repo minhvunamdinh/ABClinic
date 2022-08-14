@@ -10,51 +10,29 @@
                     <h3 class="page-header"><i class="fa fa-laptop"></i>Phiếu khám bệnh</h3>
                     <ol class="breadcrumb">
                         <li><i class="fa fa-home"></i><a th:href="@{/home}">Home</a></li>
-                        <li><i class="fa fa-laptop"></i>Danh sách hóa đơn</li>
+                        <li><i class="fa fa-laptop"></i>[[${title}]]</li>
                     </ol>
                 </div>
             </div>
             
-            <div class="row">
-                <form class="form-group col-md-12" th:action="@{/invoice}" th:object="${findParams}" method="GET">
-                    <div class="col-md-12">
-                        <div class="col-md-3">
-                            <label>Bác sĩ</label>
-                            <select class="selectpicker form-control" th:field="*{accountId}" id="accountId"  name="accountId" data-live-search="true">
-                            	<option style="font-size: 16px;" value="" selected>-- Chọn bác sĩ --</option>
-                                <option style="font-size: 16px;" th:each="item : ${lstDoctor}" th:value="${item.id}" th:text="${item.fullname}"></option>
-                              </select>
-                        </div>
-                        <div class="col-md-2">
-                            <br>
-                            <button style="font-size: 16px;" type="submit" class="btn btn-primary">Tìm kiếm</button>
-                        </div>
-                    </div>
-                </form>
-            </div>
-
             <div class="row" style="margin-top: 20px;">
                 <table class="table">
                     
                     <thead class="thead-dark">
                       <tr>
                         <th scope="col">#</th>
-                        <th scope="col">Bệnh nhân</th>
                         <th scope="col">Bác sĩ khám</th>
-                        <th scope="col">Ngày tạo</th>
-                        <th scope="col">Tổng tiền</th>
+                        <th scope="col">Ngày khám</th>
                         <th scope="col">Thao tác</th>
                       </tr>
                     </thead>
                     <tbody>
-                      <tr th:each="item, state : ${lstInvoice}">
+                      <tr th:each="item, state : ${lstTestResult}">
                         <th scope="row" th:text="${state.index+1}"></th>
-                        <td th:text="${item.clinicWorking.customer.fullname}"></td>
                         <td th:text="${item.clinicWorking.account.fullname}"></td>
                         <td th:text="${#dates.format(item.createdDate, 'dd-MM-yyyy')}"></td>
-                        <td th:text="${#numbers.formatDecimal(item.totalSellPrice, 0, 'COMMA', 0, 'POINT')} + 'Đ'"></td>
                         <td>
-                        	<a th:href="@{'/invoice-detail/' + ${item.id}}"><button style="font-size: 16px;" class="btn btn-success">Chi tiết hóa đơn</button></a>
+                        	<a th:href="@{'/customer-test-result-history-list/' + ${item.clinicWorking.customer.id} + '/detail/' + ${item.id}}"><button style="font-size: 16px;" class="btn btn-success">Xem chi tiết</button></a>
                         </td>
                       </tr>
                     </tbody>
@@ -63,16 +41,16 @@
                     <nav aria-label="Page navigation" style="text-align: center; width: 100%;">
                     <ul class="pagination justify-content-end">
                             <li class="page-item" th:classappend="${pageIndex} <= 0 ? 'disabled' : ''">
-                            <a class="page-link" th:href="@{'/invoice?page='+ ${pageIndex-1} + ${queryParams}}"><</a>
+                            <a class="page-link" th:href="@{'/customer-test-result-history-list/'+${customerId}+'?page='+ ${pageIndex-1}}"><</a>
                             </li>
 
                             <li  th:classappend="${pageIndex} != ${index-1} ? 'page-item' :'page-item active' "
                                 th:each="index : ${#numbers.sequence(1, totalPages)}">
-                            <a class="page-link" th:href="@{'/invoice?page='+ ${index-1} + ${queryParams}}" th:text="${index}">1</a>
+                            <a class="page-link" th:href="@{'/customer-test-result-history-list/'+${customerId}+'?page='+ ${index-1}}" th:text="${index}">1</a>
                             </li>
 
                             <li class="page-item" th:classappend="${pageIndex} >= ${totalPages} - 1 ? 'disabled' : ''">
-                            <a class="page-link" th:href="@{'/invoice?page='+ ${pageIndex+1} + ${queryParams}}">></a>
+                            <a class="page-link" th:href="@{'/customer-test-result-history-list/'+${customerId}+'?page='+ ${pageIndex+1}}">></a>
                             </li>
                         </ul>
                     </nav>

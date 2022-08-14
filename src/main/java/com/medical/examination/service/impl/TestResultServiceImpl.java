@@ -94,4 +94,9 @@ public class TestResultServiceImpl implements TestResultService {
 		this.testResultRepository.updateIsCalledCustomerReturn(id, isCalled);
 	}
 
+	@Override
+	public Integer countHistoryTestResultCustomer(Long customerId) {
+		return this.testResultRepository.countHistoryTestResultCustomer(customerId);
+	}
+
 }

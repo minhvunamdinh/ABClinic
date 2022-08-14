@@ -46,6 +46,10 @@ public class TestResult {
 	private Double totalSellPrice;
 	@Column(name = "is_called")
 	private Long isCalled;
+	@Column(name = "conclusion")
+	private String conclusion;
+	@Column(name = "prescription")
+	private String prescription;
 	public Long getId() {
 		return id;
 	}
@@ -135,6 +139,18 @@ public class TestResult {
 	}
 	public void setIsCalled(Long isCalled) {
 		this.isCalled = isCalled;
+	}
+	public String getConclusion() {
+		return conclusion;
+	}
+	public void setConclusion(String conclusion) {
+		this.conclusion = conclusion;
+	}
+	public String getPrescription() {
+		return prescription;
+	}
+	public void setPrescription(String prescription) {
+		this.prescription = prescription;
 	}
 	
 }

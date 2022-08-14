@@ -18,7 +18,7 @@ import lombok.Data;
 @Data
 public class AccountRequest {
 	@NotNull(message = "Thông tin bắt buộc")
-    @Size(min = 1, max = 50, message = "Độ dài phải từ 6 đến 255 ký tự")
+    @Size(min = 1, max = 50, message = "Độ dài phải từ 1 đến 50 ký tự")
 	private String username;
 	@NotNull(message = "Thông tin bắt buộc")
     //@Size(min = 6, max = 20, message = "Độ dài phải từ 6 đến 20 ký tự")
@@ -29,10 +29,10 @@ public class AccountRequest {
 	@NotNull(message = "Thông tin bắt buộc")
 	private Long isActive;
 	@NotNull(message = "Thông tin bắt buộc")
-    @Size(min = 6, max = 50, message = "Độ dài phải từ 6 đến 255 ký tự")
+	@Size(min = 1, max = 50, message = "Độ dài phải từ 1 đến 50 ký tự")
 	private String fullname;
 	@NotNull(message = "Thông tin bắt buộc")
-    @Size(min = 6, max = 255, message = "Độ dài phải từ 6 đến 255 ký tự")
+	@Size(min = 1, max = 255, message = "Độ dài phải từ 1 đến 255 ký tự")
 	private String address;
 	@NotNull(message = "Thông tin bắt buộc")
 	@DateTimeFormat (pattern="yyyy-MM-dd")
@@ -48,7 +48,7 @@ public class AccountRequest {
 	private String email;
 	@Column(name = "phone")
 	@NotEmpty(message = "Thông tin bắt buộc!")
-	@Size(min = 10, max = 10, message = "Số điện thoại phải có 10 chữ số")
+	@Pattern(regexp = "^[0][0-9]{9}$",message = "Số điện thoại phải bắt đầu với 0 và có 10 chữ số")
 	private String phone;
 	public String getUsername() {
 		return username;
@@ -131,5 +131,12 @@ public class AccountRequest {
 	@AssertTrue(message = "Mật khẩu không khớp!")
     public boolean isPasswordsEqual() {
         return (password == null) ? false : password.equals(passwordRepeat);
+    }
+	@AssertTrue(message = "Ngày sinh phải nhỏ hơn ngày hiện tại!")
+    public boolean isDobGreater() {
+        if(this.dob != null && this.dob.compareTo(new Date()) > 0) {
+        	return false;
+        }
+        return true;
     }
 }

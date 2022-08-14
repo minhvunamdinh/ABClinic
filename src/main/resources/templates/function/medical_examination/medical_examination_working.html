@@ -7,6 +7,15 @@
 <body>
     <div layout:fragment="content">
         <div class="wrapper" style="font-size: 20px;">
+        	<div class="row">
+                <div class="col-lg-12">
+                    <h3 class="page-header"><i class="fa fa-laptop"></i>Phiếu khám</h3>
+                    <ol class="breadcrumb">
+                        <li><i class="fa fa-home"></i><a th:href="@{/home}">Home</a></li>
+                        <li><i class="fa fa-laptop"></i>[[${title}]]</li>
+                    </ol>
+                </div>
+            </div>
             <div class="row">
                 <div class="col-md-3">
 
@@ -65,13 +74,13 @@
                         <div th:if="${type=='add'}" class="row">
                             <div class="col-md-4 text-center clinic-working-item-left">Kết quả chuẩn đoán</div>
                             <div class="col-md-8 text-center clinic-working-item-right">
-                                <textarea field="*{diagnosticResult}" name="diagnosticResult" style="height: 100px; font-size: 18px; background-color: #fff;" class="form-control"></textarea>
+                                <textarea field="*{diagnosticResult}" name="diagnosticResult" style="height: 100px; font-size: 18px; background-color: #fff;" class="form-control" ></textarea>
                             </div>
                         </div>
                         <div th:if="${type=='edit'}" class="row">
                             <div class="col-md-4 text-center clinic-working-item-left">Kết quả chuẩn đoán</div>
                             <div class="col-md-8 text-center clinic-working-item-right">
-                                <textarea disabled field="*{diagnosticResult}" th:text="${clinicWorking.lstTestResult[0].diagnosticResult}" name="diagnosticResult" style="height: 100px; font-size: 18px; background-color: #fff;" class="form-control"></textarea>
+                                <textarea disabled field="*{diagnosticResult}" th:text="${clinicWorking.lstTestResult[0].diagnosticResult}" name="diagnosticResult" style="height: 100px; font-size: 18px; background-color: #fff;" class="form-control" ></textarea>
                             </div>
                         </div>
                         <div class="row" th:if="${type=='add'}">
@@ -89,7 +98,19 @@
                         <div th:if="${type == 'edit'}" class="row">
                             <div class="col-md-4 text-center clinic-working-item-left">Kết quả xét nghiệm</div>
                             <div class="col-md-8 text-center clinic-working-item-right">
-                                <textarea field="*{testResult}" name="testResult" style="height: 100px; font-size: 18px;" class="form-control"></textarea>
+                                <textarea field="*{testResult}" name="testResult" style="height: 100px; font-size: 18px;" class="form-control">N/A</textarea>
+                            </div>
+                        </div>
+                        <div th:if="${type == 'edit'}" class="row">
+                            <div class="col-md-4 text-center clinic-working-item-left">Kết luận</div>
+                            <div class="col-md-8 text-center clinic-working-item-right">
+                                <textarea field="*{conclusion}" name="conclusion" style="height: 100px; font-size: 18px;" class="form-control">N/A</textarea>
+                            </div>
+                        </div>
+                        <div th:if="${type == 'edit'}" class="row">
+                            <div class="col-md-4 text-center clinic-working-item-left">Chỉ định thuốc của bác sĩ</div>
+                            <div class="col-md-8 text-center clinic-working-item-right">
+                                <textarea field="*{prescription}" name="prescription" style="height: 100px; font-size: 18px;" class="form-control">N/A</textarea>
                             </div>
                         </div>
                         <div th:if="${type == 'edit'}" class="row">
@@ -106,14 +127,17 @@
                             <div class="col-md-4 text-center clinic-working-item-left">Total sellprice</div>
                             <input type="text" id="totalSellPrice" name="totalSellPrice" field="*{totalSellPrice}">
                         </div>
-                        <div class="">
+                        <div style="margin-top: 20px;">
                             <div class="text-center">
-                                <button th:if="${type=='add'}" type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+                                <button style="font-size: 16px;" th:if="${type=='add'}" type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
                                     Chỉ định xét nghiệm
                                 </button>
-                                <button type="submit" class="btn btn-primary">
+                                <button style="font-size: 16px;" type="submit" class="btn btn-primary">
                                     Hoàn thành
                                 </button>
+                                <a th:href="@{'/customer-test-result-history-list/' + ${customerId}}" th:if="${countHistoryCustomerTestResult > 0 && type=='add'}" style="font-size: 16px;" type="button" class="btn btn-primary">
+                                    Lịch sử khám bệnh
+                                </a>
                             </div>
                         </div>
                     </form>
@@ -131,7 +155,7 @@
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <h5 class="modal-title" id="exampleModalLabel">Chỉ định xét nghiệm</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <button style="font-size: 16px;" type="button" class="close" data-dismiss="modal" aria-label="Close">
                                         <span aria-hidden="true">&times;</span>
                                     </button>
                                 </div>
@@ -200,7 +224,7 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="col-md-12 text-center"><button id="btn-chidinh"
+                                                <div class="col-md-12 text-center"><button style="font-size: 16px;" id="btn-chidinh"
                                                         type="button" class="btn btn-primary">Chỉ định</button></div>
                                             </form>
                                         </div>
@@ -216,11 +240,11 @@
                                     </div>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-danger" data-dismiss="modal">Đóng</button>
-                                    <button type="button" class="btn btn-primary" id="btn-confirm" data-dismiss="modal">Xác nhận</button>
-                                    <button id="insideClinic" type="button" class="btn btn-primary" data-toggle="modal" href="#exportPdfInsideClinic">Xuất xét nghiệm có tại phòng
+                                    <button style="font-size: 16px;" type="button" class="btn btn-danger" data-dismiss="modal">Đóng</button>
+                                    <button style="font-size: 16px;" type="button" class="btn btn-primary" id="btn-confirm" data-dismiss="modal">Xác nhận</button>
+                                    <button style="font-size: 16px;" id="insideClinic" type="button" class="btn btn-primary" data-toggle="modal" href="#exportPdfInsideClinic">Xuất xét nghiệm có tại phòng
                                         khám</button>
-                                    <button id="outsideClinic" type="button" class="btn btn-primary" data-toggle="modal" href="#exportPdfOutsideClinic">Xuất xét nghiệm không có tại phòng
+                                    <button style="font-size: 16px;" id="outsideClinic" type="button" class="btn btn-primary" data-toggle="modal" href="#exportPdfOutsideClinic">Xuất xét nghiệm không có tại phòng
                                         khám</button>
                                 </div>
                             </div>
@@ -260,8 +284,8 @@
                                     </div>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-danger" data-dismiss="modal">Đóng</button>
-                                    <button id="btnExportPdfFileInsideClinic" type="button" class="btn btn-primary" >Xuất PDF</button>
+                                    <button style="font-size: 16px;" type="button" class="btn btn-danger" data-dismiss="modal">Đóng</button>
+                                    <button style="font-size: 16px;" id="btnExportPdfFileInsideClinic" type="button" class="btn btn-primary" >Xuất PDF</button>
                                 </div>
                             </div>
                         </div>
@@ -301,8 +325,8 @@
                                     </div>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-danger" data-dismiss="modal">Đóng</button>
-                                    <button id="btnExportPdfFileOutsideClinic" type="button" class="btn btn-primary" >Xuất PDF</button>
+                                    <button style="font-size: 16px;" type="button" class="btn btn-danger" data-dismiss="modal">Đóng</button>
+                                    <button style="font-size: 16px;" id="btnExportPdfFileOutsideClinic" type="button" class="btn btn-primary" >Xuất PDF</button>
                                 </div>
                             </div>
                         </div>
@@ -384,7 +408,7 @@
     })
     var lstObjectTest = [] //list xet nghiem de xuat PDF
     $("#btn-chidinh").click(function () {
-    	debugger
+    	lstObjectTest = []
         let values = {};
         let results = []
         $.each($('#test-form').serializeArray(), function (i, field) {

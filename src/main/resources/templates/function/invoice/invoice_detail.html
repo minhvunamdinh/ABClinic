@@ -51,14 +51,16 @@
                     <div class="col-md-3">[[${invoice.clinicWorking.customer.phone}]]</div>
                     <div class="col-md-3 text-right">Địa chỉ</div>
                     <div class="col-md-9">[[${invoice.clinicWorking.customer.address}]]</div>
+                    <div class="col-md-3 text-right">Bác sĩ khám</div>
+                    <div class="col-md-3">[[${invoice.clinicWorking.account.fullname}]]</div>
                 </div>
                 <div class="row" style="margin-bottom: 20px;margin-top: 20px; padding-left: 50px; padding-right: 50px;">
                     <div class="container export-test-area" style="background-color: #91fffa;">
                         <div class="row test-result-item text-center">
-						    <div class="col-md-3 test-type-item invoice-lable">Tên hàng hóa</div>
-						    <div class="col-md-3 test-type-item invoice-lable">Số lần</div>
-						    <div class="col-md-3 test-type-item invoice-lable">Đơn giá</div>
-						    <div class="col-md-3 test-type-item invoice-lable">Thành tiền</div>
+						    <div class="col-md-3 test-type-item"><b>Tên hàng hóa</b></div>
+						    <div class="col-md-3 test-type-item"><b>Số lần</b></div>
+						    <div class="col-md-3 test-type-item"><b>Đơn giá</b></div>
+						    <div class="col-md-3 test-type-item"><b>Thành tiền</b></div>
 						</div>
 						<div class="row test-result-item text-center" th:each="item, state : ${lstTestComplete}">
 						    <div class="col-md-3 test-type-item">Xét nghiệm [[${item.testName}]]</div>
@@ -87,48 +89,52 @@
 						    <div class="col-md-3 test-type-item">&nbsp;</div>
 						</div>
 						<div class="row test-result-item text-center">
-						    <div class="col-md-3 test-type-item">Thuốc đặc biệt</div>
-						    <div class="col-md-3 test-type-item"></div>
-						    <div class="col-md-3 test-type-item"></div>
-						    <div class="col-md-3 test-type-item">0Đ</div>
-						</div>
-						<div class="row test-result-item text-center">
-						    <div class="col-md-3 test-type-item">&nbsp;</div>
-						    <div class="col-md-3 test-type-item">&nbsp;</div>
-						    <div class="col-md-3 test-type-item">&nbsp;</div>
-						    <div class="col-md-3 test-type-item">&nbsp;</div>
-						</div>
-						<div class="row test-result-item text-center">
 						    <div class="col-md-3 test-type-item">Tổng tiền</div>
 						    <div class="col-md-3 test-type-item"></div>
 						    <div class="col-md-3 test-type-item"></div>
-						    <div class="col-md-3 test-type-item">[[${#numbers.formatDecimal(invoice.totalSellPrice, 0, 'COMMA', 0, 'POINT')} + 'Đ']]</div>
+						    <div class="col-md-3 test-type-item"><b style="font-size: 18px;">[[${#numbers.formatDecimal(invoice.totalSellPrice, 0, 'COMMA', 0, 'POINT')} + 'Đ']]<b></div>
 						</div>
 						
                     </div>
                     
                 </div>
                 <div class="row" style="margin-bottom: 20px;margin-top: 20px; padding-left: 50px; padding-right: 50px;">
-                	<div class="col-md-6 text-right">
+                	<div class="col-md-4 text-right">
                 		<h2>Kết quả chuẩn đoán:</h2>
                 	</div>
-                	<div class="col-md-6 text-left">
+                	<div class="col-md-8 text-left">
                 		<h2>[[${invoice.diagnosticResult}]]</h2>
                 	</div>
                 </div>
                 <div class="row" style="margin-bottom: 20px;margin-top: 20px; padding-left: 50px; padding-right: 50px;">
-                	<div class="col-md-6 text-right">
+                	<div class="col-md-4 text-right">
                 		<h2>Kết quả xét nghiệm:</h2>
                 	</div>
-                	<div class="col-md-6 text-left">
+                	<div class="col-md-8 text-left">
                 		<h2>[[${invoice.testResult}]]</h2>
                 	</div>
                 </div>
                 <div class="row" style="margin-bottom: 20px;margin-top: 20px; padding-left: 50px; padding-right: 50px;">
-                	<div class="col-md-6 text-right">
-                		<h2>Hẹn tái khám:</h2>
+                	<div class="col-md-4 text-right">
+                		<h2>Kết luận:</h2>
                 	</div>
-                	<div class="col-md-6 text-left">
+                	<div class="col-md-8 text-left">
+                		<h2>[[${invoice.conclusion}]]</h2>
+                	</div>
+                </div>
+                <div class="row" style="margin-bottom: 20px;margin-top: 20px; padding-left: 50px; padding-right: 50px;">
+                	<div class="col-md-4 text-right">
+                		<h2>Chỉ định thuốc của bác sĩ:</h2>
+                	</div>
+                	<div class="col-md-8 text-left">
+                		<h2>[[${invoice.prescription}]]</h2>
+                	</div>
+                </div>
+                <div class="row" style="margin-bottom: 20px;margin-top: 20px; padding-left: 50px; padding-right: 50px;">
+                	<div class="col-md-4 text-right">
+                		<h2>Ngày hẹn tái khám:</h2>
+                	</div>
+                	<div class="col-md-8 text-left">
                 		<h2>[[${#dates.format(invoice.timeReturn, 'dd-MM-yyyy')}]]</h2>
                 	</div>
                 </div>

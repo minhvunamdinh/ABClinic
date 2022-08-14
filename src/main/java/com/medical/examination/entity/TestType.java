@@ -26,7 +26,7 @@ public class TestType {
 	@Column(name = "type_name")
 	@NotNull(message = "Thông tin bắt buộc!")
 	@NotEmpty(message = "Thông tin bắt buộc!")
-	@Size(min = 6, max = 255, message = "Độ dài phải từ 6 đến 255 ký tự")
+	@Size(min = 1, max = 50, message = "Độ dài phải từ 1 đến 50 ký tự")
 	private String typeName;
 	@Column(name = "status")
 	private Integer status;

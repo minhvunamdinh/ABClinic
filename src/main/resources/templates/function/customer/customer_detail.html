@@ -51,6 +51,11 @@
                                 	<input th:if="${type == 'update'}"  style="font-size: 16px;" type="date" class="form-control" th:field="*{dob}" id="dob" name="dob">
                                 	<span style="color: red;" th:if="${#fields.hasErrors('dob')}" th:errors="*{dob}"></span>
                                 </div>
+                                <div hidden class="col-md-3">Ngày tạo<span style="color: red;"> *</span></div>
+                                <div hidden class="col-md-3">
+                                	<input style="font-size: 16px;" type="date" class="form-control" th:field="*{createdDate}" id="dob" name="dob">
+                                	<span style="color: red;" th:if="${#fields.hasErrors('createdDate')}" th:errors="*{createdDate}"></span>
+                                </div>
                             </div>
                             
                             <div class="row row-size">

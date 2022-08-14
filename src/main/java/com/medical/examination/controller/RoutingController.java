@@ -6,7 +6,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
@@ -35,6 +37,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.medical.examination.entity.Account;
 import com.medical.examination.entity.ClinicWorking;
 import com.medical.examination.entity.Customer;
@@ -217,6 +220,18 @@ public class RoutingController extends BaseController {
 				
 				model.addAttribute("lstDoctor", accData.getContent());
 				model.addAttribute("lstCustomer", cusData.getContent());
+				
+				//Lay param fix loi phan trang next page k lay dc filter
+				ObjectMapper oMapper = new ObjectMapper();
+				String queryParams = "";
+				Map<String, Object> map = (Map<String, Object>) oMapper.convertValue(clinicWorkingFindParams, Map.class);
+				Set<Map.Entry<String, Object>> entrySet = map.entrySet();
+				for(Map.Entry<String, Object> entry : entrySet) {
+					if(entry.getValue() !=null && !entry.getKey().contains("id") && !entry.getKey().contains("createdDate")) {
+						queryParams += "&" + entry.getKey() + "=" + entry.getValue();
+					}
+			    }
+				model.addAttribute("queryParams", queryParams);
 			}
 			
 			return createView(model, "function/medical_examination/medical_examination.html");
@@ -456,8 +471,14 @@ public class RoutingController extends BaseController {
 			}else {
 				
 			}
+			Integer countHistoryCustomerTestResult = this.testResultService.countHistoryTestResultCustomer(clinicWorking.getCustomer().getId());
+			if(countHistoryCustomerTestResult != null && countHistoryCustomerTestResult > 0) {
+				System.out.println("count: " + countHistoryCustomerTestResult);
+				model.addAttribute("countHistoryCustomerTestResult", countHistoryCustomerTestResult);
+			}
 			if(clinicWorking != null) {
 				model.addAttribute("clinicWorking", clinicWorking);
+				model.addAttribute("customerId", clinicWorking.getCustomer().getId());
 			}
 			return createView(model, "function/medical_examination/medical_examination_working.html");
 		} catch (Exception e) {
@@ -480,6 +501,14 @@ public class RoutingController extends BaseController {
 			ClinicWorking clinicWorking = this.clinicWorkingService.getClinicWorkingById(clinicWorkingId);
 			
 			if(type.contains("add")) {
+				if(resultTestInvoiceRequest.getDiagnosticResult() == null || resultTestInvoiceRequest.getDiagnosticResult().equalsIgnoreCase("")) {
+					redirAttrs.addFlashAttribute("error", "Bạn chưa nhập kết quả chuẩn đoán");
+					return "redirect:/medical-examination-working/"+clinicWorkingId+"/add";
+				}
+				if(resultTestInvoiceRequest.getLstTest() == null || resultTestInvoiceRequest.getLstTest().equalsIgnoreCase("")) {
+					redirAttrs.addFlashAttribute("error", "Bạn chưa chỉ định xét nghiệm nào");
+					return "redirect:/medical-examination-working/"+clinicWorkingId+"/add";
+				}
 				clinicWorking.setStatus(2L); //trang thai 2: cho ket qua xet nghiem
 				//tao ket qua tet
 				testResult.setClinicWorking(clinicWorking);
@@ -499,6 +528,18 @@ public class RoutingController extends BaseController {
 					}
 				}else {
 					redirAttrs.addFlashAttribute("error", "Bạn chưa nhập ngày hẹn tái khám");
+					return "redirect:/medical-examination-working/"+clinicWorkingId+"/edit";
+				}
+				if(resultTestInvoiceRequest.getTestResult() == null || resultTestInvoiceRequest.getTestResult().equalsIgnoreCase("")) {
+					redirAttrs.addFlashAttribute("error", "Bạn chưa nhập kết quả xét nghiệm");
+					return "redirect:/medical-examination-working/"+clinicWorkingId+"/edit";
+				}
+				if(resultTestInvoiceRequest.getConclusion() == null || resultTestInvoiceRequest.getConclusion().equalsIgnoreCase("")) {
+					redirAttrs.addFlashAttribute("error", "Bạn chưa nhập kết luận");
+					return "redirect:/medical-examination-working/"+clinicWorkingId+"/edit";
+				}
+				if(resultTestInvoiceRequest.getPrescription() == null || resultTestInvoiceRequest.getPrescription().equalsIgnoreCase("")) {
+					redirAttrs.addFlashAttribute("error", "Bạn chưa nhập chỉ định thuốc");
 					return "redirect:/medical-examination-working/"+clinicWorkingId+"/edit";
 				}
 				testResult = clinicWorking.getLstTestResult().get(0);
@@ -528,7 +569,11 @@ public class RoutingController extends BaseController {
 				invoice.setLstCostPrice(lstCostPrice);
 				invoice.setLstSellPrice(lstSellPrice);
 				invoice.setTimeReturn(resultTestInvoiceRequest.getTimeReturn());
+				invoice.setConclusion(resultTestInvoiceRequest.getConclusion());
+				invoice.setPrescription(resultTestInvoiceRequest.getPrescription());
 				
+				testResult.setConclusion(resultTestInvoiceRequest.getConclusion());
+				testResult.setPrescription(resultTestInvoiceRequest.getPrescription());
 				testResult.setTimeReturn(resultTestInvoiceRequest.getTimeReturn());
 				testResult.setTestResult(resultTestInvoiceRequest.getTestResult());
 				this.invoiceService.saveInvoice(invoice);
@@ -545,14 +590,37 @@ public class RoutingController extends BaseController {
 	}
 	
 	@GetMapping("/get-medical-fee")
-	public String getMedicalFee(@RequestParam(name = "page", defaultValue = "0") int page, Model model) {
+	public String getMedicalFee(@RequestParam(name = "page", defaultValue = "0") int page, Model model, @ModelAttribute("findParams") TestResultFindParams findParams) {
 		try {
 			model.addAttribute("title", "Thu tiền khám");
-			TestResultFindParams findParams = new TestResultFindParams();
 			findParams.setFindCustomerReturning(false);
 			Pageable pageAble = PageRequest.of(page, 10, Sort.by(Sort.Order.desc("id")));
-			List<TestResult> lstTestResult = this.testResultService.findTestResult(pageAble, findParams).getContent();
-			model.addAttribute("lstTestResult", lstTestResult);
+			Page<TestResult> dataTestResult = this.testResultService.findTestResult(pageAble, findParams);
+			AccountFindParams accountFindParams = new AccountFindParams();
+			accountFindParams.setRole(2L);
+			Page<Account> accData = accountService.findAccount(PageRequest.of(0, 100), accountFindParams);
+			Page<Customer> cusData = customerService.findCustomer(PageRequest.of(0, 100), null);
+			if(dataTestResult != null) {
+				List<TestResult> lstTestResult = dataTestResult.getContent();
+				model.addAttribute("lstTestResult", lstTestResult);
+				model.addAttribute("pageSize", dataTestResult.getSize());
+				model.addAttribute("pageIndex", dataTestResult.getNumber());
+				model.addAttribute("totalPages", dataTestResult.getTotalPages());
+				model.addAttribute("totalElements", dataTestResult.getTotalElements());
+				model.addAttribute("lstDoctor", accData.getContent());
+				model.addAttribute("lstCustomer", cusData.getContent());
+				ObjectMapper oMapper = new ObjectMapper();
+				String queryParams = "";
+				Map<String, Object> map = (Map<String, Object>) oMapper.convertValue(findParams, Map.class);
+				Set<Map.Entry<String, Object>> entrySet = map.entrySet();
+				for(Map.Entry<String, Object> entry : entrySet) {
+					if(entry.getValue() !=null && !entry.getKey().contains("id")) {
+						queryParams += "&" + entry.getKey() + "=" + entry.getValue();
+					}
+				}
+				model.addAttribute("queryParams", queryParams);
+			}
+			
 			return createView(model, "function/medical_fee/get_medical_fee.html");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -574,6 +642,59 @@ public class RoutingController extends BaseController {
 			model.addAttribute("testResult", testResult);
 			model.addAttribute("lstTestComplete", lstTestComplete);
 			return createView(model, "function/medical_fee/get_medical_fee_detail.html");
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "error.html";
+		}
+	}
+	
+	/**
+	 * Xem danh sach lich su kham benh cua benh nhan
+	 * @param page
+	 * @param model
+	 * @param customerId
+	 * @return
+	 */
+	@GetMapping("/customer-test-result-history-list/{customerId}")
+	public String viewCustomerTestResultHistoryList(@RequestParam(name = "page", defaultValue = "0") int page, Model model, @PathVariable("customerId") Long customerId) {
+		try {
+			Customer customer = this.customerService.getCustomerById(customerId);
+			model.addAttribute("title", "Lịch sử khám bệnh của bệnh nhân " + customer.getFullname());
+			model.addAttribute("customerId", customerId);
+			TestResultFindParams findParams = new TestResultFindParams();
+			findParams.setCustomerId(customerId);
+			Pageable pageAble = PageRequest.of(page, 10, Sort.by(Sort.Order.desc("createdDate")));
+			Page<TestResult> dataTestResult = this.testResultService.findTestResult(pageAble, findParams);
+			if(dataTestResult != null) {
+				List<TestResult> lstTestResult = dataTestResult.getContent();
+				model.addAttribute("lstTestResult", lstTestResult);
+				model.addAttribute("pageSize", dataTestResult.getSize());
+				model.addAttribute("pageIndex", dataTestResult.getNumber());
+				model.addAttribute("totalPages", dataTestResult.getTotalPages());
+				model.addAttribute("totalElements", dataTestResult.getTotalElements());
+			}
+			
+			return createView(model, "function/customer_test_result_history/customer_test_result_history_list.html");
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "error.html";
+		}
+	}
+	
+	@GetMapping("/customer-test-result-history-list/{customerId}/detail/{id}")
+	public String viewCustomerTestResultHistoryDetail(@PathVariable("id") Long id, Model model) {
+		try {
+			model.addAttribute("title", "Chi tiết phiếu khám bệnh");
+			TestResult testResult = this.testResultService.getTestResultById(id);
+			String[] lstTest = testResult.getLstTest().split(",");
+			List<Test> lstTestComplete = new ArrayList<Test>();
+			for(String item : lstTest) {
+				Test test = this.testService.findByTestName(item.trim());
+				lstTestComplete.add(test);
+			}
+			model.addAttribute("testResult", testResult);
+			model.addAttribute("lstTestComplete", lstTestComplete);
+			return createView(model, "function/customer_test_result_history/customer_test_result_history_detail.html");
 		} catch (Exception e) {
 			e.printStackTrace();
 			return "error.html";
@@ -607,7 +728,7 @@ public class RoutingController extends BaseController {
 			if(accData != null) model.addAttribute("lstDoctor", accData.getContent());
 			if(cusData != null) model.addAttribute("lstCustomer", cusData.getContent());
 			
-			Pageable pageAble = PageRequest.of(page, 10, Sort.by(Sort.Order.asc("timeReturn")));
+			Pageable pageAble = PageRequest.of(page, 10, Sort.by(Sort.Order.desc("timeReturn")));
 			//findParams.setFindCustomerReturning(true); //Tìm bệnh nhân hẹn khám trong 3 ngày
 			
 			Page<TestResult> testResultData = this.testResultService.findTestResult(pageAble, findParams);
@@ -623,6 +744,16 @@ public class RoutingController extends BaseController {
 				List<TestResult> lstTestResult = testResultData.getContent();
 				model.addAttribute("lstTestResult", lstTestResult);
 				//model.addAttribute("countCustomerReturning", countTestResultData.getTotalElements());
+				ObjectMapper oMapper = new ObjectMapper();
+				String queryParams = "";
+				Map<String, Object> map = (Map<String, Object>) oMapper.convertValue(findParams, Map.class);
+				Set<Map.Entry<String, Object>> entrySet = map.entrySet();
+				for(Map.Entry<String, Object> entry : entrySet) {
+					if(entry.getValue() !=null && !entry.getKey().contains("id")) {
+						 queryParams += "&" + entry.getKey() + "=" + entry.getValue();
+					}
+				}
+				model.addAttribute("queryParams", queryParams);
 			}
 			
 			return createView(model, "function/customer/customer_returning_list.html");
@@ -662,12 +793,32 @@ public class RoutingController extends BaseController {
 	}
 	
 	@GetMapping("/invoice")
-	public String viewInvoicePage(Model model) {
+	public String viewInvoicePage(@RequestParam(name = "page", defaultValue = "0") int page, Model model, @ModelAttribute("findParams") InvoiceFindParams findParams) {
 		try {
 			model.addAttribute("title", "Hóa đơn");
-			InvoiceFindParams findParams = new InvoiceFindParams();
-			List<Invoice> lstInvoice = this.invoiceService.findInvoice(PageRequest.of(0, 1000, Sort.by(Sort.Order.desc("id"))), findParams).getContent();
+			Page<Invoice> dataInvoice = this.invoiceService.findInvoice(PageRequest.of(0, 1000, Sort.by(Sort.Order.desc("id"))), findParams);
+			AccountFindParams accountFindParams = new AccountFindParams();
+			accountFindParams.setRole(2L);
+			Page<Account> accData = accountService.findAccount(PageRequest.of(0, 100), accountFindParams);
+			Page<Customer> cusData = customerService.findCustomer(PageRequest.of(0, 100), null);
+			List<Invoice> lstInvoice = dataInvoice.getContent();
 			model.addAttribute("lstInvoice", lstInvoice);
+			model.addAttribute("pageSize", dataInvoice.getSize());
+			model.addAttribute("pageIndex", dataInvoice.getNumber());
+			model.addAttribute("totalPages", dataInvoice.getTotalPages());
+			model.addAttribute("totalElements", dataInvoice.getTotalElements());
+			model.addAttribute("lstDoctor", accData.getContent());
+			model.addAttribute("lstCustomer", cusData.getContent());
+			ObjectMapper oMapper = new ObjectMapper();
+			String queryParams = "";
+			Map<String, Object> map = (Map<String, Object>) oMapper.convertValue(findParams, Map.class);
+			Set<Map.Entry<String, Object>> entrySet = map.entrySet();
+			for(Map.Entry<String, Object> entry : entrySet) {
+				if(entry.getValue() !=null && !entry.getKey().contains("id")) {
+					queryParams += "&" + entry.getKey() + "=" + entry.getValue();
+				}
+			}
+			model.addAttribute("queryParams", queryParams);
 			return createView(model, "function/invoice/invoice_list.html");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -721,6 +872,17 @@ public class RoutingController extends BaseController {
 				model.addAttribute("totalElements", customerData.getTotalElements());
 				List<Customer> lstCustomer = customerData.getContent();
 				model.addAttribute("lstCustomer", lstCustomer);
+				
+				ObjectMapper oMapper = new ObjectMapper();
+				String queryParams = "";
+				Map<String, Object> map = (Map<String, Object>) oMapper.convertValue(findParams, Map.class);
+				Set<Map.Entry<String, Object>> entrySet = map.entrySet();
+				for(Map.Entry<String, Object> entry : entrySet) {
+					if(entry.getValue() !=null && !entry.getKey().contains("id")) {
+						queryParams += "&" + entry.getKey() + "=" + entry.getValue();
+					}
+				}
+				model.addAttribute("queryParams", queryParams);
 			}
 			
 			return createView(model, "function/customer/customer_list.html");
@@ -806,8 +968,9 @@ public class RoutingController extends BaseController {
 		try {
 			if (result.hasErrors()) {
 				model.addAttribute("title", "Cập nhật");
+				model.addAttribute("type", "update");
 				redirAttrs.addFlashAttribute("error", "Cập nhật thất bại!");
-	            return createView(model, "function/customer/customer_create.html");
+	            return createView(model, "function/customer/customer_detail.html");
 	        }
 	        
 	        this.customerService.saveCustomer(customer);
@@ -871,6 +1034,16 @@ public class RoutingController extends BaseController {
 					model.addAttribute("countTotalSellPrice", countTotalSellPrice);
 					model.addAttribute("countTotalInterest", countTotalInterest);
 				}
+				ObjectMapper oMapper = new ObjectMapper();
+				String queryParams = "";
+				Map<String, Object> map = (Map<String, Object>) oMapper.convertValue(findParams, Map.class);
+				Set<Map.Entry<String, Object>> entrySet = map.entrySet();
+				for(Map.Entry<String, Object> entry : entrySet) {
+					if(entry.getValue() !=null && !entry.getKey().contains("id")) {
+						queryParams += "&" + entry.getKey() + "=" + entry.getValue();
+					}
+				}
+				model.addAttribute("queryParams", queryParams);
 			}
 			
 			AccountFindParams accountFindParams = new AccountFindParams();
@@ -924,6 +1097,16 @@ public class RoutingController extends BaseController {
 					model.addAttribute("countTotalSellPrice", countTotalSellPrice);
 					model.addAttribute("countTotalInterest", countTotalInterest);
 				}
+				ObjectMapper oMapper = new ObjectMapper();
+				String queryParams = "";
+				Map<String, Object> map = (Map<String, Object>) oMapper.convertValue(findParams, Map.class);
+				Set<Map.Entry<String, Object>> entrySet = map.entrySet();
+				for(Map.Entry<String, Object> entry : entrySet) {
+					if(entry.getValue() !=null && !entry.getKey().contains("id")) {
+						queryParams += "&" + entry.getKey() + "=" + entry.getValue();
+					}
+				}
+				model.addAttribute("queryParams", queryParams);
 			}
 			
 			AccountFindParams accountFindParams = new AccountFindParams();
@@ -1003,6 +1186,16 @@ public class RoutingController extends BaseController {
 				List<TestType> lstTestType = testTypeData.getContent();
 				model.addAttribute("lstTestType", lstTestType);
 				
+				ObjectMapper oMapper = new ObjectMapper();
+				String queryParams = "";
+				Map<String, Object> map = (Map<String, Object>) oMapper.convertValue(findParams, Map.class);
+				Set<Map.Entry<String, Object>> entrySet = map.entrySet();
+				for(Map.Entry<String, Object> entry : entrySet) {
+					if(entry.getValue() !=null && !entry.getKey().contains("id")) {
+						queryParams += "&" + entry.getKey() + "=" + entry.getValue();
+					}
+				}
+				model.addAttribute("queryParams", queryParams);
 			}
 			
 			return createView(model, "function/boss/test/test_type_list.html");
@@ -1127,6 +1320,17 @@ public class RoutingController extends BaseController {
 				model.addAttribute("totalElements", testData.getTotalElements());
 				List<Test> lstTest = testData.getContent();
 				model.addAttribute("lstTest", lstTest);
+				
+				ObjectMapper oMapper = new ObjectMapper();
+				String queryParams = "";
+				Map<String, Object> map = (Map<String, Object>) oMapper.convertValue(findParams, Map.class);
+				Set<Map.Entry<String, Object>> entrySet = map.entrySet();
+				for(Map.Entry<String, Object> entry : entrySet) {
+					if(entry.getValue() !=null && !entry.getKey().contains("id")) {
+						queryParams += "&" + entry.getKey() + "=" + entry.getValue();
+					}
+				}
+				model.addAttribute("queryParams", queryParams);
 			}
 			
 			List<TestType> lstTestType = this.testTypeService.findTestType(PageRequest.of(0, 1000), null).getContent();
@@ -1278,6 +1482,18 @@ public class RoutingController extends BaseController {
 				model.addAttribute("totalElements", accountData.getTotalElements());
 				List<Account> lstAccount = accountData.getContent();
 				model.addAttribute("lstAccount", lstAccount);
+				
+				ObjectMapper oMapper = new ObjectMapper();
+				String queryParams = "";
+				Map<String, Object> map = (Map<String, Object>) oMapper.convertValue(findParams, Map.class);
+				Set<Map.Entry<String, Object>> entrySet = map.entrySet();
+				for(Map.Entry<String, Object> entry : entrySet) {
+					if(entry.getValue() !=null && !entry.getKey().contains("id") && !entry.getKey().contains("bossUsing")) {
+						queryParams += "&" + entry.getKey() + "=" + entry.getValue();
+					}
+			    }
+				model.addAttribute("queryParams", queryParams);
+				System.out.println(queryParams);
 			}
 			
 			return createView(model, "function/boss/account/account_list.html");
@@ -1309,7 +1525,11 @@ public class RoutingController extends BaseController {
 				model.addAttribute("error", "Thêm mới thất bại!");
 	            return createView(model, "function/boss/account/account_create.html");
 	        }
-			
+//			if((accountRequest.getDob()).compareTo(new Date()) > 0) {
+//				model.addAttribute("title", "Thêm mới");
+//				model.addAttribute("error", "Ngày sinh phải nhỏ hơn ngày hiện tại!");
+//	            return createView(model, "function/boss/account/account_create.html");
+//			}
 			if (accountRepository.existsByUsername(accountRequest.getUsername())) {
 				model.addAttribute("error", "Tên đăng nhập đã tồn tại!");
 			}

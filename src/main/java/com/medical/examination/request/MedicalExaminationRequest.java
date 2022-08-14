@@ -2,10 +2,12 @@ package com.medical.examination.request;
 
 import java.util.Date;
 
+import javax.validation.constraints.AssertTrue;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 import org.springframework.format.annotation.DateTimeFormat;
@@ -17,25 +19,31 @@ public class MedicalExaminationRequest {
 	private Long customerId;
 	@NotNull(message = "Thông tin bắt buộc!")
 	@NotEmpty(message = "Thông tin bắt buộc!")
+	@Size(min = 1, max = 50, message = "Độ dài phải từ 1 đến 50 ký tự")
 	private String fullname;
 	@NotNull(message = "Thông tin bắt buộc!")
 	@NotEmpty(message = "Thông tin bắt buộc!")
-	@Size(min = 10, max = 10, message = "Số điện thoại phải có 10 chữ số")
+//	@Size(min = 10, max = 10, message = "Số điện thoại phải có 10 chữ số")
+	@Pattern(regexp = "^[0][0-9]{9}$",message = "Số điện thoại phải bắt đầu với 0 và có 10 chữ số")
 	private String phone;
 	@DateTimeFormat (pattern="yyyy-MM-dd")
 	@NotNull(message = "Thông tin bắt buộc!")
 	private Date dob;
 	@NotBlank(message = "Thông tin bắt buộc!")
 	@Email(message = "Sai định dạng email!")
+	@Size(min = 1, max = 50, message = "Độ dài phải từ 1 đến 50 ký tự")
 	private String email;
 	@NotNull(message = "Thông tin bắt buộc")
 	@NotEmpty(message = "Thông tin bắt buộc!")
+	@Size(min = 1, max = 50, message = "Độ dài phải từ 1 đến 50 ký tự")
 	private String country;
 	@NotNull(message = "Thông tin bắt buộc")
 	@NotEmpty(message = "Thông tin bắt buộc!")
+	@Size(min = 1, max = 50, message = "Độ dài phải từ 1 đến 50 ký tự")
 	private String address;
 	@NotNull(message = "Thông tin bắt buộc")
 	@NotEmpty(message = "Thông tin bắt buộc!")
+	@Size(min = 1, max = 50, message = "Độ dài phải từ 1 đến 50 ký tự")
 	private String job;
 	@NotNull(message = "Thông tin bắt buộc")
 	private Long gender;
@@ -109,5 +117,11 @@ public class MedicalExaminationRequest {
 	public void setDesc(String desc) {
 		this.desc = desc;
 	}
-	
+	@AssertTrue(message = "Ngày sinh phải nhỏ hơn ngày hiện tại!")
+    public boolean isDobGreater() {
+        if(this.dob != null && this.dob.compareTo(new Date()) > 0) {
+        	return false;
+        }
+        return true;
+    }
 }

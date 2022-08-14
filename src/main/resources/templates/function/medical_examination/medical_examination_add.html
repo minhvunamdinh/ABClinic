@@ -64,6 +64,7 @@
 	                            <label >Ngày sinh<i style="color: red;">*</i></label>
 	                            <input style="font-size: 16px" type="date" class="form-control" th:field="*{dob}" id="dob"  name="dob">
 	                            <span style="color: red;" th:if="${#fields.hasErrors('dob')}" th:errors="*{dob}"></span>
+	                            <span style="color: red;" th:if="${#fields.hasErrors('dobGreater')}" th:errors="*{dobGreater}"></span>
 	                        </div>
 	                    </div>
 	                    <div class="col-md-3">

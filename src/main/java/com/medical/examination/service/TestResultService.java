@@ -17,4 +17,5 @@ public interface TestResultService {
 	TestResult getTestResultById(Long id);
 	Page<TestResult> findTestResult(Pageable pageable, TestResultFindParams findParams);
 	void updateIsCalledCustomerReturn(Long id , Long isCalled);
+	public Integer countHistoryTestResultCustomer(Long customerId);
 }

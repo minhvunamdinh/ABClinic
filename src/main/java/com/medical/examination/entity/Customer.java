@@ -13,10 +13,12 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.AssertTrue;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 import org.springframework.format.annotation.DateTimeFormat;
@@ -31,30 +33,34 @@ public class Customer {
 	private Long id;
 	@Column(name = "fullname")
 	@NotEmpty(message = "Thông tin bắt buộc!")
-	@Size(min = 6, max = 50, message = "Độ dài phải từ 6 đến 50 ký tự")
+	@Size(min = 1, max = 50, message = "Độ dài phải từ 1 đến 50 ký tự")
 	private String fullname;
 	@Column(name = "phone")
 	@NotEmpty(message = "Thông tin bắt buộc!")
-	@Size(min = 10, max = 10, message = "Số điện thoại phải có 10 chữ số")
+	@Pattern(regexp = "^[0][0-9]{9}$",message = "Số điện thoại phải bắt đầu với 0 và có 10 chữ số")
 	private String phone;
 	@Column(name = "gender")
 	@NotNull(message = "Thông tin bắt buộc!")
 	private Long gender;
 	@Column(name = "job")
 	@NotEmpty(message = "Thông tin bắt buộc!")
+	@Size(min = 6, max = 50, message = "Độ dài phải từ 1 đến 50 ký tự")
 	private String job;
 	@Column(name = "address")
 	@NotEmpty(message = "Thông tin bắt buộc!")
+	@Size(min = 6, max = 50, message = "Độ dài phải từ 1 đến 50 ký tự")
 	private String address;
 	@Column(name = "dob")
 	@DateTimeFormat (pattern="yyyy-MM-dd")
 	@NotNull(message = "Thông tin bắt buộc!")
 	private Date dob;
 	@Column(name = "country")
+	@Size(min = 6, max = 50, message = "Độ dài phải từ 1 đến 50 ký tự")
 	@NotEmpty(message = "Thông tin bắt buộc!")
 	private String country;
 	@Column(name = "email")
 	@NotBlank(message = "Thông tin bắt buộc!")
+	@Size(min = 1, max = 50, message = "Độ dài phải từ 1 đến 50 ký tự")
 	@Email(message = "Sai định dạng email!")
 	private String email;
 	@Column(name = "`desc`")
@@ -138,5 +144,11 @@ public class Customer {
 	public void setCreatedDate(Date createdDate) {
 		this.createdDate = createdDate;
 	}
-	
+	@AssertTrue(message = "Ngày sinh phải nhỏ hơn ngày hiện tại!")
+    public boolean isDobGreater() {
+        if(this.dob != null && this.dob.compareTo(new Date()) > 0) {
+        	return false;
+        }
+        return true;
+    }
 }
