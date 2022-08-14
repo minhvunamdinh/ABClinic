@@ -2,16 +2,6 @@ body{
 	font-size: 16px !important;
 }
 
-.login-img3-body{
-
-  background: url('../img/background/login_bg.jpg') no-repeat center center !important;
-
-  -o-background-size: cover;
-
-  background-size: cover;
-
-}
-
 .header-user-info{
   margin-top: 10px;
 }
@@ -39,4 +29,39 @@ body{
 
 .text-right{
   text-align: right;
+}
+
+.text-left{
+  text-align: left;
+}
+
+.notification-alert{
+	position: absolute !important;
+    right: 15px;
+    top: 75px;
+}
+
+.row-size{
+  margin-top: 10px !important;
+  margin-bottom: 10px !important;
+}
+
+.text-insert{
+  font-size: 16px !important;
+}
+
+.dropdown-toggle{
+	height: 34px !important;
+    font-size: 16px !important;
+}
+
+.test-type-item{
+	border: 1px solid;
+}
+.count{
+	min-width: 365px;
+}
+
+.td-tb{
+	width: 50px;
 }
