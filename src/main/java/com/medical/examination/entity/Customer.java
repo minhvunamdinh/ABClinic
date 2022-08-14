@@ -44,18 +44,18 @@ public class Customer {
 	private Long gender;
 	@Column(name = "job")
 	@NotEmpty(message = "Thông tin bắt buộc!")
-	@Size(min = 6, max = 50, message = "Độ dài phải từ 1 đến 50 ký tự")
+	@Size(min = 1, max = 50, message = "Độ dài phải từ 1 đến 50 ký tự")
 	private String job;
 	@Column(name = "address")
 	@NotEmpty(message = "Thông tin bắt buộc!")
-	@Size(min = 6, max = 50, message = "Độ dài phải từ 1 đến 50 ký tự")
+	@Size(min = 1, max = 50, message = "Độ dài phải từ 1 đến 50 ký tự")
 	private String address;
 	@Column(name = "dob")
 	@DateTimeFormat (pattern="yyyy-MM-dd")
 	@NotNull(message = "Thông tin bắt buộc!")
 	private Date dob;
 	@Column(name = "country")
-	@Size(min = 6, max = 50, message = "Độ dài phải từ 1 đến 50 ký tự")
+	@Size(min = 1, max = 50, message = "Độ dài phải từ 1 đến 50 ký tự")
 	@NotEmpty(message = "Thông tin bắt buộc!")
 	private String country;
 	@Column(name = "email")
