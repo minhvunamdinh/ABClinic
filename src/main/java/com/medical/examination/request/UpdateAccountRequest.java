@@ -21,16 +21,12 @@ import lombok.Data;
 public class UpdateAccountRequest {
 	private Long id;
 	@NotNull(message = "Thông tin bắt buộc")
-
     @Size(min = 1, max = 50, message = "Độ dài phải từ 1 đến 50 ký tự")
-
 	private String username;
 	@NotNull(message = "Thông tin bắt buộc")
 	private Long isActive;
 	@NotNull(message = "Thông tin bắt buộc")
-
 	@Size(min = 1, max = 50, message = "Độ dài phải từ 1 đến 50 ký tự")
-
 	private String fullname;
 	@NotNull(message = "Thông tin bắt buộc")
 	@Size(min = 1, max = 50, message = "Độ dài phải từ 1 đến 50 ký tự")

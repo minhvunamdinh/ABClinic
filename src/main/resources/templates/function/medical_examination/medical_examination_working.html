@@ -135,7 +135,7 @@
                                 <button style="font-size: 16px;" type="submit" class="btn btn-primary">
                                     Hoàn thành
                                 </button>
-                                <a th:href="@{'/customer-test-result-history-list/' + ${customerId}}" th:if="${countHistoryCustomerTestResult > 0 && type=='add'}" style="font-size: 16px;" type="button" class="btn btn-primary">
+                                <a th:href="@{'/customer-test-result-history-list/' + ${customerId}}" th:if="${countHistoryCustomerTestResult > 0}" style="font-size: 16px;" type="button" class="btn btn-primary">
                                     Lịch sử khám bệnh
                                 </a>
                             </div>
@@ -163,66 +163,19 @@
                                     <div class="test-area">
                                         <div class="row">
                                             <form id="test-form" class="col-md-12">
-                                                <div class="test-type-name"><label>Xét nghiệm hóa sinh</label></div>
-                                                <div class="col-md-12">
-                                                    <div class="row test-type-item">
-                                                        <div class="col-md-4" th:each="item, state : ${lstTestHoaSinh}">
-                                                            <input th:id="@{'xnhs' + ${state.index+1}}"
-                                                                th:name="@{'xnhs' + ${state.index+1}}" type="checkbox"
-                                                                th:value="@{${item.testName} + ' - ' + ${item.costPrice} + ' - ' + ${item.sellPrice}}">
-                                                            <label th:for="@{'xnhs' + ${state.index+1}}"
-                                                                th:text="@{ ${item.costPrice} ? ${item.testName} + ' - ' + ${#numbers.formatDecimal(item.costPrice, 0, 'COMMA', 0, 'POINT')} + 'Đ' : ${item.testName}}"></label>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="test-type-name"><label>Xét nghiệm huyết học</label></div>
-                                                <div class="col-md-12">
-                                                    <div class="row test-type-item">
-                                                        <div class="col-md-4" th:each="item, state : ${lstTestMau}">
-                                                            <input th:id="@{'xnmau' + ${state.index+1}}"
-                                                                th:name="@{'xnhs' + ${state.index+1}}" type="checkbox"
-                                                                th:value="@{${item.testName} + ' - ' + ${item.costPrice} + ' - ' + ${item.sellPrice}}">
-                                                            <label th:for="@{'xnmau' + ${state.index+1}}"
-                                                                th:text="@{ ${item.costPrice} ? ${item.testName} + ' - ' + ${#numbers.formatDecimal(item.costPrice, 0, 'COMMA', 0, 'POINT')} + 'Đ' : ${item.testName}}"></label>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="test-type-name"><label>Xét nghiệm vi sinh</label></div>
-                                                <div class="col-md-12">
-                                                    <div class="row test-type-item">
-                                                        <div class="col-md-4" th:each="item, state : ${lstTestViSinh}">
-                                                            <input th:id="@{'xnvisinh' + ${state.index+1}}"
-                                                                th:name="@{'xnhs' + ${state.index+1}}" type="checkbox"
-                                                                th:value="@{${item.testName} + ' - ' + ${item.costPrice} + ' - ' + ${item.sellPrice}}">
-                                                            <label th:for="@{'xnvisinh' + ${state.index+1}}"
-                                                                th:text="@{ ${item.costPrice} ? ${item.testName} + ' - ' + ${#numbers.formatDecimal(item.costPrice, 0, 'COMMA', 0, 'POINT')} + 'Đ' : ${item.testName}}"></label>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="test-type-name"><label>Xét nghiệm phân</label></div>
-                                                <div class="col-md-12">
-                                                    <div class="row test-type-item">
-                                                        <div class="col-md-4" th:each="item, state : ${lstTestPhan}">
-                                                            <input th:id="@{'xnphan' + ${state.index+1}}"
-                                                                th:name="@{'xnhs' + ${state.index+1}}" type="checkbox"
-                                                                th:value="@{${item.testName} + ' - ' + ${item.costPrice} + ' - ' + ${item.sellPrice}}">
-                                                            <label th:for="@{'xnphan' + ${state.index+1}}"
-                                                                th:text="@{ ${item.costPrice} ? ${item.testName} + ' - ' + ${#numbers.formatDecimal(item.costPrice, 0, 'COMMA', 0, 'POINT')} + 'Đ' : ${item.testName}}"></label>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="test-type-name"><label>Xét nghiệm nước tiểu</label></div>
-                                                <div class="col-md-12">
-                                                    <div class="row test-type-item">
-                                                        <div class="col-md-4"
-                                                            th:each="item, state : ${lstTestNuocTieu}">
-                                                            <input th:id="@{'xnnuoctieu' + ${state.index+1}}"
-                                                                th:name="@{'xnhs' + ${state.index+1}}" type="checkbox"
-                                                                th:value="@{${item.testName} + ' - ' + ${item.costPrice} + ' - ' + ${item.sellPrice}}">
-                                                            <label th:for="@{'xnnuoctieu' + ${state.index+1}}"
-                                                                th:text="@{ ${item.costPrice} ? ${item.testName} + ' - ' + ${#numbers.formatDecimal(item.costPrice, 0, 'COMMA', 0, 'POINT')} + 'Đ' : ${item.testName}}"></label>
-                                                        </div>
-                                                    </div>
+                                                <div th:each="item : ${lstTestType}">
+                                                	<div class="test-type-name"><label>[[${item.typeName}]]</label></div>
+	                                                <div class="col-md-12">
+	                                                    <div class="row test-type-item">
+	                                                        <div class="col-md-4" th:each="test, state : ${item.lstTest}">
+	                                                            <input th:id="@{${item.id} + 'xn' + ${state.index+1}}"
+	                                                                th:name="@{${item.id} + 'xn' + ${state.index+1}}" type="checkbox"
+	                                                                th:value="@{${test.testName} + ' - ' + ${test.costPrice} + ' - ' + ${test.sellPrice}}">
+	                                                            <label th:for="@{${item.id} + 'xn' + ${state.index+1}}"
+	                                                                th:text="@{ ${test.costPrice} ? ${test.testName} + ' - ' + ${#numbers.formatDecimal(test.costPrice, 0, 'COMMA', 0, 'POINT')} + 'Đ' : ${test.testName}}"></label>
+	                                                        </div>
+	                                                    </div>
+	                                                </div>
                                                 </div>
                                                 <div class="col-md-12 text-center"><button style="font-size: 16px;" id="btn-chidinh"
                                                         type="button" class="btn btn-primary">Chỉ định</button></div>

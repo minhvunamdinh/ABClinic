@@ -35,69 +35,64 @@
                     <div class="col-md-3">[[${clinicWorking.customer.phone}]]</div>
                     <div class="col-md-3 text-right">Địa chỉ</div>
                     <div class="col-md-9">[[${clinicWorking.customer.address}]]</div>
-                    <div class="col-md-3 text-right">Nghề nghiệp</div>
-                    <div class="col-md-3">[[${clinicWorking.customer.job}]]</div>
-                    <div class="col-md-3 text-right">Quốc tịch</div>
-                    <div class="col-md-3">[[${clinicWorking.customer.country}]]</div>
                     <div class="col-md-3 text-right">Ngày khám</div>
-                    <div class="col-md-3">[[${#dates.format(clinicWorking.lstTestResult[0].createdDate, 'dd-MM-yyyy')}]]</div>
-                    <div class="col-md-3 text-right">Bác sĩ khám</div>
-                    <div class="col-md-3">[[${clinicWorking.account.fullname}]]</div>
+                    <div class="col-md-9">[[${#dates.format(clinicWorking.lstTestResult[0].createdDate, 'dd-MM-yyyy')}]]</div>
+                </div>
+				
+				<div style="background-color: #91fffa;">
+					<div class="row" style="margin-bottom: 20px;margin-top: 20px; padding-left: 50px; padding-right: 50px;">
+                	<div class="col-md-3">
+                		<h2>Các xét nghiệm được chỉ định:</h2>
+                	</div>
+                	<div class="col-md-9" >
+                		<h2>[[${clinicWorking.lstTestResult[0].lstTest}]]</h2>
+                	</div>
                 </div>
                 <div class="row" style="margin-bottom: 20px;margin-top: 20px; padding-left: 50px; padding-right: 50px;">
-                    <div class="container export-test-area" style="background-color: #91fffa;">
-                        <div class="row test-result-item text-center">
-						    <div class="col-md-12 test-type-item testResult-lable"><b>Các xét nghiệm được chỉ định</b></div>
-						</div>
-						<div class="row test-result-item text-center">
-						    <div class="col-md-12 test-type-item">[[${clinicWorking.lstTestResult[0].lstTest}]]</div>
-						</div>
-                    </div>
-                    
-                </div>
-                <div class="row" style="margin-bottom: 20px;margin-top: 20px; padding-left: 50px; padding-right: 50px;">
-                	<div class="col-md-4 text-right">
+                	<div class="col-md-3">
                 		<h2>Kết quả chuẩn đoán:</h2>
                 	</div>
-                	<div class="col-md-8 text-left">
+                	<div class="col-md-9">
                 		<h2>[[${clinicWorking.lstTestResult[0].diagnosticResult}]]</h2>
                 	</div>
                 </div>
                 <div class="row" style="margin-bottom: 20px;margin-top: 20px; padding-left: 50px; padding-right: 50px;">
-                	<div class="col-md-4 text-right">
+                	<div class="col-md-3">
                 		<h2>Kết quả xét nghiệm:</h2>
                 	</div>
-                	<div class="col-md-8 text-left">
+                	<div class="col-md-9">
                 		<h2>[[${clinicWorking.lstTestResult[0].testResult}]]</h2>
                 	</div>
                 </div>
                 <div class="row" style="margin-bottom: 20px;margin-top: 20px; padding-left: 50px; padding-right: 50px;">
-                	<div class="col-md-4 text-right">
+                	<div class="col-md-3">
                 		<h2>Kết luận:</h2>
                 	</div>
-                	<div class="col-md-8 text-left">
+                	<div class="col-md-9">
                 		<h2>[[${clinicWorking.lstTestResult[0].conclusion}]]</h2>
                 	</div>
                 </div>
                 <div class="row" style="margin-bottom: 20px;margin-top: 20px; padding-left: 50px; padding-right: 50px;">
-                	<div class="col-md-4 text-right">
-                		<h2>Chỉ định thuốc của bác sĩ:</h2>
+                	<div class="col-md-3">
+                		<h2>Chỉ định của bác sĩ:</h2>
                 	</div>
-                	<div class="col-md-8 text-left">
+                	<div class="col-md-9">
                 		<h2>[[${clinicWorking.lstTestResult[0].prescription}]]</h2>
                 	</div>
                 </div>
                 <div class="row" style="margin-bottom: 20px;margin-top: 20px; padding-left: 50px; padding-right: 50px;">
-                	<div class="col-md-4 text-right">
+                	<div class="col-md-3">
                 		<h2>Ngày hẹn tái khám:</h2>
                 	</div>
-                	<div class="col-md-8 text-left">
+                	<div class="col-md-9">
                 		<h2>[[${#dates.format(clinicWorking.lstTestResult[0].timeReturn, 'dd-MM-yyyy')}]]</h2>
                 	</div>
                 </div>
+				</div>
             </div>
-            <div class="text-center" style="margin-top: 20px;">
-                <a th:href="@{/medical-examination}"><button class="btn btn-danger">Trở về</button></a>
+            
+                   <div class="text-center" style="margin-top: 20px;">
+                <a th:href="@{/medical-examination}"><button style="font-size: 16px;" class="btn btn-danger">Trở về</button></a>
                 <a th:if="${currentUser.role == 2 && clinicWorking.status == 1}" th:href="@{'/medical-examination-working/' + ${clinicWorking.id} + '/add'}"><button class="btn btn-primary">Thêm vào khám</button></a>
             </div>
         </div>

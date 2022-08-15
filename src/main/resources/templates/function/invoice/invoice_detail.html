@@ -23,7 +23,7 @@
     	<div class="wrapper">
             <div class="row">
                 <div class="col-lg-12">
-                    <h3 class="page-header"><i class="fa fa-laptop"></i>Phiếu khám bệnh</h3>
+                    <h3 class="page-header"><i class="fa fa-laptop"></i>[[${title}]]</h3>
                     <ol class="breadcrumb">
                         <li><i class="fa fa-home"></i><a th:href="@{/home}">Home</a></li>
                         <li><i class="fa fa-laptop"></i>Hóa đơn</li>
@@ -89,7 +89,7 @@
 						    <div class="col-md-3 test-type-item">&nbsp;</div>
 						</div>
 						<div class="row test-result-item text-center">
-						    <div class="col-md-3 test-type-item">Tổng tiền</div>
+						    <div class="col-md-3 test-type-item"><b>Tổng tiền</b></div>
 						    <div class="col-md-3 test-type-item"></div>
 						    <div class="col-md-3 test-type-item"></div>
 						    <div class="col-md-3 test-type-item"><b style="font-size: 18px;">[[${#numbers.formatDecimal(invoice.totalSellPrice, 0, 'COMMA', 0, 'POINT')} + 'Đ']]<b></div>
@@ -99,42 +99,42 @@
                     
                 </div>
                 <div class="row" style="margin-bottom: 20px;margin-top: 20px; padding-left: 50px; padding-right: 50px;">
-                	<div class="col-md-4 text-right">
+                	<div class="col-md-4">
                 		<h2>Kết quả chuẩn đoán:</h2>
                 	</div>
-                	<div class="col-md-8 text-left">
+                	<div class="col-md-8">
                 		<h2>[[${invoice.diagnosticResult}]]</h2>
                 	</div>
                 </div>
                 <div class="row" style="margin-bottom: 20px;margin-top: 20px; padding-left: 50px; padding-right: 50px;">
-                	<div class="col-md-4 text-right">
+                	<div class="col-md-4">
                 		<h2>Kết quả xét nghiệm:</h2>
                 	</div>
-                	<div class="col-md-8 text-left">
+                	<div class="col-md-8">
                 		<h2>[[${invoice.testResult}]]</h2>
                 	</div>
                 </div>
                 <div class="row" style="margin-bottom: 20px;margin-top: 20px; padding-left: 50px; padding-right: 50px;">
-                	<div class="col-md-4 text-right">
+                	<div class="col-md-4">
                 		<h2>Kết luận:</h2>
                 	</div>
-                	<div class="col-md-8 text-left">
+                	<div class="col-md-8">
                 		<h2>[[${invoice.conclusion}]]</h2>
                 	</div>
                 </div>
                 <div class="row" style="margin-bottom: 20px;margin-top: 20px; padding-left: 50px; padding-right: 50px;">
-                	<div class="col-md-4 text-right">
+                	<div class="col-md-4">
                 		<h2>Chỉ định thuốc của bác sĩ:</h2>
                 	</div>
-                	<div class="col-md-8 text-left">
+                	<div class="col-md-8">
                 		<h2>[[${invoice.prescription}]]</h2>
                 	</div>
                 </div>
                 <div class="row" style="margin-bottom: 20px;margin-top: 20px; padding-left: 50px; padding-right: 50px;">
-                	<div class="col-md-4 text-right">
+                	<div class="col-md-4">
                 		<h2>Ngày hẹn tái khám:</h2>
                 	</div>
-                	<div class="col-md-8 text-left">
+                	<div class="col-md-8">
                 		<h2>[[${#dates.format(invoice.timeReturn, 'dd-MM-yyyy')}]]</h2>
                 	</div>
                 </div>

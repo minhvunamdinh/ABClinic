@@ -172,9 +172,11 @@ public class RoutingController extends BaseController {
 				e.printStackTrace();
 				return "error.html";
 			}
+		}else {
+			return "redirect:/medical-examination";
 		}
 			
-		return createView(model, "index");
+//		return createView(model, "index");
 		
 	}
 	
@@ -456,18 +458,20 @@ public class RoutingController extends BaseController {
 				this.clinicWorkingService.updateClinicWorking(clinicWorking); //Cap nhat lai ban ghi trang thai dang kham
 				
 				//Lay data xet nghiem
-				List<Test> lstTestMau = this.testService.findTest(PageRequest.of(0, 100), new TestFindParams(1L, 1L)).getContent();
-				List<Test> lstTestHoaSinh = this.testService.findTest(PageRequest.of(0, 100), new TestFindParams(2L, 1L)).getContent();
-				List<Test> lstTestViSinh = this.testService.findTest(PageRequest.of(0, 100), new TestFindParams(3L, 1L)).getContent();
-				List<Test> lstTestPhan = this.testService.findTest(PageRequest.of(0, 100), new TestFindParams(4L, 1L)).getContent();
-				List<Test> lstTestNuocTieu = this.testService.findTest(PageRequest.of(0, 100), new TestFindParams(5L, 1L)).getContent();
-				model.addAttribute("lstTestMau", lstTestMau);
-				model.addAttribute("lstTestHoaSinh", lstTestHoaSinh);
-				model.addAttribute("lstTestViSinh", lstTestViSinh);
-				model.addAttribute("lstTestPhan", lstTestPhan);
-				model.addAttribute("lstTestNuocTieu", lstTestNuocTieu);
-				
-				
+//				List<Test> lstTestMau = this.testService.findTest(PageRequest.of(0, 100), new TestFindParams(1L, 1L)).getContent();
+//				List<Test> lstTestHoaSinh = this.testService.findTest(PageRequest.of(0, 100), new TestFindParams(2L, 1L)).getContent();
+//				List<Test> lstTestViSinh = this.testService.findTest(PageRequest.of(0, 100), new TestFindParams(3L, 1L)).getContent();
+//				List<Test> lstTestPhan = this.testService.findTest(PageRequest.of(0, 100), new TestFindParams(4L, 1L)).getContent();
+//				List<Test> lstTestNuocTieu = this.testService.findTest(PageRequest.of(0, 100), new TestFindParams(5L, 1L)).getContent();
+//				model.addAttribute("lstTestMau", lstTestMau);
+//				model.addAttribute("lstTestHoaSinh", lstTestHoaSinh);
+//				model.addAttribute("lstTestViSinh", lstTestViSinh);
+//				model.addAttribute("lstTestPhan", lstTestPhan);
+//				model.addAttribute("lstTestNuocTieu", lstTestNuocTieu);
+				TestTypeFindParams testTypeFindParams = new TestTypeFindParams();
+				testTypeFindParams.setStatus(1);
+				List<TestType> lstTestType = this.testTypeService.findTestType(PageRequest.of(0, 1000), testTypeFindParams).getContent();
+				model.addAttribute("lstTestType", lstTestType);
 			}else {
 				
 			}
@@ -663,6 +667,7 @@ public class RoutingController extends BaseController {
 			model.addAttribute("customerId", customerId);
 			TestResultFindParams findParams = new TestResultFindParams();
 			findParams.setCustomerId(customerId);
+			findParams.setFindCustomerReturning(false);
 			Pageable pageAble = PageRequest.of(page, 10, Sort.by(Sort.Order.desc("createdDate")));
 			Page<TestResult> dataTestResult = this.testResultService.findTestResult(pageAble, findParams);
 			if(dataTestResult != null) {
