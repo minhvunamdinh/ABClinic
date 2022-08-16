@@ -449,7 +449,7 @@ public class RoutingController extends BaseController {
 	@GetMapping("/medical-examination-working/{clinicWorkingId}/{type}")
 	public String viewMedicalExaminationWorkingPage(@PathVariable("clinicWorkingId") Long clinicWorkingId, Model model, @PathVariable("type") String type, ResultTestInvoiceRequest resultTestInvoiceRequest) {
 		try {
-			model.addAttribute("title", "Khám bệnh");
+			model.addAttribute("title", "Phiếu khám bệnh");
 			model.addAttribute("clinicWorkingId", clinicWorkingId);
 			model.addAttribute("type", type);
 			ClinicWorking clinicWorking = this.clinicWorkingService.getClinicWorkingById(clinicWorkingId);

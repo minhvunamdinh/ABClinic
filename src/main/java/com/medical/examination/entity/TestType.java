@@ -30,7 +30,7 @@ public class TestType {
 	private String typeName;
 	@Column(name = "status")
 	private Integer status;
-	@OneToMany(fetch = FetchType.EAGER, mappedBy = "testType", cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "testType", cascade = CascadeType.ALL)
 //	@JsonIgnore
 	List<Test> lstTest;
 	public Long getId() {

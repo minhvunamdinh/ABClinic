@@ -34,6 +34,9 @@ public class TestTypeServiceImpl implements TestTypeService {
 
 	@Override
 	public TestType saveTestType(TestType testType) {
+		if(testType.getId() == null) {
+			testType.setStatus(0);
+		}
 		return this.testTypeRepository.save(testType);
 	}
 
