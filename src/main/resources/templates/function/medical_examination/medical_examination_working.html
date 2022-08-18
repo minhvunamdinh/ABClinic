@@ -172,7 +172,7 @@
 	                                                                th:name="@{${item.id} + 'xn' + ${state.index+1}}" type="checkbox"
 	                                                                th:value="@{${test.testName} + ' - ' + ${test.costPrice} + ' - ' + ${test.sellPrice}}">
 	                                                            <label th:for="@{${item.id} + 'xn' + ${state.index+1}}"
-	                                                                th:text="@{ ${test.costPrice} ? ${test.testName} + ' - ' + ${#numbers.formatDecimal(test.costPrice, 0, 'COMMA', 0, 'POINT')} + 'Đ' : ${test.testName}}"></label>
+	                                                                th:text="@{ ${test.sellPrice} ? ${test.testName} + ' - ' + ${#numbers.formatDecimal(test.sellPrice, 0, 'COMMA', 0, 'POINT')} + 'Đ' : ${test.testName}}"></label>
 	                                                        </div>
 	                                                    </div>
 	                                                </div>
