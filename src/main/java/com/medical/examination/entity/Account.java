@@ -19,11 +19,13 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
+import lombok.experimental.SuperBuilder;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
+@SuperBuilder
 @Table(name = "account")
 public class Account {
 	@Id
