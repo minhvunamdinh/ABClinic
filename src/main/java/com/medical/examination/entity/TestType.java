@@ -16,8 +16,10 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.experimental.SuperBuilder;
 
 @Entity
+@SuperBuilder
 @Table(name = "test_type")
 public class TestType {
 	@Id
@@ -33,6 +35,11 @@ public class TestType {
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "testType", cascade = CascadeType.ALL)
 //	@JsonIgnore
 	List<Test> lstTest;
+
+	public TestType() {
+
+	}
+
 	public Long getId() {
 		return id;
 	}

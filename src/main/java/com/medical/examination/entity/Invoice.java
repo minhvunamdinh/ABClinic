@@ -11,9 +11,11 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import lombok.experimental.SuperBuilder;
 import org.springframework.format.annotation.DateTimeFormat;
 
 @Entity
+@SuperBuilder
 @Table(name = "invoice")
 public class Invoice {
 	@Id
@@ -51,6 +53,11 @@ public class Invoice {
 	private String conclusion;
 	@Column(name = "prescription")
 	private String prescription;
+
+	public Invoice() {
+
+	}
+
 	public Long getId() {
 		return id;
 	}
