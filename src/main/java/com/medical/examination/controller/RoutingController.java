@@ -568,7 +568,7 @@ public class RoutingController extends BaseController {
 				invoice.setCode(resultTestInvoiceRequest.getCode());
 				invoice.setLstTest(testResult.getLstTest());
 				invoice.setLstTestId(testResult.getLstTestId());
-				invoice.setTotalCostPrice(testResult.getTotalCostPrice() != null ? testResult.getTotalCostPrice() + 200000 : 200000);
+				invoice.setTotalCostPrice(testResult.getTotalCostPrice() != null ? testResult.getTotalCostPrice() : 0);
 				invoice.setTotalSellPrice(testResult.getTotalSellPrice() != null ? testResult.getTotalSellPrice() + 200000 : 200000);
 				invoice.setTestResult(resultTestInvoiceRequest.getTestResult());
 				invoice.setDiagnosticResult(testResult.getDiagnosticResult());
