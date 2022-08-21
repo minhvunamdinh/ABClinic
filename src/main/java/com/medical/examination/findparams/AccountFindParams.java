@@ -1,7 +1,7 @@
 package com.medical.examination.findparams;
 
-
 import java.util.Date;
+
 public class AccountFindParams {
 	private Long id;
 	private String username;

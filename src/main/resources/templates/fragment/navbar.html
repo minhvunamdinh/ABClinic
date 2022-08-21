@@ -18,7 +18,7 @@
                 <ul class="sub">
                     <li><a th:href="@{/medical-examination}">Phiếu khám bệnh</a></li>
                     <li th:if="${currentUser.role == 3 || currentUser.role == 2}"><a th:href="@{/medical-examination?status=0}">Danh sách chưa khám</a></li>
-                    <li th:if="${currentUser.role == 3 || currentUser.role == 2}"><a th:href="@{/medical-examination?status=1}">Danh sách đang khám</a></li>
+                    <li th:if="${currentUser.role == 3 || currentUser.role == 2}"><a th:href="@{/medical-examination?isFindMoreStatus=true&isFindDataInCurrentDate=false}">Danh sách đang khám</a></li>
                     <li th:if="${currentUser.role == 3}"><a th:href="@{/get-medical-fee}">Thu tiền khám</a></li>
                     <li th:if="${currentUser.role == 3}"><a th:href="@{/invoice}">Danh sách hóa đơn</a></li>
                     <li th:if="${currentUser.role == 3 && countCustomerReturn == null}"><a th:href="@{/customer-returning-list}">Danh sách hẹn khám</a></li>

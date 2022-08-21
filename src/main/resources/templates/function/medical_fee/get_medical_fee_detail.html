@@ -43,7 +43,7 @@
 						    <div class="col-md-3 test-type-item"><b>Đơn giá</b></div>
 						    <div class="col-md-3 test-type-item"><b>Thành tiền</b></div>
 						</div>
-						<div class="row test-result-item text-center" th:each="item, state : ${lstTestComplete}">
+						<div th:if="${lstTestComplete}" class="row test-result-item text-center" th:each="item, state : ${lstTestComplete}">
 						    <div class="col-md-3 test-type-item">Xét nghiệm [[${item.testName}]]</div>
 						    <div class="col-md-3 test-type-item">1</div>
 						    <div th:if="${item.costPrice}" class="col-md-3 test-type-item">[[${#numbers.formatDecimal(item.SellPrice, 0, 'COMMA', 0, 'POINT')} + 'Đ']]</div>
@@ -61,7 +61,8 @@
 						    <div class="col-md-3 test-type-item"><b>Tổng tiền</b></div>
 						    <div class="col-md-3 test-type-item"></div>
 						    <div class="col-md-3 test-type-item"></div>
-						    <div class="col-md-3 test-type-item"><b style="font-size: 18px;">[[${#numbers.formatDecimal(testResult.examinationFee + 200000, 0, 'COMMA', 0, 'POINT')} + 'Đ']]</b></div>
+						    <div th:if="${testResult.examinationFee}" class="col-md-3 test-type-item"><b style="font-size: 18px;">[[${#numbers.formatDecimal(testResult.examinationFee + 200000, 0, 'COMMA', 0, 'POINT')} + 'Đ']]</b></div>
+						    <div th:unless="${testResult.examinationFee}" class="col-md-3 test-type-item"><b style="font-size: 18px;">[[${#numbers.formatDecimal(200000, 0, 'COMMA', 0, 'POINT')} + 'Đ']]</b></div>
 						</div>
 						
                     </div>

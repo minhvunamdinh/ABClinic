@@ -42,6 +42,20 @@
                                 <option style="font-size: 16px;" value=3>Đã khám</option>
                             </select>
                         </div>
+                        <div hidden class="col-md-3">
+                            <label>Hiển thị</label>
+                            <select hidden class="form-control dropdown-toggle" th:field="*{isFindDataInCurrentDate}" id="isFindDataInCurrentDate"  name="isFindDataInCurrentDate">
+                                <option style="font-size: 16px;" value=false>Trong ngày</option>
+                                <option style="font-size: 16px;" selected value=true>Tất cả</option>
+                            </select>
+                        </div>
+                        <div hidden class="col-md-3">
+                            <label>More status</label>
+                            <select hidden class="form-control dropdown-toggle" th:field="*{isFindMoreStatus}" id="isFindMoreStatus"  name="isFindMoreStatus">
+                                <option style="font-size: 16px;" value=false>false</option>
+                                <option style="font-size: 16px;" selected value=true>true</option>
+                            </select>
+                        </div>
                         <div class="col-md-2">
                             <br>
                             <button style="font-size: 16px;" type="submit" class="btn btn-primary">Tìm kiếm</button>

@@ -87,12 +87,13 @@
                             <div class="col-md-4 text-center clinic-working-item-left">Các xét nghiệm đã chỉ định</div>
                             <div class="col-md-8 text-center clinic-working-item-right">
                                 <textarea field="*{lstTest}" readonly name="lstTest" id="xn-chi-dinh" style="height: 100px; font-size: 18px; background-color: #fff" class="form-control"></textarea>
+                                <textarea hidden field="*{lstTestId}" readonly name="lstTestId" id="xn-chi-dinh-id" style="height: 100px; font-size: 18px; background-color: #fff;" class="form-control">N/A</textarea>
                             </div>
                         </div>
                         <div class="row" th:if="${type=='edit'}">
                             <div class="col-md-4 text-center clinic-working-item-left">Các xét nghiệm đã chỉ định</div>
                             <div class="col-md-8 text-center clinic-working-item-right">
-                                <textarea readonly field="*{lstTest}" th:text="${clinicWorking.lstTestResult[0].lstTest}" name="lstTest" id="xn-chi-dinh" style="height: 100px; font-size: 18px; background-color: #fff;" class="form-control"></textarea>
+                                <textarea readonly field="*{lstTest}" th:text="${clinicWorking.lstTestResult[0].lstTest}" name="lstTest" id="xn-chi-dinh" style="height: 100px; font-size: 18px; background-color: #fff;" class="form-control">N/A</textarea>
                             </div>
                         </div>
                         <div th:if="${type == 'edit'}" class="row">
@@ -170,9 +171,9 @@
 	                                                        <div class="col-md-4" th:each="test, state : ${item.lstTest}">
 	                                                            <input th:id="@{${item.id} + 'xn' + ${state.index+1}}"
 	                                                                th:name="@{${item.id} + 'xn' + ${state.index+1}}" type="checkbox"
-	                                                                th:value="@{${test.testName} + ' - ' + ${test.costPrice} + ' - ' + ${test.sellPrice}}">
+	                                                                th:value="@{${test.testName} + ' - ' + ${test.costPrice} + ' - ' + ${test.sellPrice} + ' - ' + ${test.id}}">
 	                                                            <label th:for="@{${item.id} + 'xn' + ${state.index+1}}"
-	                                                                th:text="@{ ${test.sellPrice} ? ${test.testName} + ' - ' + ${#numbers.formatDecimal(test.sellPrice, 0, 'COMMA', 0, 'POINT')} + 'Đ' : ${test.testName}}"></label>
+	                                                                th:text="@{ ${test.costPrice} ? ${test.testName} + ' - ' + ${#numbers.formatDecimal(test.costPrice, 0, 'COMMA', 0, 'POINT')} + 'Đ' : ${test.testName}}"></label>
 	                                                        </div>
 	                                                    </div>
 	                                                </div>
@@ -359,19 +360,23 @@
     $(document).ready(function(){
         $("#code").val('BN_'+Math.floor(Math.random()*9999))
     })
+    let lstTestId = []
     var lstObjectTest = [] //list xet nghiem de xuat PDF
     $("#btn-chidinh").click(function () {
     	lstObjectTest = []
         let values = {};
         let results = []
+        lstTestId = [];
         $.each($('#test-form').serializeArray(), function (i, field) {
             values[field.name] = field.value.testName;
             results.push(field.value)
         });
         let lstTest = []
+        
         results.forEach(item => {
             let itemSplited = item.split(" - ")
             lstTest.push(itemSplited[0])
+            lstTestId.push(itemSplited[3])
             let objectTest = {
                 testName: itemSplited[0],
                 costPrice: itemSplited[1]!='null' ? itemSplited[1] : 0,
@@ -379,6 +384,7 @@
             }
             lstObjectTest.push(objectTest)
         })
+        console.log('lstTestId: ', lstTestId)
         console.log('lst object: ', lstObjectTest)
         
         var lstObjectTestOutside = [] //list xet nghiem ngoai phong kham de xuat PDF
@@ -458,6 +464,7 @@
 
     $('#btn-confirm').click(function(){
         $('#xn-chi-dinh').val($('#testList').val())
+        $("#xn-chi-dinh-id").val(lstTestId)
     })
 
     $("#btnExportPdfFileInsideClinic").click(function () {

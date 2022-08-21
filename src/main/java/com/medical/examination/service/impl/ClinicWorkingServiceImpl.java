@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaBuilder.In;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
@@ -72,13 +73,22 @@ public class ClinicWorkingServiceImpl implements ClinicWorkingService {
 					if (findParams.getStatus() != null) {
 						predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("status"), findParams.getStatus())));
 					}
+					if(findParams.getIsFindDataInCurrentDate() == true) {
+						Date date = new Date();
+						date.setDate(new Date().getDate() - 1);
+						date.setHours(0);
+						date.setMinutes(0);
+						date.setSeconds(0);
+						predicates.add(criteriaBuilder.and(criteriaBuilder.greaterThanOrEqualTo(root.get("createdDate"), date))); //chi hien thi ban ghi trong ngay hom nay
+					}
+					if(findParams.getIsFindMoreStatus() == true) {
+						In<Long> in = criteriaBuilder.in(root.<Long>get("status"));
+						in.value(1L);
+						in.value(2L);
+						predicates.add(in);
+					}
 				}
-				Date date = new Date();
-				date.setDate(new Date().getDate() - 1);
-				date.setHours(0);
-				date.setMinutes(0);
-				date.setSeconds(0);
-				predicates.add(criteriaBuilder.and(criteriaBuilder.greaterThanOrEqualTo(root.get("createdDate"), date))); //chi hien thi ban ghi trong ngay hom nay
+				
 				return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
 			}
 		}, pageable);

@@ -75,7 +75,7 @@ public class TestServiceImpl implements TestService {
 
 	@Override
 	public Test getTestByTestName(String testName) {
-		return this.testRepository.getTestByTestName(testName);
+		return this.getTestByTestName(testName);
 	}
 
 	@Override

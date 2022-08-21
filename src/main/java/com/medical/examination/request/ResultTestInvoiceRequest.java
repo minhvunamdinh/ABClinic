@@ -15,6 +15,7 @@ public class ResultTestInvoiceRequest {
 	private String testResult;
 	private String diagnosticResult;
 	private String lstTest;
+	private String lstTestId;
 	private String lstMedicine;
 	@DateTimeFormat (pattern="yyyy-MM-dd")
 	private Date timeReturn;
@@ -81,6 +82,12 @@ public class ResultTestInvoiceRequest {
 	}
 	public void setPrescription(String prescription) {
 		this.prescription = prescription;
+	}
+	public String getLstTestId() {
+		return lstTestId;
+	}
+	public void setLstTestId(String lstTestId) {
+		this.lstTestId = lstTestId;
 	}
 	
 }

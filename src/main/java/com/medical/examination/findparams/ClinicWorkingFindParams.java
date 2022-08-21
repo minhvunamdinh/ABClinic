@@ -7,6 +7,8 @@ public class ClinicWorkingFindParams {
 	private Long customerId;
 	private Date createdDate;
 	private Long status;
+	private boolean isFindDataInCurrentDate = true;
+	private boolean isFindMoreStatus;
 	public Long getAccountId() {
 		return accountId;
 	}
@@ -30,6 +32,18 @@ public class ClinicWorkingFindParams {
 	}
 	public void setStatus(Long status) {
 		this.status = status;
+	}
+	public boolean getIsFindDataInCurrentDate() {
+		return isFindDataInCurrentDate;
+	}
+	public void setIsFindDataInCurrentDate(boolean isFindDataInCurrentDate) {
+		this.isFindDataInCurrentDate = isFindDataInCurrentDate;
+	}
+	public boolean getIsFindMoreStatus() {
+		return isFindMoreStatus;
+	}
+	public void setIsFindMoreStatus(boolean isFindMoreStatus) {
+		this.isFindMoreStatus = isFindMoreStatus;
 	}
 	
 }

@@ -509,10 +509,10 @@ public class RoutingController extends BaseController {
 					redirAttrs.addFlashAttribute("error", "Bạn chưa nhập kết quả chuẩn đoán");
 					return "redirect:/medical-examination-working/"+clinicWorkingId+"/add";
 				}
-				if(resultTestInvoiceRequest.getLstTest() == null || resultTestInvoiceRequest.getLstTest().equalsIgnoreCase("")) {
-					redirAttrs.addFlashAttribute("error", "Bạn chưa chỉ định xét nghiệm nào");
-					return "redirect:/medical-examination-working/"+clinicWorkingId+"/add";
-				}
+//				if(resultTestInvoiceRequest.getLstTest() == null || resultTestInvoiceRequest.getLstTest().equalsIgnoreCase("")) {
+//					redirAttrs.addFlashAttribute("error", "Bạn chưa chỉ định xét nghiệm nào");
+//					return "redirect:/medical-examination-working/"+clinicWorkingId+"/add";
+//				}
 				clinicWorking.setStatus(2L); //trang thai 2: cho ket qua xet nghiem
 				//tao ket qua tet
 				testResult.setClinicWorking(clinicWorking);
@@ -520,6 +520,7 @@ public class RoutingController extends BaseController {
 				testResult.setCode(resultTestInvoiceRequest.getCode());
 				testResult.setDiagnosticResult(resultTestInvoiceRequest.getDiagnosticResult());
 				testResult.setLstTest(resultTestInvoiceRequest.getLstTest());
+				testResult.setLstTestId(resultTestInvoiceRequest.getLstTestId());
 				testResult.setExaminationFee(resultTestInvoiceRequest.getTotalSellPrice());
 				testResult.setTotalCostPrice(resultTestInvoiceRequest.getTotalCostPrice());
 				testResult.setTotalSellPrice(resultTestInvoiceRequest.getTotalSellPrice());
@@ -550,7 +551,7 @@ public class RoutingController extends BaseController {
 				String[] lstTest = testResult.getLstTest().split(",");
 				String lstCostPrice = "";
 				String lstSellPrice = "";
-				if(lstTest.length > 0) {
+				if(lstTest.length > 1) {
 					for(String item: lstTest) {
 						Test test = this.testService.findByTestName(item);
 						lstCostPrice += test.getCostPrice()!=null ? test.getCostPrice().toString() + "," : 0 + ",";
@@ -566,8 +567,9 @@ public class RoutingController extends BaseController {
 				invoice.setCreatedDate(new Date());
 				invoice.setCode(resultTestInvoiceRequest.getCode());
 				invoice.setLstTest(testResult.getLstTest());
-				invoice.setTotalCostPrice(testResult.getTotalCostPrice() + 200000);
-				invoice.setTotalSellPrice(testResult.getTotalSellPrice() + 200000);
+				invoice.setLstTestId(testResult.getLstTestId());
+				invoice.setTotalCostPrice(testResult.getTotalCostPrice() != null ? testResult.getTotalCostPrice() + 200000 : 200000);
+				invoice.setTotalSellPrice(testResult.getTotalSellPrice() != null ? testResult.getTotalSellPrice() + 200000 : 200000);
 				invoice.setTestResult(resultTestInvoiceRequest.getTestResult());
 				invoice.setDiagnosticResult(testResult.getDiagnosticResult());
 				invoice.setLstCostPrice(lstCostPrice);
@@ -639,12 +641,14 @@ public class RoutingController extends BaseController {
 			TestResult testResult = this.testResultService.getTestResultById(id);
 			String[] lstTest = testResult.getLstTest().split(",");
 			List<Test> lstTestComplete = new ArrayList<Test>();
-			for(String item : lstTest) {
-				Test test = this.testService.findByTestName(item.trim());
-				lstTestComplete.add(test);
+			if(lstTest.length > 1) {
+				for(String item : lstTest) {
+					Test test = this.testService.findByTestName(item.trim());
+					lstTestComplete.add(test);
+				}
+				model.addAttribute("lstTestComplete", lstTestComplete);
 			}
 			model.addAttribute("testResult", testResult);
-			model.addAttribute("lstTestComplete", lstTestComplete);
 			return createView(model, "function/medical_fee/get_medical_fee_detail.html");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -693,12 +697,15 @@ public class RoutingController extends BaseController {
 			TestResult testResult = this.testResultService.getTestResultById(id);
 			String[] lstTest = testResult.getLstTest().split(",");
 			List<Test> lstTestComplete = new ArrayList<Test>();
-			for(String item : lstTest) {
-				Test test = this.testService.findByTestName(item.trim());
-				lstTestComplete.add(test);
+			if(lstTest.length > 1) {
+				for(String item : lstTest) {
+					Test test = this.testService.findByTestName(item.trim());
+					lstTestComplete.add(test);
+				}
+				model.addAttribute("lstTestComplete", lstTestComplete);
 			}
+			
 			model.addAttribute("testResult", testResult);
-			model.addAttribute("lstTestComplete", lstTestComplete);
 			return createView(model, "function/customer_test_result_history/customer_test_result_history_detail.html");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -841,13 +848,17 @@ public class RoutingController extends BaseController {
 			String[] lstSellPrice = invoice.getLstSellPrice().split(",");
 			List<TestDTO> lstTestComplete = new ArrayList<TestDTO>();
 
-			for(int i = 0; i < lstTest.length; i++) {
-				TestDTO item = new TestDTO();
-				item.setTestName(lstTest[i]);
-				item.setCostPrice(Double.valueOf(lstCostPrice[i]));
-				item.setSellPrice(Double.valueOf(lstSellPrice[i]));
-				lstTestComplete.add(item);
+			if(lstTest.length > 1) {
+				for(int i = 0; i < lstTest.length; i++) {
+					TestDTO item = new TestDTO();
+					item.setTestName(lstTest[i]);
+					item.setCostPrice(Double.valueOf(lstCostPrice[i]));
+					item.setSellPrice(Double.valueOf(lstSellPrice[i]));
+					lstTestComplete.add(item);
+				}
+				model.addAttribute("lstTestComplete", lstTestComplete);
 			}
+			
 //			String[] lstTest = invoice.getLstTest().split(",");
 //			List<Test> lstTestComplete = new ArrayList<Test>();
 //			for(String item : lstTest) {
@@ -855,7 +866,6 @@ public class RoutingController extends BaseController {
 //				lstTestComplete.add(test);
 //			}
 			model.addAttribute("invoice", invoice);
-			model.addAttribute("lstTestComplete", lstTestComplete);
 			return createView(model, "function/invoice/invoice_detail.html");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -1160,15 +1170,18 @@ public class RoutingController extends BaseController {
 			String[] lstSellPrice = invoice.getLstSellPrice().split(",");
 			List<TestDTO> lstTestComplete = new ArrayList<TestDTO>();
 
-			for(int i = 0; i < lstTest.length; i++) {
-				TestDTO item = new TestDTO();
-				item.setTestName(lstTest[i]);
-				item.setCostPrice(Double.valueOf(lstCostPrice[i]));
-				item.setSellPrice(Double.valueOf(lstSellPrice[i]));
-				lstTestComplete.add(item);
+			if(lstTest.length > 1) {
+				for(int i = 0; i < lstTest.length; i++) {
+					TestDTO item = new TestDTO();
+					item.setTestName(lstTest[i]);
+					item.setCostPrice(Double.valueOf(lstCostPrice[i]));
+					item.setSellPrice(Double.valueOf(lstSellPrice[i]));
+					lstTestComplete.add(item);
+				}
+				model.addAttribute("lstTestComplete", lstTestComplete);
 			}
 			model.addAttribute("invoice", invoice);
-			model.addAttribute("lstTestComplete", lstTestComplete);
+			
 			return createView(model, "function/boss/invoice_detail.html");
 		} catch (Exception e) {
 			e.printStackTrace();

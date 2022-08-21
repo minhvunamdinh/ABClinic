@@ -1,7 +1,6 @@
 package com.medical.examination.entity;
 
 import lombok.experimental.SuperBuilder;
-
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -53,12 +52,11 @@ public class TestResult {
 	private String conclusion;
 	@Column(name = "prescription")
 	private String prescription;
-
+	@Column(name = "lst_test_id")
+	private String lstTestId;
 	public TestResult() {
 
-	}
-
-	public Long getId() {
+	}	public Long getId() {
 		return id;
 	}
 	public void setId(Long id) {
@@ -159,6 +157,12 @@ public class TestResult {
 	}
 	public void setPrescription(String prescription) {
 		this.prescription = prescription;
+	}
+	public String getLstTestId() {
+		return lstTestId;
+	}
+	public void setLstTestId(String lstTestId) {
+		this.lstTestId = lstTestId;
 	}
 	
 }

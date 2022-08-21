@@ -47,7 +47,7 @@
 						    <div class="col-md-6 test-type-item testResult-lable"><b>Các xét nghiệm được chỉ định</b></div>
 						    <div class="col-md-6 test-type-item testResult-lable"><b>Số lần</b></div>
 						</div>
-						<div class="row test-result-item text-center" th:each="item, state : ${lstTestComplete}">
+						<div th:if="${lstTestComplete}" class="row test-result-item text-center" th:each="item, state : ${lstTestComplete}">
 						    <div class="col-md-6 test-type-item">Xét nghiệm [[${item.testName}]]</div>
 						    <div class="col-md-6 test-type-item">1</div>
 						</div>

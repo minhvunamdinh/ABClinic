@@ -53,12 +53,12 @@ public class Invoice {
 	private String conclusion;
 	@Column(name = "prescription")
 	private String prescription;
+	@Column(name = "lst_test_id")
+	private String lstTestId;
 
 	public Invoice() {
 
-	}
-
-	public Long getId() {
+		}	public Long getId() {
 		return id;
 	}
 	public void setId(Long id) {
@@ -153,6 +153,12 @@ public class Invoice {
 	}
 	public void setPrescription(String prescription) {
 		this.prescription = prescription;
+	}
+	public String getLstTestId() {
+		return lstTestId;
+	}
+	public void setLstTestId(String lstTestId) {
+		this.lstTestId = lstTestId;
 	}
 	
 }
