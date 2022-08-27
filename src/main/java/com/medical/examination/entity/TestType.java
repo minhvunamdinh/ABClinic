@@ -15,11 +15,11 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import org.hibernate.annotations.Where;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.experimental.SuperBuilder;
 
 @Entity
-@SuperBuilder
 @Table(name = "test_type")
 public class TestType {
 	@Id
@@ -33,13 +33,9 @@ public class TestType {
 	@Column(name = "status")
 	private Integer status;
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "testType", cascade = CascadeType.ALL)
+	@Where(clause = "status = 1") //Thêm điều kiện search listTest với status = 1 (Đã kích hoạt)
 //	@JsonIgnore
 	List<Test> lstTest;
-
-	public TestType() {
-
-	}
-
 	public Long getId() {
 		return id;
 	}

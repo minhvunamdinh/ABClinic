@@ -21,9 +21,9 @@ public class AccountRequest {
     @Size(min = 1, max = 50, message = "Độ dài phải từ 1 đến 50 ký tự")
 	private String username;
 	@NotNull(message = "Thông tin bắt buộc")
-    //@Size(min = 6, max = 20, message = "Độ dài phải từ 6 đến 20 ký tự")
-	@Pattern(regexp = "((?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%]).{6,20})",
-    message = "Không đúng định dạng mật khẩu, mật khẩu phải có đủ chữ hoa, chữ thường, số, ký tự đặc biệt")
+    @Size(min = 6, max = 50, message = "Độ dài phải từ 6 đến 50 ký tự")
+//	@Pattern(regexp = "((?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%]).{6,20})",
+//    message = "Không đúng định dạng mật khẩu, mật khẩu phải có đủ chữ hoa, chữ thường, số, ký tự đặc biệt")
 	private String password;
 	private String passwordRepeat;
 	@NotNull(message = "Thông tin bắt buộc")

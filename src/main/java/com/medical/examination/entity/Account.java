@@ -19,13 +19,11 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
-import lombok.experimental.SuperBuilder;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
-@SuperBuilder
 @Table(name = "account")
 public class Account {
 	@Id
@@ -145,7 +143,7 @@ public class Account {
 		this.phone = phone;
 	}
 	public Account(String username, String password, Long isActive, String fullname, String address, Date dob,
-			Long gender, Long role, Long isWorking, Long status, String email) {
+			Long gender, Long role, Long isWorking, Long status, String email, String phone) {
 		super();
 		this.username = username;
 		this.password = password;
@@ -158,6 +156,7 @@ public class Account {
 		this.isWorking = isWorking;
 		this.status = status;
 		this.email = email;
+		this.phone = phone;
 	}
 	public Account(Long id, String username, String password, Long isActive, String fullname, String address, Date dob,
 			Long gender, Long role, Long isWorking, Long status, String email) {

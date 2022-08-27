@@ -49,6 +49,8 @@ public class MedicalExaminationRequest {
 	private Long gender;
 	@NotNull(message = "Thông tin bắt buộc")
 	private Long accountId;
+
+	@Size(min = 0, max = 500, message = "Độ dài phải từ 1 đến 500 ký tự")
 	private String desc;
 	
 	public Long getCustomerId() {

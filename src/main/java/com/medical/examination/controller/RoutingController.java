@@ -13,6 +13,7 @@ import java.util.Set;
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
@@ -101,13 +103,24 @@ public class RoutingController extends BaseController {
 	@Autowired
 	PasswordEncoder encoder;
 	
+	public boolean isAdmin = false;
+	
 	@GetMapping({ "", "/home" })
 	public String viewHomePage(Model model) {
 		ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
 		HttpServletRequest request = (HttpServletRequest) attr.getRequest();
 		HttpSession session = request.getSession();
+		if(session.getAttribute("CURRENT_USER") == null) {
+			account = AccountDetail.build(Constants.ACCOUNT_ADMIN);
+			session.setAttribute("CURRENT_USER", account);
+		}
 		account = (AccountDetail) session.getAttribute("CURRENT_USER");
-		if(account.getRole() == 1) {
+		if(account.getRole() == 0) {
+			isAdmin = true;
+		}else {
+			isAdmin = false;
+		}
+		if(account.getRole() == 1 || account.getRole() == 0) {
 			try {
 				model.addAttribute("title", "home");
 				
@@ -419,9 +432,15 @@ public class RoutingController extends BaseController {
 	}
 	
 	@GetMapping("/medical-examination/delete/{id}")
+	@Transactional(rollbackFor = {Exception.class, Throwable.class})
 	public String deleteClinicWorking(@PathVariable("id") Long id, Model model, RedirectAttributes redirAttrs) {
 		try {
+			Long customerId = this.clinicWorkingService.getClinicWorkingById(id).getCustomer().getId();
+			Customer customer = this.customerService.getCustomerById(customerId);
 			this.clinicWorkingService.deleteClinicWorking(id);
+			if(customer.getLstClinicWorking().size() == 1) {
+				this.customerService.deleteCustomer(customerId); //Nếu là bệnh nhân mới thì xóa luôn trong bảng customer
+			}
 			redirAttrs.addFlashAttribute("success", "Xóa thành công!");
 			return "redirect:/medical-examination";
 		} catch (Exception e) {
@@ -548,12 +567,12 @@ public class RoutingController extends BaseController {
 					return "redirect:/medical-examination-working/"+clinicWorkingId+"/edit";
 				}
 				testResult = clinicWorking.getLstTestResult().get(0);
-				String[] lstTest = testResult.getLstTest().split(",");
+				String[] lstTest = testResult.getLstTestId().split(",");
 				String lstCostPrice = "";
 				String lstSellPrice = "";
 				if(lstTest.length > 1) {
 					for(String item: lstTest) {
-						Test test = this.testService.findByTestName(item);
+						Test test = this.testService.getTestById(Long.parseLong(item));
 						lstCostPrice += test.getCostPrice()!=null ? test.getCostPrice().toString() + "," : 0 + ",";
 						lstSellPrice += test.getSellPrice()!=null ? test.getSellPrice().toString() + "," : 0 + ",";
 					}
@@ -570,6 +589,7 @@ public class RoutingController extends BaseController {
 				invoice.setLstTestId(testResult.getLstTestId());
 				invoice.setTotalCostPrice(testResult.getTotalCostPrice() != null ? testResult.getTotalCostPrice() : 0);
 				invoice.setTotalSellPrice(testResult.getTotalSellPrice() != null ? testResult.getTotalSellPrice() + 200000 : 200000);
+				invoice.setIncome(testResult.getTotalCostPrice() != null && testResult.getTotalSellPrice() != null ? testResult.getTotalSellPrice() - testResult.getTotalCostPrice() + 200000 : 200000); //Tien lai = sellPrice - costPrice + 200000
 				invoice.setTestResult(resultTestInvoiceRequest.getTestResult());
 				invoice.setDiagnosticResult(testResult.getDiagnosticResult());
 				invoice.setLstCostPrice(lstCostPrice);
@@ -639,11 +659,11 @@ public class RoutingController extends BaseController {
 		try {
 			model.addAttribute("title", "Chi tiết phiếu xét nghiệm");
 			TestResult testResult = this.testResultService.getTestResultById(id);
-			String[] lstTest = testResult.getLstTest().split(",");
+			String[] lstTest = testResult.getLstTestId().split(",");
 			List<Test> lstTestComplete = new ArrayList<Test>();
 			if(lstTest.length > 1) {
 				for(String item : lstTest) {
-					Test test = this.testService.findByTestName(item.trim());
+					Test test = this.testService.getTestById(Long.parseLong(item));
 					lstTestComplete.add(test);
 				}
 				model.addAttribute("lstTestComplete", lstTestComplete);
@@ -695,11 +715,11 @@ public class RoutingController extends BaseController {
 		try {
 			model.addAttribute("title", "Chi tiết phiếu khám bệnh");
 			TestResult testResult = this.testResultService.getTestResultById(id);
-			String[] lstTest = testResult.getLstTest().split(",");
+			String[] lstTest = testResult.getLstTestId().split(",");
 			List<Test> lstTestComplete = new ArrayList<Test>();
 			if(lstTest.length > 1) {
 				for(String item : lstTest) {
-					Test test = this.testService.findByTestName(item.trim());
+					Test test = this.testService.getTestById(Long.parseLong(item));
 					lstTestComplete.add(test);
 				}
 				model.addAttribute("lstTestComplete", lstTestComplete);
@@ -714,10 +734,20 @@ public class RoutingController extends BaseController {
 	}
 	
 	@PostMapping("/post-medical-fee-detail/{id}")
+	@Transactional(rollbackFor = {Exception.class, Throwable.class})
 	public String confirmMedicalFeeDetail(@PathVariable("id") Long id, Model model) {
 		try {
 			TestResult testResult = this.testResultService.getTestResultById(id);
 			testResult.setStatus(1L);//Xác nhận thanh toán
+			
+			//Lay thong tin user trong phien lam viec
+			ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
+			HttpServletRequest request = (HttpServletRequest) attr.getRequest();
+			HttpSession session = request.getSession();
+			account = (AccountDetail) session.getAttribute("CURRENT_USER");
+			if(account != null) {
+				this.clinicWorkingService.updateCreatedByClinicWorking(account.getId(), testResult.getClinicWorking().getId()); //Set người thu tiền hóa đơn
+			}
 			this.testResultService.saveTestResult(testResult);
 			return "redirect:/get-medical-fee";
 		} catch (Exception e) {
@@ -843,7 +873,7 @@ public class RoutingController extends BaseController {
 		try {
 			model.addAttribute("title", "Chi tiết Hóa đơn");
 			Invoice invoice = this.invoiceService.getInvoiceById(id);
-			String[] lstTest = invoice.getLstTest().split(",");
+			String[] lstTest = invoice.getLstTestId().split(",");
 			String[] lstCostPrice = invoice.getLstCostPrice().split(",");
 			String[] lstSellPrice = invoice.getLstSellPrice().split(",");
 			List<TestDTO> lstTestComplete = new ArrayList<TestDTO>();
@@ -851,7 +881,8 @@ public class RoutingController extends BaseController {
 			if(lstTest.length > 1) {
 				for(int i = 0; i < lstTest.length; i++) {
 					TestDTO item = new TestDTO();
-					item.setTestName(lstTest[i]);
+					Test test = this.testService.getTestById(Long.parseLong(lstTest[i]));
+					item.setTestName(test.getTestName());
 					item.setCostPrice(Double.valueOf(lstCostPrice[i]));
 					item.setSellPrice(Double.valueOf(lstSellPrice[i]));
 					lstTestComplete.add(item);
@@ -1165,7 +1196,7 @@ public class RoutingController extends BaseController {
 		try {
 			model.addAttribute("title", "Chi tiết Hóa đơn");
 			Invoice invoice = this.invoiceService.getInvoiceById(id);
-			String[] lstTest = invoice.getLstTest().split(",");
+			String[] lstTest = invoice.getLstTestId().split(",");
 			String[] lstCostPrice = invoice.getLstCostPrice().split(",");
 			String[] lstSellPrice = invoice.getLstSellPrice().split(",");
 			List<TestDTO> lstTestComplete = new ArrayList<TestDTO>();
@@ -1173,7 +1204,8 @@ public class RoutingController extends BaseController {
 			if(lstTest.length > 1) {
 				for(int i = 0; i < lstTest.length; i++) {
 					TestDTO item = new TestDTO();
-					item.setTestName(lstTest[i]);
+					Test test = this.testService.getTestById(Long.parseLong(lstTest[i]));
+					item.setTestName(test.getTestName());
 					item.setCostPrice(Double.valueOf(lstCostPrice[i]));
 					item.setSellPrice(Double.valueOf(lstSellPrice[i]));
 					lstTestComplete.add(item);
@@ -1490,7 +1522,12 @@ public class RoutingController extends BaseController {
 		try {
 			model.addAttribute("title", "Danh sách tài khoản");
 			Pageable pageAble = PageRequest.of(page, 10, Sort.by(Sort.Order.desc("id")));
-			findParams.setBossUsing(true);
+			if(this.isAdmin == true) {
+				findParams.setBossUsing(false);
+			}else {
+				findParams.setBossUsing(true);
+			}
+			
 			Page<Account> accountData = this.accountService.findAccount(pageAble, findParams);
 			
 			if(accountData != null) {
@@ -1538,8 +1575,8 @@ public class RoutingController extends BaseController {
 	@PostMapping("/account/create")
 	public String createAccount(@Valid @ModelAttribute(value="accountRequest") AccountRequest accountRequest, BindingResult result, Model model, RedirectAttributes redirAttrs) {
 		try {
+			model.addAttribute("title", "Thêm mới");
 			if (result.hasErrors()) {
-				model.addAttribute("title", "Thêm mới");
 				model.addAttribute("error", "Thêm mới thất bại!");
 	            return createView(model, "function/boss/account/account_create.html");
 	        }
@@ -1550,16 +1587,18 @@ public class RoutingController extends BaseController {
 //			}
 			if (accountRepository.existsByUsername(accountRequest.getUsername())) {
 				model.addAttribute("error", "Tên đăng nhập đã tồn tại!");
+				return createView(model, "function/boss/account/account_create.html");
 			}
 			if (accountRepository.existsByEmail(accountRequest.getEmail())) {
 				model.addAttribute("error", "Email đã tồn tại!");
+				return createView(model, "function/boss/account/account_create.html");
 			}
 			BCryptPasswordEncoder encode = new BCryptPasswordEncoder();
 			// Create new user's account
 			Account accountVerified = new Account(accountRequest.getUsername(), encode.encode(accountRequest.getPassword()),
 					accountRequest.getIsActive(), accountRequest.getFullname(), accountRequest.getAddress(),
 					accountRequest.getDob(), accountRequest.getGender(), accountRequest.getRole(),
-					accountRequest.getIsWorking(), accountRequest.getStatus(), accountRequest.getEmail());
+					accountRequest.getIsWorking(), accountRequest.getStatus(), accountRequest.getEmail(), accountRequest.getPhone());
 	        
 	        this.accountService.saveAccount(accountVerified);
 	        redirAttrs.addFlashAttribute("success", "Thêm mới thành công!");
@@ -1595,10 +1634,10 @@ public class RoutingController extends BaseController {
 	@PostMapping("/account/update/{id}")
 	public String updateAccount(@PathVariable("id") Long id, @Valid @ModelAttribute(value="updateAccountRequest") UpdateAccountRequest updateAccountRequest, BindingResult result, Model model, RedirectAttributes redirAttrs) {
 		try {
+			model.addAttribute("title", "Cập nhật");
+			model.addAttribute("type", "update");
 			if (result.hasErrors()) {
-				model.addAttribute("title", "Cập nhật");
 				model.addAttribute("error", "Cập nhật thất bại!");
-				model.addAttribute("type", "update");
 	            return createView(model, "function/boss/account/account_detail.html");
 	        }
 			Account account = this.accountService.getAccountById(id);
@@ -1655,7 +1694,18 @@ public class RoutingController extends BaseController {
 			}
 			this.accountService.saveAccount(account);
 	        redirAttrs.addFlashAttribute("success", "Đổi mật khẩu thành công!");
-	        return "redirect:/list-account";
+	        
+	      //Lay thong tin user trong phien lam viec
+			ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
+			HttpServletRequest request = (HttpServletRequest) attr.getRequest();
+			HttpSession session = request.getSession();
+			AccountDetail currentUser = (AccountDetail) session.getAttribute("CURRENT_USER");
+			if(currentUser != null && currentUser.getRole()==1) {
+				return "redirect:/list-account";
+			}else {
+				return "redirect:/medical-examination";
+			}
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 			redirAttrs.addFlashAttribute("error", "Đổi mật khẩu thất bại!");

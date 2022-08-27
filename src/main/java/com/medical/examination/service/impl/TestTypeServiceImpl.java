@@ -68,7 +68,6 @@ public class TestTypeServiceImpl implements TestTypeService {
 					}
 					if (findParams.getStatus() != null) {
 						predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("status"), findParams.getStatus())));
-//						predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("lstTest").get("status"), Long.valueOf(findParams.getStatus()))));
 					}
 				}
 				return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));

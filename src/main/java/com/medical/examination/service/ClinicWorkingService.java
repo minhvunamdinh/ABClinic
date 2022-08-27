@@ -20,4 +20,5 @@ public interface ClinicWorkingService {
 	ClinicWorking getClinicWorkingById(Long id);
 	Page<ClinicWorking> findClinicWorking(Pageable pageable, ClinicWorkingFindParams findParams);
 	void updateAccountIdClinicWorking(Long accountId, Long id);
+	void updateCreatedByClinicWorking(Long createdBy, Long id);
 }

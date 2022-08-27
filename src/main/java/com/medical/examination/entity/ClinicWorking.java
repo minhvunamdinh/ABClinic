@@ -1,7 +1,5 @@
 package com.medical.examination.entity;
 
-import lombok.experimental.SuperBuilder;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -19,7 +17,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
-@SuperBuilder
 @Table(name = "clinic_working")
 public class ClinicWorking {
 	@Id
@@ -41,11 +38,9 @@ public class ClinicWorking {
 	List<TestResult> lstTestResult = new ArrayList<TestResult>();
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "clinicWorking", cascade = CascadeType.ALL)
 	List<Invoice> lstInvoice = new ArrayList<Invoice>();
-
-	public ClinicWorking() {
-
-	}
-
+	@ManyToOne
+	@JoinColumn(name = "created_by")
+	private Account createdBy;
 	public Long getId() {
 		return id;
 	}
@@ -93,6 +88,12 @@ public class ClinicWorking {
 	}
 	public void setLstInvoice(List<Invoice> lstInvoice) {
 		this.lstInvoice = lstInvoice;
+	}
+	public Account getCreatedBy() {
+		return createdBy;
+	}
+	public void setCreatedBy(Account createdBy) {
+		this.createdBy = createdBy;
 	}
 	
 }

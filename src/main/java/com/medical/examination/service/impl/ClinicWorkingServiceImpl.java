@@ -105,4 +105,9 @@ public class ClinicWorkingServiceImpl implements ClinicWorkingService {
 		this.clinicWorkingRepository.updateAccountIdClinicWorking(accountId, id);
 	}
 
+	@Override
+	public void updateCreatedByClinicWorking(Long createdBy, Long id) {
+		this.clinicWorkingRepository.updateCreatedByClinicWorking(createdBy, id);
+	}
+
 }

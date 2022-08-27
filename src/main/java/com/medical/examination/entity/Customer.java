@@ -21,12 +21,9 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
-import lombok.experimental.SuperBuilder;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
-@SuperBuilder
 
 @Entity
 @Table(name = "customer")
@@ -74,11 +71,7 @@ public class Customer {
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "customer", cascade = CascadeType.REMOVE)
 	//@JsonIgnore
 	private List<ClinicWorking> lstClinicWorking = new ArrayList<ClinicWorking>();
-
-	public Customer() {
-
-	}
-
+	
 	public List<ClinicWorking> getLstClinicWorking() {
 		return lstClinicWorking;
 	}

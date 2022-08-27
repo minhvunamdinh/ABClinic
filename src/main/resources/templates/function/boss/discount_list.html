@@ -137,7 +137,7 @@
                         <td th:text="${#dates.format(item.createdDate, 'dd-MM-yyyy')}"></td>
                         <td th:text="${#numbers.formatDecimal(item.totalCostPrice, 0, 'COMMA', 0, 'POINT')} + 'Đ'"></td>
                         <td th:text="${#numbers.formatDecimal(item.totalSellPrice, 0, 'COMMA', 0, 'POINT')} + 'Đ'"></td>
-                        <td th:text="${#numbers.formatDecimal((item.totalSellPrice - item.totalCostPrice), 0, 'COMMA', 0, 'POINT')} + 'Đ'"></td>
+                        <td th:text="${#numbers.formatDecimal(((item.totalSellPrice - item.totalCostPrice)), 0, 'COMMA', 0, 'POINT')} + 'Đ'"></td>
                         <td class="noExl" >
                         	<p th:if="${item.isDiscounted == 0}">Chưa chiết khấu</p>
                         	<p th:if="${item.isDiscounted == 1}">Đã chiết khấu</p>

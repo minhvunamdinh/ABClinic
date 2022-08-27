@@ -11,11 +11,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import lombok.experimental.SuperBuilder;
 import org.springframework.format.annotation.DateTimeFormat;
 
 @Entity
-@SuperBuilder
 @Table(name = "invoice")
 public class Invoice {
 	@Id
@@ -55,10 +53,9 @@ public class Invoice {
 	private String prescription;
 	@Column(name = "lst_test_id")
 	private String lstTestId;
-
-	public Invoice() {
-
-		}	public Long getId() {
+	@Column(name = "income")
+	private Double income;
+	public Long getId() {
 		return id;
 	}
 	public void setId(Long id) {
@@ -159,6 +156,12 @@ public class Invoice {
 	}
 	public void setLstTestId(String lstTestId) {
 		this.lstTestId = lstTestId;
+	}
+	public Double getIncome() {
+		return income;
+	}
+	public void setIncome(Double income) {
+		this.income = income;
 	}
 	
 }

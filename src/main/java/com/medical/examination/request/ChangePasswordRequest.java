@@ -16,12 +16,14 @@ import lombok.Data;
 @Data
 public class ChangePasswordRequest {
 	@NotNull(message = "Thông tin bắt buộc")
-	@Pattern(regexp = "((?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%]).{6,20})",
-    message = "Không đúng định dạng mật khẩu, mật khẩu phải có đủ chữ hoa, chữ thường, số, ký tự đặc biệt")
+	@Size(min = 6, max = 50, message = "Độ dài phải từ 6 đến 50 ký tự")
+//	@Pattern(regexp = "((?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%]).{6,20})",
+//    message = "Không đúng định dạng mật khẩu, mật khẩu phải có đủ chữ hoa, chữ thường, số, ký tự đặc biệt")
 	private String oldPassword;
 	@NotNull(message = "Thông tin bắt buộc")
-	@Pattern(regexp = "((?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%]).{6,20})",
-    message = "Không đúng định dạng mật khẩu, mật khẩu phải có đủ chữ hoa, chữ thường, số, ký tự đặc biệt")
+	@Size(min = 6, max = 50, message = "Độ dài phải từ 6 đến 50 ký tự")
+//	@Pattern(regexp = "((?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%]).{6,20})",
+//    message = "Không đúng định dạng mật khẩu, mật khẩu phải có đủ chữ hoa, chữ thường, số, ký tự đặc biệt")
 	private String newPassword;
 	private String newPasswordRepeat;
 	

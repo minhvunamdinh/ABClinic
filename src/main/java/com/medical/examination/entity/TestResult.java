@@ -1,6 +1,5 @@
 package com.medical.examination.entity;
 
-import lombok.experimental.SuperBuilder;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -13,7 +12,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@SuperBuilder
 @Table(name = "test_result")
 public class TestResult {
 	@Id
@@ -54,9 +52,7 @@ public class TestResult {
 	private String prescription;
 	@Column(name = "lst_test_id")
 	private String lstTestId;
-	public TestResult() {
-
-	}	public Long getId() {
+	public Long getId() {
 		return id;
 	}
 	public void setId(Long id) {

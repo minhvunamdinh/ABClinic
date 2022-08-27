@@ -42,6 +42,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	}
 	@Override
 	public void configure(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
+		authenticationManagerBuilder.inMemoryAuthentication().withUser("admin").password(passwordEncoder().encode("Minhvu@fpt")).roles("ADMIN");
 		authenticationManagerBuilder.userDetailsService(accountDetailsServiceImpl).passwordEncoder(passwordEncoder()); //cung cấp service cho spring security;
 	}
 	@Bean

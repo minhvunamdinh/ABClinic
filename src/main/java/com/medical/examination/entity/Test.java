@@ -12,11 +12,9 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import lombok.experimental.SuperBuilder;
 import net.bytebuddy.utility.nullability.MaybeNull;
 
 @Entity
-@SuperBuilder
 @Table(name = "test")
 public class Test {
 	@Id
@@ -39,11 +37,6 @@ public class Test {
 	private TestType testType;
 	@Column(name = "status")
 	private Long status;
-
-	public Test() {
-
-	}
-
 	public Long getId() {
 		return id;
 	}
