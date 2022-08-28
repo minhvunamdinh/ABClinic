@@ -340,15 +340,15 @@ public class RoutingController extends BaseController {
 			
 			Customer customer = this.customerService.getCustomerById(medicalExaminationRequest.getCustomerId());
 			
-			customer.setAddress(medicalExaminationRequest.getAddress());
-			customer.setCountry(medicalExaminationRequest.getCountry());
-			customer.setDesc(medicalExaminationRequest.getDesc());
+			customer.setAddress(medicalExaminationRequest.getAddress().trim());
+			customer.setCountry(medicalExaminationRequest.getCountry().trim());
+			customer.setDesc(medicalExaminationRequest.getDesc().trim());
 			customer.setDob(medicalExaminationRequest.getDob());
-			customer.setEmail(medicalExaminationRequest.getEmail());
-			customer.setFullname(medicalExaminationRequest.getFullname());
+			customer.setEmail(medicalExaminationRequest.getEmail().trim());
+			customer.setFullname(medicalExaminationRequest.getFullname().trim());
 			customer.setGender(medicalExaminationRequest.getGender());
-			customer.setJob(medicalExaminationRequest.getJob());
-			customer.setPhone(medicalExaminationRequest.getPhone());
+			customer.setJob(medicalExaminationRequest.getJob().trim());
+			customer.setPhone(medicalExaminationRequest.getPhone().trim());
 			this.customerService.saveCustomer(customer);
 			//insert clinic_woring
 			this.clinicWorkingService.updateAccountIdClinicWorking(medicalExaminationRequest.getAccountId(), id);
@@ -403,15 +403,15 @@ public class RoutingController extends BaseController {
 	    			}
 	    		}else {
 	    			//Tao customer truoc de lay id insert vao clinic_working
-	    			customer.setFullname(medicalExaminationRequest.getFullname());
-	    			customer.setPhone(medicalExaminationRequest.getPhone());
+	    			customer.setFullname(medicalExaminationRequest.getFullname().trim());
+	    			customer.setPhone(medicalExaminationRequest.getPhone().trim());
 	    			customer.setDob(medicalExaminationRequest.getDob());
-	    			customer.setEmail(medicalExaminationRequest.getEmail());
-	    			customer.setCountry(medicalExaminationRequest.getCountry());
-	    			customer.setAddress(medicalExaminationRequest.getAddress());
+	    			customer.setEmail(medicalExaminationRequest.getEmail().trim());
+	    			customer.setCountry(medicalExaminationRequest.getCountry().trim());
+	    			customer.setAddress(medicalExaminationRequest.getAddress().trim());
 	    			customer.setJob(medicalExaminationRequest.getJob());
 	    			customer.setGender(medicalExaminationRequest.getGender());
-	    			customer.setDesc(medicalExaminationRequest.getDesc());
+	    			customer.setDesc(medicalExaminationRequest.getDesc().trim());
 	    			newCustomerCreated = this.customerService.saveCustomer(customer);
 	    			clinicWorking.setCustomer(newCustomerCreated);
 	    		}
@@ -537,7 +537,7 @@ public class RoutingController extends BaseController {
 				testResult.setClinicWorking(clinicWorking);
 				testResult.setCreatedDate(new Date());
 				testResult.setCode(resultTestInvoiceRequest.getCode());
-				testResult.setDiagnosticResult(resultTestInvoiceRequest.getDiagnosticResult());
+				testResult.setDiagnosticResult(resultTestInvoiceRequest.getDiagnosticResult().trim());
 				testResult.setLstTest(resultTestInvoiceRequest.getLstTest());
 				testResult.setLstTestId(resultTestInvoiceRequest.getLstTestId());
 				testResult.setExaminationFee(resultTestInvoiceRequest.getTotalSellPrice());
@@ -590,18 +590,18 @@ public class RoutingController extends BaseController {
 				invoice.setTotalCostPrice(testResult.getTotalCostPrice() != null ? testResult.getTotalCostPrice() : 0);
 				invoice.setTotalSellPrice(testResult.getTotalSellPrice() != null ? testResult.getTotalSellPrice() + 200000 : 200000);
 				invoice.setIncome(testResult.getTotalCostPrice() != null && testResult.getTotalSellPrice() != null ? testResult.getTotalSellPrice() - testResult.getTotalCostPrice() + 200000 : 200000); //Tien lai = sellPrice - costPrice + 200000
-				invoice.setTestResult(resultTestInvoiceRequest.getTestResult());
-				invoice.setDiagnosticResult(testResult.getDiagnosticResult());
+				invoice.setTestResult(resultTestInvoiceRequest.getTestResult().trim());
+				invoice.setDiagnosticResult(testResult.getDiagnosticResult().trim());
 				invoice.setLstCostPrice(lstCostPrice);
 				invoice.setLstSellPrice(lstSellPrice);
 				invoice.setTimeReturn(resultTestInvoiceRequest.getTimeReturn());
-				invoice.setConclusion(resultTestInvoiceRequest.getConclusion());
-				invoice.setPrescription(resultTestInvoiceRequest.getPrescription());
+				invoice.setConclusion(resultTestInvoiceRequest.getConclusion().trim());
+				invoice.setPrescription(resultTestInvoiceRequest.getPrescription().trim());
 				
-				testResult.setConclusion(resultTestInvoiceRequest.getConclusion());
-				testResult.setPrescription(resultTestInvoiceRequest.getPrescription());
+				testResult.setConclusion(resultTestInvoiceRequest.getConclusion().trim());
+				testResult.setPrescription(resultTestInvoiceRequest.getPrescription().trim());
 				testResult.setTimeReturn(resultTestInvoiceRequest.getTimeReturn());
-				testResult.setTestResult(resultTestInvoiceRequest.getTestResult());
+				testResult.setTestResult(resultTestInvoiceRequest.getTestResult().trim());
 				this.invoiceService.saveInvoice(invoice);
 				
 			}
@@ -1585,20 +1585,20 @@ public class RoutingController extends BaseController {
 //				model.addAttribute("error", "Ngày sinh phải nhỏ hơn ngày hiện tại!");
 //	            return createView(model, "function/boss/account/account_create.html");
 //			}
-			if (accountRepository.existsByUsername(accountRequest.getUsername())) {
+			if (accountRepository.existsByUsername(accountRequest.getUsername().trim())) {
 				model.addAttribute("error", "Tên đăng nhập đã tồn tại!");
 				return createView(model, "function/boss/account/account_create.html");
 			}
-			if (accountRepository.existsByEmail(accountRequest.getEmail())) {
+			if (accountRepository.existsByEmail(accountRequest.getEmail().trim())) {
 				model.addAttribute("error", "Email đã tồn tại!");
 				return createView(model, "function/boss/account/account_create.html");
 			}
 			BCryptPasswordEncoder encode = new BCryptPasswordEncoder();
 			// Create new user's account
-			Account accountVerified = new Account(accountRequest.getUsername(), encode.encode(accountRequest.getPassword()),
-					accountRequest.getIsActive(), accountRequest.getFullname(), accountRequest.getAddress(),
+			Account accountVerified = new Account(accountRequest.getUsername().trim(), encode.encode(accountRequest.getPassword().trim()),
+					accountRequest.getIsActive(), accountRequest.getFullname().trim(), accountRequest.getAddress().trim(),
 					accountRequest.getDob(), accountRequest.getGender(), accountRequest.getRole(),
-					accountRequest.getIsWorking(), accountRequest.getStatus(), accountRequest.getEmail(), accountRequest.getPhone());
+					accountRequest.getIsWorking(), accountRequest.getStatus(), accountRequest.getEmail().trim(), accountRequest.getPhone().trim());
 	        
 	        this.accountService.saveAccount(accountVerified);
 	        redirAttrs.addFlashAttribute("success", "Thêm mới thành công!");
@@ -1641,17 +1641,17 @@ public class RoutingController extends BaseController {
 	            return createView(model, "function/boss/account/account_detail.html");
 	        }
 			Account account = this.accountService.getAccountById(id);
-			account.setAddress(updateAccountRequest.getAddress());
+			account.setAddress(updateAccountRequest.getAddress().trim());
 			account.setDob(updateAccountRequest.getDob());
-			account.setEmail(updateAccountRequest.getEmail());
-			account.setFullname(updateAccountRequest.getFullname());
+			account.setEmail(updateAccountRequest.getEmail().trim());
+			account.setFullname(updateAccountRequest.getFullname().trim());
 			account.setGender(updateAccountRequest.getGender());
 			account.setIsActive(updateAccountRequest.getIsActive());
 			account.setIsWorking(updateAccountRequest.getIsWorking());
 			account.setRole(updateAccountRequest.getRole());
 			account.setStatus(updateAccountRequest.getStatus());
-			account.setUsername(updateAccountRequest.getUsername());
-			account.setPhone(updateAccountRequest.getPhone());
+			account.setUsername(updateAccountRequest.getUsername().trim());
+			account.setPhone(updateAccountRequest.getPhone().trim());
 	        this.accountService.saveAccount(account);
 	        redirAttrs.addFlashAttribute("success", "Cập nhật thành công!");
 	        return "redirect:/list-account";
@@ -1686,11 +1686,11 @@ public class RoutingController extends BaseController {
 	        }
 			
 			Account account = this.accountService.getAccountById(id);
-			if (!encoder.matches(changePasswordRequest.getOldPassword(), account.getPassword())) {
+			if (!encoder.matches(changePasswordRequest.getOldPassword().trim(), account.getPassword().trim())) {
 				model.addAttribute("error", "Mật khẩu cũ không chính xác!");
 	            return createView(model, "function/boss/account/account_change_password.html");
 			}else {
-				account.setPassword(encoder.encode(changePasswordRequest.getNewPassword()));
+				account.setPassword(encoder.encode(changePasswordRequest.getNewPassword().trim()));
 			}
 			this.accountService.saveAccount(account);
 	        redirAttrs.addFlashAttribute("success", "Đổi mật khẩu thành công!");
