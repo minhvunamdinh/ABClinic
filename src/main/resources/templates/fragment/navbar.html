@@ -37,7 +37,7 @@
                     <li><a class="" th:href="@{/customer-list}">DS bệnh nhân</a></li>
                     <li th:if="${currentUser.role == 1}"><a class="" th:href="@{/test-type-list}">DS loại xét nghiệm</a></li>
                     <li th:if="${currentUser.role == 1}"><a class="" th:href="@{/test-list}">DS xét nghiệm</a></li>
-                    <li th:if="${currentUser.role == 1}"><a class="" tH:href="@{/list-account}">DS người dùng</a></li>
+                    <li th:if="${currentUser.role == 1 || currentUser.role == 0}"><a class="" tH:href="@{/list-account}">DS người dùng</a></li>
                 </ul>
             </li>
             <!--<li>

@@ -5,7 +5,7 @@
     </div>
 
     <!--logo start-->
-    <a th:if="${currentUser.role == 1}" tH:href="@{/home}" class="logo">AB<span class="lite">Clinic</span></a>
+    <a th:if="${currentUser.role == 1 || currentUser.role == 0}" tH:href="@{/home}" class="logo">AB<span class="lite">Clinic</span></a>
     <a th:if="${currentUser.role != 1}" tH:href="@{/medical-examination}" class="logo">AB<span class="lite">Clinic</span></a>
     <!--logo end-->
 

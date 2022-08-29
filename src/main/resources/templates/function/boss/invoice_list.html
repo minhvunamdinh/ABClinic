@@ -4,7 +4,7 @@
 
 <body>
     <div layout:fragment="content">
-    	<div class="wrapper" th:if="${currentUser.role == 1}">
+    	<div class="wrapper" th:if="${currentUser.role == 1 || currentUser.role == 0}">
             <div class="row">
                 <div class="col-lg-12">
                     <h3 class="page-header"><i class="fa fa-laptop"></i>[[${title}]]</h3>
@@ -137,7 +137,7 @@
                         <td th:text="${#dates.format(item.createdDate, 'dd-MM-yyyy')}"></td>
                         <td th:text="${#numbers.formatDecimal(item.totalCostPrice, 0, 'COMMA', 0, 'POINT')} + 'Đ'"></td>
                         <td th:text="${#numbers.formatDecimal(item.totalSellPrice, 0, 'COMMA', 0, 'POINT')} + 'Đ'"></td>
-                        <td th:text="${#numbers.formatDecimal(((item.totalSellPrice - item.totalCostPrice)), 0, 'COMMA', 0, 'POINT')} + 'Đ'"></td>
+                        <td th:text="${#numbers.formatDecimal((item.totalSellPrice - item.totalCostPrice), 0, 'COMMA', 0, 'POINT')} + 'Đ'"></td>
                         <td class="noExl" >
                         	<p th:if="${item.isDiscounted == 0}">Chưa chiết khấu</p>
                         	<p th:if="${item.isDiscounted == 1}">Đã chiết khấu</p>
@@ -180,7 +180,7 @@
                   </th:block>
             </div>
         </div>
-        <div class="wrapper" th:unless="${currentUser.role == 1}">
+        <div class="wrapper" th:unless="${currentUser.role == 1 || currentUser.role == 0}">
 			<h1 style="color: red;">Bạn không có quyền truy cập màn hình này</h1>
 		</div>
     </div>

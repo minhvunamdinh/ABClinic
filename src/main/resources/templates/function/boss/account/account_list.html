@@ -4,7 +4,7 @@
 
 <body>
     <div layout:fragment="content">
-    	<div class="wrapper" th:if="${currentUser.role == 1}">
+    	<div class="wrapper" th:if="${currentUser.role == 1 || currentUser.role == 0}">
             <div class="row">
                 <div class="col-lg-12">
                     <h3 class="page-header"><i class="fa fa-laptop"></i>Danh sách người dùng</h3>
@@ -51,6 +51,7 @@
                             <label>Quyền</label>
                             <select class="form-control dropdown-toggle" th:field="*{role}" id="role"  name="role">
                                 <option style="font-size: 16px;" value="" selected>-- Chọn quyền --</option>
+                                <option th:if="${currentUser.role == 0}" style="font-size: 16px;" value=1>Boss</option>
                                 <option style="font-size: 16px;" value=2>Bác sĩ</option>
                                 <option style="font-size: 16px;" value=3>Lễ tân</option>
                             </select>
@@ -95,6 +96,7 @@
                         	<p th:if="${item.gender == -1}">Khác</p>
                         </td>
                         <td>
+                        	<p th:if="${item.role == 1}">Boss</p>
                         	<p th:if="${item.role == 2}">Bác sĩ</p>
                         	<p th:if="${item.role == 3}">Lễ tân</p>
                         </td>
@@ -135,7 +137,7 @@
                   </th:block>
             </div>
         </div>
-        <div class="wrapper" th:unless="${currentUser.role == 1}">
+        <div class="wrapper" th:unless="${currentUser.role == 1 || currentUser.role == 0}">
 			<h1 style="color: red;">Bạn không có quyền truy cập màn hình này</h1>
 		</div>
     </div>

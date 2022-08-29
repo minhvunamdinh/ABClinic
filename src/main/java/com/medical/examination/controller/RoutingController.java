@@ -563,7 +563,7 @@ public class RoutingController extends BaseController {
 					return "redirect:/medical-examination-working/"+clinicWorkingId+"/edit";
 				}
 				if(resultTestInvoiceRequest.getPrescription() == null || resultTestInvoiceRequest.getPrescription().equalsIgnoreCase("")) {
-					redirAttrs.addFlashAttribute("error", "Bạn chưa nhập chỉ định thuốc");
+					redirAttrs.addFlashAttribute("error", "Bạn chưa nhập chỉ định của bác sĩ");
 					return "redirect:/medical-examination-working/"+clinicWorkingId+"/edit";
 				}
 				testResult = clinicWorking.getLstTestResult().get(0);
