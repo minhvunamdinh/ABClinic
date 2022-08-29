@@ -97,6 +97,7 @@
 	                        <div class="" >
 	                            <label>Ghi chú</label>
 	                            <textarea style="font-size: 16px" class="form-control" th:field="*{desc}" id="desc" name="desc"></textarea>
+								<span style="color: red;" th:if="${#fields.hasErrors('desc')}" th:errors="*{desc}"></span>
 	                        </div>
 	                    </div>
 	                    <div class="col-md-3">

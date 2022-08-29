@@ -345,7 +345,7 @@ public class RoutingController extends BaseController {
 			customer.setDesc(medicalExaminationRequest.getDesc().trim());
 			customer.setDob(medicalExaminationRequest.getDob());
 			customer.setEmail(medicalExaminationRequest.getEmail().trim());
-			customer.setFullname(medicalExaminationRequest.getFullname().trim());
+			customer.setFullname(medicalExaminationRequest.getFullname());
 			customer.setGender(medicalExaminationRequest.getGender());
 			customer.setJob(medicalExaminationRequest.getJob().trim());
 			customer.setPhone(medicalExaminationRequest.getPhone().trim());
@@ -403,7 +403,7 @@ public class RoutingController extends BaseController {
 	    			}
 	    		}else {
 	    			//Tao customer truoc de lay id insert vao clinic_working
-	    			customer.setFullname(medicalExaminationRequest.getFullname().trim());
+	    			customer.setFullname(medicalExaminationRequest.getFullname());
 	    			customer.setPhone(medicalExaminationRequest.getPhone().trim());
 	    			customer.setDob(medicalExaminationRequest.getDob());
 	    			customer.setEmail(medicalExaminationRequest.getEmail().trim());
